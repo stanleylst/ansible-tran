@@ -12,6 +12,10 @@ Contents:
    :maxdepth: 2
 
    helloworld
+   markdown
+   README
+   sec
+   support
 
 Indices and tables
 ==================
