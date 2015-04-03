@@ -11,6 +11,9 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   docs/helloword
+   docs/sec
+   docs/support
 
 
 Indices and tables
