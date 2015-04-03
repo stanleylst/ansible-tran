@@ -12,7 +12,6 @@ Contents:
    :maxdepth: 2
 
    helloworld
-   markdown
 
 Indices and tables
 ==================
