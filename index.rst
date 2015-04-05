@@ -9,11 +9,13 @@ Welcome to ansible-cn's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :numbered:
+   :maxdepth: 3
 
-   docs/helloword
    docs/sec
    docs/support
+   docs/types
+   docs/type2
 
 
 Indices and tables
