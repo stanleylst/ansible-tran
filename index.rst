@@ -12,10 +12,7 @@ Contents:
    :numbered:
    :maxdepth: 3
 
-   docs/sec
-   docs/support
-   docs/types
-   docs/type2
+   docs/intro
 
 
 Indices and tables
