@@ -9,7 +9,6 @@ Welcome to ansible-cn's documentation!
 Contents:
 
 .. toctree::
-   :numbered:
    :maxdepth: 3
 
    docs/intro
