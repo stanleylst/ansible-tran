@@ -1,8 +1,7 @@
-##The Ansible Configuration File
 Ansible的配置文件
 ++++++++++++++++++++++++++++++
 
-.. contents:: Topics
+.. contents:: 标题
 
 .. highlight:: bash
 
