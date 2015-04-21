@@ -5,74 +5,68 @@ Ansible的配置文件
 
 .. highlight:: bash
 
-Certain settings in Ansible are adjustable via a configuration file.  The stock configuration should be sufficient
-for most users, but there may be reasons you would want to change them.
+Ansible的一些的设置可以通过配置文件完成。在大多数场景下默认的配置就能满足大多数用户的需求，在一些特殊场景下，用户还是需要自行修改这些配置文件 
 
-Changes can be made and used in a configuration file which will be processed in the following order::
+用户可以修改一下配置文件来修改设置，他们的被读取的顺序如下::
 
-    * ANSIBLE_CONFIG (an environment variable)
-    * ansible.cfg (in the current directory)
-    * .ansible.cfg (in the home directory)
+    * ANSIBLE_CONFIG (一个环境变量)
+    * ansible.cfg (位于当前目录中)
+    * .ansible.cfg (位于家目录中)
     * /etc/ansible/ansible.cfg
 
-Prior to 1.5 the order was::
+版本1.5之前的读取顺序如下::
 
-    * ansible.cfg (in the current directory)
-    * ANSIBLE_CONFIG (an environment variable)
-    * .ansible.cfg (in the home directory)
+    * ansible.cfg (位于当前目录)
+    * ANSIBLE_CONFIG (一个环境变量)
+    * .ansible.cfg (位于家目录下)
     * /etc/ansible/ansible.cfg
 
-Ansible will process the above list and use the first file found. Settings in files are not merged.
+Ansible 将会按以上顺序逐个查询这些文件，直到找到一个为止，并且使用第一个寻找到个配置文件的配置，这些配置将不会被叠加。 
 
 .. _getting_the_latest_configuration:
 
-Getting the latest configuration
+获取最新配置文件
 ````````````````````````````````
 
-If installing ansible from a package manager, the latest ansible.cfg should be present in /etc/ansible, possibly
-as a ".rpmnew" file (or other) as appropriate in the case of updates.
+如果使用程序包管理器安装ansible，最新的 ansible.cfg 配置文件有可能出现在 /etc/ansible 下并且命名为 ".rpmnew", 也可能根据不同的更新命名为其它名称
 
-If you have installed from pip or from source, however, you may want to create this file in order to override
-default settings in Ansible.
+如果你是通过 pip 或者其他方式安装，则可能需要自行创建这个文件,以免原配置文件被覆盖。Ansible 的默认设置将会将其覆盖  
 
-You may wish to consult the `ansible.cfg in source control <https://raw.github.com/ansible/ansible/devel/examples/ansible.cfg>`_ for all of the possible latest values.
+配置文件的详细参数以及取值范围请查看`ansible.cfg  <https://raw.github.com/ansible/ansible/devel/examples/ansible.cfg>`_ 
 
 .. _environmental_configuration:
 
-Environmental configuration
+环境配置
 ```````````````````````````
 
-Ansible also allows configuration of settings via environment variables.  If these environment variables are set, they will
-override any setting loaded from the configuration file.  These variables are for brevity not defined here, but look in 'constants.py' in the source tree if you want to use these.  They are mostly considered to be a legacy system as compared to the config file, but are equally valid.
+Ansible 通过环境变量的形式来进行配置。这些设置后的环境变量将会覆盖掉所有配置文件读取的配置。为了节省篇幅，这些变量没有被列在这里，详情请见源代码目录中的 ‘constants.py’. 相对于配置文件它门会比当作遗产系统（legacy system) 来被使用，但是仍然有效
 
 .. _config_values_by_section:
 
-Explanation of values by section
+配置文件不同段详解
 ````````````````````````````````
 
-The configuration file is broken up into sections.  Most options are in the "general" section but some sections of the file
-are specific to certain connection types.
+配置文件被切割成了不同段。多数配置选项位于“general”段， 也有一些属于特定的链接类型（connection type）
 
 .. _general_defaults:
 
-General defaults
+通用默认段s
 ----------------
 
-In the [defaults] section of ansible.cfg, the following settings are tunable:
+在 [defaults] 段中，一下选项是可以调节的:
 
 .. _action_plugins:
 
 action_plugins
 ==============
 
-Actions are pieces of code in ansible that enable things like module execution, templating, and so forth.
+“行为”是 ansible中的一段代码，用来激活一些事件，例如执行一个模块，一个模版，等等 
 
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+这是一个以开发者为中心的特性，使得一些底层模块可以从外部不同地方加载::
 
    action_plugins = ~/.ansible/plugins/action_plugins/:/usr/share/ansible_plugins/action_plugins
 
-Most users will not need to use this feature.  See :doc:`developing_plugins` for more details.
+大多数用户都会使用这一特性，详情请见 :doc:`developing_plugins` .
 
 .. _ansible_managed:
 
