@@ -50,7 +50,7 @@ Ansible 通过环境变量的形式来进行配置。这些设置后的环境变
 
 .. _general_defaults:
 
-通用默认段s
+通用默认段
 ----------------
 
 在 [defaults] 段中，一下选项是可以调节的:
@@ -73,41 +73,38 @@ action_plugins
 ansible_managed
 ===============
 
-Ansible-managed is a string that can be inserted into files written by Ansible's config templating system, if you use
-a string like::
+Ansible-managed 是一个字符串。可以插入到Ansible配置模版系统生成的文件中。如果你使用以下的自字符::
 
    {{ ansible_managed }}
 
-The default configuration shows who modified a file and when::
+默认设置可以哪个用户修改和修改时间::
 
     ansible_managed = Ansible managed: {file} modified on %Y-%m-%d %H:%M:%S by {uid} on {host}
 
-This is useful to tell users that a file has been placed by Ansible and manual changes are likely to be overwritten.
+这个设置可以告知用户，Ansible修改了一个文件，并且手动写入的内容可能已经被覆盖。 
 
-Note that if using this feature, and there is a date in the string, the template will be reported changed each time as the date is updated.
+需要注意的是，如果使用这一特性，这个字符串中将包含一个日期注释，如果日期更新，模版系统将会在每一次报告文件修改。
 
 .. _ask_pass:
 
 ask_pass
 ========
 
-This controls whether an Ansible playbook should prompt for a password by default.  The default behavior is no::
-
+这个可以控制，Ansible 剧本playbook 是否会自动默认弹出弹出密码。默认为no:: 
     ask_pass=True
 
-If using SSH keys for authentication, it's probably not needed to change this setting.
+如果使用SSH 密钥匙做身份认证。可能需要修改这一参数 
 
 .. _ask_sudo_pass:
 
 ask_sudo_pass
 =============
 
-Similar to ask_pass, this controls whether an Ansible playbook should prompt for a sudo password by default when
-sudoing.  The default behavior is also no::
+类似 ask_pass,用来控制Ansible playbook 在执行sudo之前是否询问sudo密码。默认为no::
 
     ask_sudo_pass=True
 
-Users on platforms where sudo passwords are enabled should consider changing this setting.
+如果用户使用的系统平台开启了sudo 密码的话，应该开绿这一参数
 
 .. _bin_ansible_callbacks:
 
@@ -116,27 +113,23 @@ bin_ansible_callbacks
 
 .. versionadded:: 1.8
 
-Controls whether callback plugins are loaded when running /usr/bin/ansible.  This may be used to log activity from
-the command line, send notifications, and so on.  Callback plugins are always loaded for /usr/bin/ansible-playbook
-if present and cannot be disabled::
+用来控制callback插件是否在运行 /usr/bin/ansible 的时候被加载。 这个模块将用于命令行的日志系统，发出通知等特性。
+Callback插件如果存在将会永久性的被 /usr/bin/ansible-playbook 加载，不能被禁用::
 
     bin_ansible_callbacks=False
 
-Prior to 1.8, callbacks were never loaded for /usr/bin/ansible.
-
+1.8 版本之前，callbacks 插件不可以被 /usr/bin/ansible加载。 
 .. _callback_plugins:
 
 callback_plugins
 ================
 
-Callbacks are pieces of code in ansible that get called on specific events, permitting to trigger notifications.
-
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+Callbacks 在ansible中是一段代码，在特殊事件时将被调用。并且允许出发通知。 
+这是一个以开发者为中心的特性，可以实现对Ansible的底层拓展，并且拓展模块可以位于任何位置:: 
 
    callback_plugins = ~/.ansible/plugins/callback_plugins/:/usr/share/ansible_plugins/callback_plugins
 
-Most users will not need to use this feature.  See :doc:`developing_plugins` for more details
+大多数的用户将会用到这一特性，详见 :doc:`developing_plugins`。
 
 .. _command_warnings:
 
@@ -145,12 +138,8 @@ command_warnings
 
 .. versionadded:: 1.8
 
-By default since Ansible 1.8, Ansible will warn when usage of the shell and
-command module appear to be simplified by using a default Ansible module
-instead.  This can include reminders to use the 'git' module instead of
-shell commands to execute 'git'.  Using modules when possible over arbitrary
-shell commands can lead to more reliable and consistent playbook runs, and
-also easier to maintain playbooks::
+从Ansible 1.8 开始，当shell和命令行模块被默认模块简化的时，Ansible 将默认发出警告。
+这个包含提醒使用'git'但不是通过命令行执行。使用模块调用比冒然使用命令行调用可以使playbook工作更具有一致性也更加可靠同时也更加便于维护::
 
     command_warnings = False
 
