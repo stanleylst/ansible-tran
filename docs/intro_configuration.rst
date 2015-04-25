@@ -143,9 +143,7 @@ command_warnings
 
     command_warnings = False
 
-These warnings can be silenced by adjusting the following
-setting or adding warn=yes or warn=no to the end of the command line
-parameter string, like so::
+我们可以通过在命令行末尾添加 warn=yes 或者 warn=no选项来控制是否开启警告提示::
 
 
     - name: usage of git that could be replaced with the git module
@@ -156,15 +154,12 @@ parameter string, like so::
 connection_plugins
 ==================
 
-Connections plugin permit to extend the channel used by ansible to transport commands and files.
-
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+连接插件允许拓展ansible拓展通讯信道，用来传输命令或者文件。 
+这是一个开发者中心特性，拓展插件可以从任何不同地方加载::
 
     connection_plugins = ~/.ansible/plugins/connection_plugins/:/usr/share/ansible_plugins/connection_plugins
 
-Most users will not need to use this feature.  See :doc:`developing_plugins` for more details
-
+大多数用户会用到这一特性， 详见：:doc:`developing_plugins`
 .. _deprecation_warnings:
 
 deprecation_warnings
@@ -172,31 +167,28 @@ deprecation_warnings
 
 .. versionadded:: 1.3
 
-Allows disabling of deprecating warnings in ansible-playbook output::
+允许在ansible-playbook输出结果中禁用“不建议使用”警告::
 
     deprecation_warnings = True
 
-Deprecation warnings indicate usage of legacy features that are slated for removal in a future release of Ansible.
+“不建议警告”指的是使用一些在新版本中可能会被淘汰的遗留特性。 
 
 .. _display_skipped_hosts:
 
 display_skipped_hosts
 =====================
 
-If set to `False`, ansible will not display any status for a task that is skipped. The default behavior is to display skipped tasks::
-
+如果设置为`False`,ansible 将不会显示任何跳过任务的状态。默认选项是现实跳过任务的状态:: 
     display_skipped_hosts=True
 
-Note that Ansible will always show the task header for any task, regardless of whether or not the task is skipped.
+注意Ansible 总是会显示任何任务的头文件， 不管这个任务被跳过与否。 
 
 .. _error_on_undefined_vars:
 
 error_on_undefined_vars
 =======================
 
-On by default since Ansible 1.3, this causes ansible to fail steps that reference variable names that are likely
-typoed::
-
+从Ansible 1.3开始，这个选项将为默认，如果所引用的变量名称错误的话， 将会导致ansible在执行步骤上失败::
     error_on_undefined_vars=True
 
 If set to False, any '{{ template_expression }}' that contains undefined variables will be rendered in a template
@@ -207,9 +199,7 @@ or ansible action line exactly as written.
 executable
 ==========
 
-This indicates the command to use to spawn a shell under a sudo environment.  Users may need to change this in
-rare instances to /bin/bash in rare instances when sudo is constrained, but in most cases it may be left as is::
-
+这个选项可以在sudo环境下产生一个shell交互接口。 用户只在/bin/bash的或者sudo限制的一些场景中需要修改。大部分情况下不需要修改::
     executable = /bin/bash
 
 .. _filter_plugins:
@@ -217,22 +207,21 @@ rare instances to /bin/bash in rare instances when sudo is constrained, but in m
 filter_plugins
 ==============
 
-Filters are specific functions that can be used to extend the template system.
+过滤器是一种特殊的函数，用来拓展模版系统 。
 
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+这是一个开发者核心的特性，允许Ansible从任何地方载入底层拓展模块:: 
 
     filter_plugins = ~/.ansible/plugins/filter_plugins/:/usr/share/ansible_plugins/filter_plugins
 
 Most users will not need to use this feature.  See :doc:`developing_plugins` for more details
+大部分用户不会用到这个特性，详见:doc:`developing_plugins`。
 
 .. _force_color:
 
 force_color
 ===========
 
-This options forces color mode even when running without a TTY::
-
+到没有使用TTY终端的时候，这个选项当用来强制颜色模式::
     force_color = 1
 
 .. _force_handlers:
@@ -242,65 +231,58 @@ force_handlers
 
 .. versionadded:: 1.9.1
 
-This option causes notified handlers to run on a host even if a failure occurs on that host::
+即便这个用户崩溃，这个选项仍可以继续运行这个用户:: 
 
 		force_handlers = True
 
 The default is False, meaning that handlers will not run if a failure has occurred on a host.
 This can also be set per play or on the command line. See :doc:`_handlers_and_failure` for more details.
+如果这个选项是False. 如果一个主机崩溃了，handlers将不会再运行这个主机。这个选项也可以通过命令行临时使用。详见:doc:`_handlers_and_failure`.
 
 .. _forks:
 
 forks
 =====
 
-This is the default number of parallel processes to spawn when communicating with remote hosts.  Since Ansible 1.3,
-the fork number is automatically limited to the number of possible hosts, so this is really a limit of how much
-network and CPU load you think you can handle.  Many users may set this to 50, some set it to 500 or more.  If you
-have a large number of hosts, higher values will make actions across all of those hosts complete faster.  The default
-is very very conservative::
-
-    forks=5
-
+这个选项设置在与主机通信时的默认并行进程数。从Ansible 1.3开始，fork数量默认自动设置为主机数量或者潜在的主机数量，
+这将直接控制有多少网络资源活着cpu可以被使用。很多用户把这个设置为50，有些设置为500或者更多。如果你有很多的主机，
+高数值将会使得跨主机行为变快。默认值比较保守::
+    _forks=5 	
+	
+	
 .. _gathering:
 
 gathering
 =========
 
-New in 1.6, the 'gathering' setting controls the default policy of facts gathering (variables discovered about remote systems).
-
-The value 'implicit' is the default, meaning facts will be gathered per play unless 'gather_facts: False' is set in the play.  The value 'explicit' is the inverse, facts will not be gathered unless directly requested in the play.
-
-The value 'smart' means each new host that has no facts discovered will be scanned, but if the same host is addressed in multiple plays it will not be contacted again in the playbook run.  This option can be useful for those wishing to save fact gathering time.
+1.6版本中的新特性，这个设置控制默认facts收集（远程系统变量）。
+默认值为'implicit', 每一次play，facts都会被手机,除非设置'gather_facts: False'。 选项‘explicit’正好相反，facts不会被收集，直到play中需要。 
+‘smart’选项意思是，没有facts的新hosts将不会被扫描， 但是如果同样一个主机，在不同的plays里面被记录地址，在playbook运行中将不会通信。这个选项当有需求节省fact收集时比较有用。 
 
 hash_behaviour
 ==============
 
-Ansible by default will override variables in specific precedence orders, as described in :doc:`playbooks_variables`.  When a variable
-of higher precedence wins, it will replace the other value.
+Ansible 默认将会以一种特定的优先级覆盖变量，详见:doc:`playbooks_variables`。拥有更高优先级的参数将会覆盖掉其他参数
 
-Some users prefer that variables that are hashes (aka 'dictionaries' in Python terms) are merged.  This setting is called 'merge'. This is not the default behavior and it does not affect variables whose values are scalars (integers, strings) or
-arrays.  We generally recommend not using this setting unless you think you have an absolute need for it, and playbooks in the
-official examples repos do not use this setting::
+有些用户希望被hashed的参数（python 中的数据结构'dictionaries'）被合并。 这个设置叫做‘merge’。这不是一个默认设置，而且不影响数组类型的数组。我不建议使用这个设置除非你觉得一定需要这个设置。官方实例中不使用这个选项:: 
 
     hash_behaviour=replace
 
-The valid values are either 'replace' (the default) or 'merge'.
+合法的值为'replace'(默认值)或者‘merge’。
 
 .. _hostfile:
 
 hostfile
 ========
 
-This is a deprecated setting since 1.9, please look at :ref:`inventory` for the new setting.
+在1.9版本中，这不是一个合法设置。详见:ref:`inventory`。
 
 .. _host_key_checking:
 
 host_key_checking
 =================
 
-As described in :doc:`intro_getting_started`, host key checking is on by default in Ansible 1.3 and later.  If you understand the
-implications and wish to disable it, you may do so here by setting the value to False::
+这个特性详见:doc:`intro_getting_started`,在Ansible 1.3或更新版本中将会检测主机密钥。 如果你了解怎么使用并且希望禁用这个功能，你可以将这个值设置为False::
 
     host_key_checking=True
 
@@ -309,78 +291,72 @@ implications and wish to disable it, you may do so here by setting the value to 
 inventory
 =========
 
-This is the default location of the inventory file, script, or directory that Ansible will use to determine what hosts it has available
-to talk to::
+这个事默认库文件位置，脚本，或者存放可通信主机的目录::
 
     inventory = /etc/ansible/hosts
 
-It used to be called hostfile in Ansible before 1.9
+在1.9版本中被叫做hostfile. 
 
 .. _jinja2_extensions:
 
 jinja2_extensions
 =================
 
-This is a developer-specific feature that allows enabling additional Jinja2 extensions::
+这是一个开发者中心特性，允许开启Jinja2拓展模块:: 
 
     jinja2_extensions = jinja2.ext.do,jinja2.ext.i18n
 
-If you do not know what these do, you probably don't need to change this setting :)
+如果你不太清楚这些都是啥，还是不要改的好:)
 
 .. _library:
 
 library
 =======
 
-This is the default location Ansible looks to find modules::
+这个事Ansible默认搜寻模块的位置::
 
      library = /usr/share/ansible
 
-Ansible knows how to look in multiple locations if you feed it a colon separated path, and it also will look for modules in the
-"./library" directory alongside a playbook.
+Ansible知道如何搜寻多个用冒号隔开的路径，同时也会搜索在playbook中的“./library”。
 
 .. _log_path:
 
 log_path
 ========
 
-If present and configured in ansible.cfg, Ansible will log information about executions at the designated location.  Be sure
-the user running Ansible has permissions on the logfile::
+如果出现在ansible.cfg文件中。Ansible 将会在选定的位置登陆执行信息。请留意用户运行的Ansible对于logfile有权限::
 
     log_path=/var/log/ansible.log
 
-This behavior is not on by default.  Note that ansible will, without this setting, record module arguments called to the
-syslog of managed machines.  Password arguments are excluded.
+这个特性不是默认开启的。如果不设置，ansible将会吧模块加载纪录在系统日志系统中。不包含用密码。 
 
-For Enterprise users seeking more detailed logging history, you may be interested in :doc:`tower`.
+对于需要了解更多日志系统的企业及用户，你也许对:doc:`tower` 感兴趣。 
 
 .. _lookup_plugins:
 
 lookup_plugins
 ==============
 
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+这是一个开发者中心选项，允许模块插件在不同区域被加载::
 
     lookup_plugins = ~/.ansible/plugins/lookup_plugins/:/usr/share/ansible_plugins/lookup_plugins
 
-Most users will not need to use this feature.  See :doc:`developing_plugins` for more details
+绝大部分用户将不会使用这个特性，详见:doc:`developing_plugins`
 
 .. _module_lang:
 
 module_lang
 ===========
 
-This is to set the default language to communicate between the module and the system. By default, the value is 'C'.
+这是默认模块和系统之间通信的计算机语言，默认为'C'语言。 
 
 .. _module_name:
 
 module_name
 ===========
 
-This is the default module name (-m) value for /usr/bin/ansible.  The default is the 'command' module.
-Remember the command module doesn't support shell variables, pipes, or quotes, so you might wish to change
-it to 'shell'::
+这个是/usr/bin/ansible的默认模块名（-m）。 默认是'command'模块。 之前提到过，command模块不支持shell变量，管道，配额。
+所以也许你希望把这个参数改为'shell'::
 
     module_name = command
 
@@ -389,8 +365,7 @@ it to 'shell'::
 nocolor
 =======
 
-By default ansible will try to colorize output to give a better indication of failure and status information.
-If you dislike this behavior you can turn it off by setting 'nocolor' to 1::
+默认ansible会为输出结果加上颜色，用来更好的区分状态信息和失败信息。如果你想关闭这一功能，可以把'nocolor'设置为‘1’:：
 
     nocolor=0
 
@@ -399,9 +374,8 @@ If you dislike this behavior you can turn it off by setting 'nocolor' to 1::
 nocows
 ======
 
-By default ansible will take advantage of cowsay if installed to make /usr/bin/ansible-playbook runs more exciting.
-Why?  We believe systems management should be a happy experience.  If you do not like the cows, you can disable them
-by setting 'nocows' to 1::
+默认ansible可以调用一些cowsay的特性，使得/usr/bin/ansible-playbook运行起来更加愉快。为啥呢，因为我们相信系统应该是一
+比较愉快的经历。如果你不喜欢cows，你可以通通过将'nocows'设置为‘1’来禁用这一选项::
 
     nocows=0
 
@@ -410,21 +384,20 @@ by setting 'nocows' to 1::
 pattern
 =======
 
-This is the default group of hosts to talk to in a playbook if no "hosts:" stanza is supplied.  The default is to talk
-to all hosts.  You may wish to change this to protect yourself from surprises::
+如果没有提供“hosts”节点，这是playbook要通信的默认主机组。默认值是对所有主机通信，如果不想被惊吓到，最好还是设置个个选项::
+
 
     hosts=*
 
-Note that /usr/bin/ansible always requires a host pattern and does not use this setting, only /usr/bin/ansible-playbook.
+注意 /usr/bin/ansible 一直需要一个host pattern，并且不使用这个选项。这个选项只作用于/usr/bin/ansible-playbook. 
 
 .. _poll_interval:
 
 poll_interval
 =============
 
-For asynchronous tasks in Ansible (covered in :doc:`playbooks_async`), this is how often to check back on the status of those
-tasks when an explicit poll interval is not supplied.  The default is a reasonably moderate 15 seconds which is a tradeoff
-between checking in frequently and providing a quick turnaround when something may have completed::
+对于Ansible中的异步任务(详见 :doc:`playbooks_async`）， 这个是设置定义，当具体的poll interval 没有定义时，多少时间回查一下这些任务的状态，
+默认值是一个折中选择15秒钟。这个时间是个回查频率和任务完成叫回频率和当任务完成时的回转频率的这种:: 
 
     poll_interval=15
 
@@ -433,8 +406,7 @@ between checking in frequently and providing a quick turnaround when something m
 private_key_file
 ================
 
-If you are using a pem file to authenticate with machines rather than SSH agent or passwords, you can set the default
-value here to avoid re-specifying ``--ansible-private-keyfile`` with every invocation::
+如果你是用pem密钥文件而不是SSH 客户端或秘密啊认证的话，你可以设置这里的默认值，来避免每一次提醒设置密钥文件位置``--ansible-private-keyfile``::
 
     private_key_file=/path/to/file.pem
 
@@ -443,8 +415,7 @@ value here to avoid re-specifying ``--ansible-private-keyfile`` with every invoc
 remote_port
 ===========
 
-This sets the default SSH port on all of your systems, for systems that didn't specify an alternative value in inventory.
-The default is the standard 22::
+这个设置是你系统默认的远程SSH端口，如果不指定，默认为22号端口:: 
 
     remote_port = 22
 
