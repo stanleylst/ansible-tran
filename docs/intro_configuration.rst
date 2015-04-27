@@ -424,22 +424,19 @@ remote_port
 remote_tmp
 ==========
 
-Ansible works by transferring modules to your remote machines, running them, and then cleaning up after itself.  In some
-cases, you may not wish to use the default location and would like to change the path.  You can do so by altering this
-setting::
+Ansible 通过远程传输模块到远程主机，然后远程执行，执行后在清理现场。在有些场景下，你也许想使用默认路径希望像更换补丁一样使用，
+这时候你可以使用这个选项。::
 
     remote_tmp = $HOME/.ansible/tmp
 
-The default is to use a subdirectory of the user's home directory.  Ansible will then choose a random directory name
-inside this location.
+默认路径是在用户家目录下属的目录。Ansible 会在这个目录中使用一个随机的文件夹名称。 
 
 .. _remote_user:
 
 remote_user
 ===========
 
-This is the default username ansible will connect as for /usr/bin/ansible-playbook.  Note that /usr/bin/ansible will
-always default to the current user if this is not defined::
+这是个ansible使用/usr/bin/ansible-playbook链接的默认用户名。 注意如果不指定，/usr/bin/ansible默认使用当前用户名称:: 
 
     remote_user = root
 
@@ -450,26 +447,23 @@ roles_path
 
 .. versionadded: '1.4'
 
-The roles path indicate additional directories beyond the 'roles/' subdirectory of a playbook project to search to find Ansible
-roles.  For instance, if there was a source control repository of common roles and a different repository of playbooks, you might
-choose to establish a convention to checkout roles in /opt/mysite/roles like so::
+roles 路径指的是'roles/'下的额外目录，用于playbook搜索Ansible roles。比如， 如果我们有个用于common roles源代码控制仓库和一个不同的
+playbooks仓库，你也许会建立一个惯例去在 /opt/mysite/roles 里面查找roles。::
 
     roles_path = /opt/mysite/roles
 
-Additional paths can be provided separated by colon characters, in the same way as other pathstrings::
+多余的路径可以用冒号分隔，类似于其他path字符串::
 
     roles_path = /opt/mysite/roles:/opt/othersite/roles
 
-Roles will be first searched for in the playbook directory.  Should a role not be found, it will indicate all the possible paths
-that were searched.
+Roles将会在playbook目录中开始搜索。如果role没有找到，这个参数指定了其它可能的搜索路径。 
 
 .. _sudo_exe:
 
 sudo_exe
 ========
 
-If using an alternative sudo implementation on remote machines, the path to sudo can be replaced here provided
-the sudo implementation is matching CLI flags with the standard sudo::
+如果在其他远程主机上使用另一种方式执行sudo草做， sudo程序的路径可以用这个参数更换，使用命令行标签来拟合标准sudo::
 
    sudo_exe=sudo
 
@@ -478,9 +472,8 @@ the sudo implementation is matching CLI flags with the standard sudo::
 sudo_flags
 ==========
 
-Additional flags to pass to sudo when engaging sudo support.  The default is '-H' which preserves the environment
-of the original user.  In some situations you may wish to add or remove flags, but in general most users
-will not need to change this setting::
+当使用sudo支持的时候，传递给sudo而外的标签。 默认值为"-H", 意思是保留原用户的环境。在有些场景下也许需要添加或者删除
+标签，大多数用户不需要修改这个选项::
 
    sudo_flags=-H
 
@@ -489,8 +482,8 @@ will not need to change this setting::
 sudo_user
 =========
 
-This is the default user to sudo to if ``--sudo-user`` is not specified or 'sudo_user' is not specified in an Ansible
-playbook.  The default is the most logical: 'root'::
+这个是sudo使用的默认用户，如果``--sudo-user`` 没有特指或者'sudo_user' 在Ansible playbooks中没有特指，在大多数的逻辑中
+默认为: 'root' :: 
 
    sudo_user=root
 
@@ -501,18 +494,18 @@ system_warnings
 
 .. versionadded:: 1.6
 
-Allows disabling of warnings related to potential issues on the system running ansible itself (not on the managed hosts)::
+允许禁用系统运行ansible相关的潜在问题警告（不包括操作主机）::
 
    system_warnings = True
 
-These may include warnings about 3rd party packages or other conditions that should be resolved if possible.
+这个包括第三方库或者一些需要解决问题的警告。
 
 .. _timeout:
 
 timeout
 =======
 
-This is the default SSH timeout to use on connection attempts::
+这个事默认SSH链接尝试超市时间::
 
     timeout = 10
 
@@ -521,25 +514,22 @@ This is the default SSH timeout to use on connection attempts::
 transport
 =========
 
-This is the default transport to use if "-c <transport_name>" is not specified to /usr/bin/ansible or /usr/bin/ansible-playbook.
-The default is 'smart', which will use 'ssh' (OpenSSH based) if the local operating system is new enough to support ControlPersist
-technology, and then will otherwise use 'paramiko'.  Other transport options include 'local', 'chroot', 'jail', and so on.
+如果"-c  <transport_name>" 选项没有在使用/usr/bin/ansible 或者 /usr/bin/ansible-playbook 特指的话，这个参数提供了默认通信机制。默认
+值为'smart'， 如果本地系统支持 ControlPersist技术的话，将会使用(基于OpenSSH)‘ssh’，如果不支持讲使用‘paramiko’。其他传输选项包括‘local’,
+'chroot','jail'等等。 
 
-Users should usually leave this setting as 'smart' and let their playbooks choose an alternate setting when needed with the
-'connection:' play parameter.
+用户通常可以这个设置为‘smart’,让playbook在需要的条件自己选择‘connectin:’参数。 
 
 .. _vars_plugins:
 
 vars_plugins
 ============
 
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+这是一个开发者中心选项，允许底层拓展模块从任何地方加载::
 
     vars_plugins = ~/.ansible/plugins/vars_plugins/:/usr/share/ansible_plugins/vars_plugins
 
-Most users will not need to use this feature.  See :doc:`developing_plugins` for more details
-
+大部分的用户不会用到这个特性，详见:doc:`developing_plugins` 
 
 .. _vault_password_file:
 
@@ -548,28 +538,26 @@ vault_password_file
 
 .. versionadded:: 1.7
 
-Configures the path to the Vault password file as an alternative to specifying ``--vault-password-file`` on the command line::
+这个用来设置密码文件，也可以通过命令行指定``--vault-password-file``::
 
    vault_password_file = /path/to/vault_password_file
 
-As of 1.7 this file can also be a script. If you are using a script instead of a flat file, ensure that it is marked as executable, and that the password is printed to standard output. If your script needs to prompt for data, prompts can be sent to standard error.
+在1.7版本中，这个文件也可以称为一个脚本的形式。如果你使用脚本而不是单纯文件的话，请确保它可以执行并且密码可以在标准输出上打印出来。如果你的脚本需要提示请求数据，请求将会发到标准错误输出中。 
 
 .. _paramiko_settings:
 
 Paramiko Specific Settings
 --------------------------
 
-Paramiko is the default SSH connection implementation on Enterprise Linux 6 or earlier, and is not used by default on other
-platforms.  Settings live under the [paramiko] header.
+Paramiko 是商业版linux 6 的默认SSH链接。但在其他平台上不是默认使用的。请在[paramiko]头文件下激活它。
 
 .. _record_host_keys:
 
 record_host_keys
 ================
 
-The default setting of yes will record newly discovered and approved (if host key checking is enabled) hosts in the user's hostfile.
-This setting may be inefficient for large numbers of hosts, and in those situations, using the ssh transport is definitely recommended
-instead.  Setting it to False will improve performance and is recommended when host key checking is disabled::
+默认设置会记录并验证通过在用户hostfile中新发现的的主机（如果host key checking 被激活的话）。 这个选项在有很多主机的时候将会性能很差。在
+这种情况下，建议使用SSH传输代替。 当设置为False时， 性能将会提升，在hostkey checking 被禁用时候，建议使用。::
 
     record_host_keys=True
 
@@ -578,53 +566,47 @@ instead.  Setting it to False will improve performance and is recommended when h
 OpenSSH Specific Settings
 -------------------------
 
-Under the [ssh_connection] header, the following settings are tunable for SSH connections.  OpenSSH is the default connection type for Ansible
-on OSes that are new enough to support ControlPersist.  (This means basically all operating systems except Enterprise Linux 6 or earlier).
+在[ssh_connection]头文件之下，用来调整SSH的通信连接。OpenSSH是Ansible在操作系统上默认的通讯连接，对于支持ControlPersist足够新了。（意思除了Enterprise linux 6版以及更早的系统外的所有的操作系统)。 
 
 .. _ssh_args:
 
 ssh_args
 ========
 
-If set, this will pass a specific set of options to Ansible rather than Ansible's usual defaults::
+如果设置了的话，这个选项将会传递一组选项给Ansible 然不是使用以前的默认值::
 
     ssh_args = -o ControlMaster=auto -o ControlPersist=60s
 
-In particular, users may wish to raise the ControlPersist time to encourage performance.  A value of 30 minutes may
-be appropriate.
+用户可以提高ControlPersist值来提高性能。30 分钟通常比较合适。 
 
 .. _control_path:
 
 control_path
 ============
 
-This is the location to save ControlPath sockets. This defaults to::
+这个是保存ControlPath套接字的位置。 默认值是::
 
     control_path=%(directory)s/ansible-ssh-%%h-%%p-%%r
 
-On some systems with very long hostnames or very long path names (caused by long user names or
-deeply nested home directories) this can exceed the character limit on
-file socket names (108 characters for most platforms). In that case, you
-may wish to shorten the string to something like the below::
+在有些系统上面，会遇到很长的主机名或者很长的路径名称（也许因为很长的用户名，或者比较深的家目录），这些都会
+超出套接字文件名字符上限（对于大多数平台上限为108个字符）。在这种情况下，你也许希望按照以下方式缩短字符串::
 
     control_path = %(directory)s/%%h-%%r
 
-Ansible 1.4 and later will instruct users to run with "-vvvv" in situations where it hits this problem
-and if so it is easy to tell there is too long of a Control Path filename.  This may be frequently
-encountered on EC2.
+Ansible 1.4 以后的版本会引导用户在这种情况下使用"-vvvv"参数，这样很容易分辨 Control Path 文件名是否过长。这个
+问题在EC2上会频繁的遇到。 
 
 .. _scp_if_ssh:
 
 scp_if_ssh
 ==========
 
-Occasionally users may be managing a remote system that doesn't have SFTP enabled.  If set to True, we can
-cause scp to be used to transfer remote files instead::
+又是用户操控一个一个没有开启SFTP协议的远程系统。如果这个设置为True，scp将代替用来为远程主机传输文件:: 
 
     scp_if_ssh=False
 
-There's really no reason to change this unless problems are encountered, and then there's also no real drawback
-to managing the switch.  Most environments support SFTP by default and this doesn't usually need to be changed.
+如果没有遇到这样的问题没有必要来修改这个设置。当然修改这个设置也没有什么明显的弊端。大部分的系统环境都默认支持SFTP，
+通常情况下不需要修改。 
 
 
 .. _pipelining:
@@ -632,14 +614,11 @@ to managing the switch.  Most environments support SFTP by default and this does
 pipelining
 ==========
 
-Enabling pipelining reduces the number of SSH operations required to
-execute a module on the remote server, by executing many ansible modules without actual file transfer. 
-This can result in a very significant performance improvement when enabled, however when using "sudo:" operations you must
-first disable 'requiretty' in /etc/sudoers on all managed hosts.
+在不通过实际文件传输的情况下执行ansible模块来使用管道特性，从而减少执行远程模块SSH操作次数。如果开启这个设置，将显著提高性能。
+然而当使用"sudo:"操作的时候， 你必须在所有管理的主机的/etc/sudoers中禁用'requiretty'。
 
-By default, this option is disabled to preserve compatibility with
-sudoers configurations that have requiretty (the default on many distros), but is highly
-recommended if you can enable it, eliminating the need for :doc:`playbooks_acceleration`::
+默认这个选项为了保证与sudoers requiretty的设置（在很多发行版中时默认的设置）的兼容性是禁用的。 
+但是为了提高性能强烈建议开启这个设置。详见:doc:`playbooks_acceleration`::
 
     pipelining=False
 
@@ -648,9 +627,8 @@ recommended if you can enable it, eliminating the need for :doc:`playbooks_accel
 Accelerated Mode Settings
 -------------------------
 
-Under the [accelerate] header, the following settings are tunable for :doc:`playbooks_acceleration`.  Acceleration is 
-a useful performance feature to use if you cannot enable :ref:`pipelining` in your environment, but is probably
-not needed if you can.
+在[accelerate]首部下， 以下设置可以调整，详见:doc:`playbooks_acceleration`。如果你不能在你的环境中开启:ref:`pipelining` ，
+Accelertation 是一个很有用的性能特性。 但是如果你可以开启管道，这个选项也许对你无用。
 
 .. _accelerate_port:
 
@@ -659,7 +637,7 @@ accelerate_port
 
 .. versionadded:: 1.3
 
-This is the port to use for accelerated mode::
+在急速模式下使用的端口::
 
     accelerate_port = 5099
 
@@ -670,7 +648,7 @@ accelerate_timeout
 
 .. versionadded:: 1.4
 
-This setting controls the timeout for receiving data from a client. If no data is received during this time, the socket connection will be closed. A keepalive packet is sent back to the controller every 15 seconds, so this timeout should not be set lower than 15 (by default, the timeout is 30 seconds)::
+这个设置时用来控制从客户机获取数据的超时时间。如果在这段时间内没有数据传输，套接字连接会被关闭。 一个保持连接（keepalive）数据包通常每15秒回发回给控制台，所以这个超时时间不应该低于15秒（默认值为30秒）::
 
     accelerate_timeout = 30
 
@@ -681,11 +659,11 @@ accelerate_connect_timeout
 
 .. versionadded:: 1.4
 
-This setting controls the timeout for the socket connect call, and should be kept relatively low. The connection to the `accelerate_port` will be attempted 3 times before Ansible will fall back to ssh or paramiko (depending on your default connection setting) to try and start the accelerate daemon remotely. The default setting is 1.0 seconds::
+这个设置空着套接字调用的超时时间。这个应该设置相对比较短。这个和`accelerate_port`连接在回滚到ssh或者paramiko（受限于你默认的连接设置）连接方式之前会尝试三次开始远程加速daemon守护进程。默认设置为1.0秒::
 
     accelerate_connect_timeout = 1.0
 
-Note, this value can be set to less than one second, however it is probably not a good idea to do so unless you're on a very fast and reliable LAN. If you're connecting to systems over the internet, it may be necessary to increase this timeout.
+注意，这个选项值可以设置为小于1秒钟，但是除非你拥有一个速度很快而且很可靠的网络，否则也许这样并不是一个很好的选择。如果你使用英特网访问你的系统，最好提高这个值。  
 
 .. _accelerate_daemon_timeout:
 
@@ -695,10 +673,11 @@ accelerate_daemon_timeout
 .. versionadded:: 1.6
 
 This setting controls the timeout for the accelerated daemon, as measured in minutes. The default daemon timeout is 30 minutes::
+这个控制加速daemon守护进程的超时时间，用分钟来衡量。默认为30分钟::
 
     accelerate_daemon_timeout = 30
 
-Note, prior to 1.6, the timeout was hard-coded from the time of the daemon's launch. For version 1.6+, the timeout is now based on the last activity to the daemon and is configurable via this option.
+注意， 在1.6版本之前，daemon发起的超时时间是硬编码的。对于1.6以后的版本，超时时间是根据daemon上一次活动信息和这个可设置的选项。 
 
 .. _accelerate_multi_key:
 
@@ -708,8 +687,8 @@ accelerate_multi_key
 .. versionadded:: 1.6
 
 If enabled, this setting allows multiple private keys to be uploaded to the daemon. Any clients connecting to the daemon must also enable this option::
+如果这个选项开启，这个设置将允许多个私钥被加载到daemon。 任何客户端要想连接daemon都需要开启这个选项::
 
     accelerate_multi_key = yes
 
-New clients first connect to the target node over SSH to upload the key, which is done via a local socket file, so they must have the same access as the user that launched the daemon originally.
-
+通过本地套接字文件连接的通过SSH上传密钥文件到目标节点的新客户端，必须在登陆daemon时使用原始的登陆密钥登陆。 
