@@ -38,7 +38,7 @@ Ansible提供两种方式去完成任务，一是 ad-hoc 命令，一是写 Ansi
 Parallelism and Shell Commands
 ``````````````````````````````
 
-一个例子
+举一个例子
 
 这里我们要使用 Ansible 的命令行工具来重启 Atlanta 组中所有的 web 服务器，每次重启10个。
 
