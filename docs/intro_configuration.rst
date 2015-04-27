@@ -50,7 +50,7 @@ Ansible 通过环境变量的形式来进行配置。这些设置后的环境变
 
 .. _general_defaults:
 
-通用默认段s
+通用默认段
 ----------------
 
 在 [defaults] 段中，一下选项是可以调节的:
@@ -73,41 +73,38 @@ action_plugins
 ansible_managed
 ===============
 
-Ansible-managed is a string that can be inserted into files written by Ansible's config templating system, if you use
-a string like::
+Ansible-managed 是一个字符串。可以插入到Ansible配置模版系统生成的文件中。如果你使用以下的自字符::
 
    {{ ansible_managed }}
 
-The default configuration shows who modified a file and when::
+默认设置可以哪个用户修改和修改时间::
 
     ansible_managed = Ansible managed: {file} modified on %Y-%m-%d %H:%M:%S by {uid} on {host}
 
-This is useful to tell users that a file has been placed by Ansible and manual changes are likely to be overwritten.
+这个设置可以告知用户，Ansible修改了一个文件，并且手动写入的内容可能已经被覆盖。 
 
-Note that if using this feature, and there is a date in the string, the template will be reported changed each time as the date is updated.
+需要注意的是，如果使用这一特性，这个字符串中将包含一个日期注释，如果日期更新，模版系统将会在每一次报告文件修改。
 
 .. _ask_pass:
 
 ask_pass
 ========
 
-This controls whether an Ansible playbook should prompt for a password by default.  The default behavior is no::
-
+这个可以控制，Ansible 剧本playbook 是否会自动默认弹出弹出密码。默认为no:: 
     ask_pass=True
 
-If using SSH keys for authentication, it's probably not needed to change this setting.
+如果使用SSH 密钥匙做身份认证。可能需要修改这一参数 
 
 .. _ask_sudo_pass:
 
 ask_sudo_pass
 =============
 
-Similar to ask_pass, this controls whether an Ansible playbook should prompt for a sudo password by default when
-sudoing.  The default behavior is also no::
+类似 ask_pass,用来控制Ansible playbook 在执行sudo之前是否询问sudo密码。默认为no::
 
     ask_sudo_pass=True
 
-Users on platforms where sudo passwords are enabled should consider changing this setting.
+如果用户使用的系统平台开启了sudo 密码的话，应该开绿这一参数
 
 .. _bin_ansible_callbacks:
 
@@ -116,27 +113,23 @@ bin_ansible_callbacks
 
 .. versionadded:: 1.8
 
-Controls whether callback plugins are loaded when running /usr/bin/ansible.  This may be used to log activity from
-the command line, send notifications, and so on.  Callback plugins are always loaded for /usr/bin/ansible-playbook
-if present and cannot be disabled::
+用来控制callback插件是否在运行 /usr/bin/ansible 的时候被加载。 这个模块将用于命令行的日志系统，发出通知等特性。
+Callback插件如果存在将会永久性的被 /usr/bin/ansible-playbook 加载，不能被禁用::
 
     bin_ansible_callbacks=False
 
-Prior to 1.8, callbacks were never loaded for /usr/bin/ansible.
-
+1.8 版本之前，callbacks 插件不可以被 /usr/bin/ansible加载。 
 .. _callback_plugins:
 
 callback_plugins
 ================
 
-Callbacks are pieces of code in ansible that get called on specific events, permitting to trigger notifications.
-
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+Callbacks 在ansible中是一段代码，在特殊事件时将被调用。并且允许出发通知。 
+这是一个以开发者为中心的特性，可以实现对Ansible的底层拓展，并且拓展模块可以位于任何位置:: 
 
    callback_plugins = ~/.ansible/plugins/callback_plugins/:/usr/share/ansible_plugins/callback_plugins
 
-Most users will not need to use this feature.  See :doc:`developing_plugins` for more details
+大多数的用户将会用到这一特性，详见 :doc:`developing_plugins`。
 
 .. _command_warnings:
 
@@ -145,18 +138,12 @@ command_warnings
 
 .. versionadded:: 1.8
 
-By default since Ansible 1.8, Ansible will warn when usage of the shell and
-command module appear to be simplified by using a default Ansible module
-instead.  This can include reminders to use the 'git' module instead of
-shell commands to execute 'git'.  Using modules when possible over arbitrary
-shell commands can lead to more reliable and consistent playbook runs, and
-also easier to maintain playbooks::
+从Ansible 1.8 开始，当shell和命令行模块被默认模块简化的时，Ansible 将默认发出警告。
+这个包含提醒使用'git'但不是通过命令行执行。使用模块调用比冒然使用命令行调用可以使playbook工作更具有一致性也更加可靠同时也更加便于维护::
 
     command_warnings = False
 
-These warnings can be silenced by adjusting the following
-setting or adding warn=yes or warn=no to the end of the command line
-parameter string, like so::
+我们可以通过在命令行末尾添加 warn=yes 或者 warn=no选项来控制是否开启警告提示::
 
 
     - name: usage of git that could be replaced with the git module
@@ -167,15 +154,12 @@ parameter string, like so::
 connection_plugins
 ==================
 
-Connections plugin permit to extend the channel used by ansible to transport commands and files.
-
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+连接插件允许拓展ansible拓展通讯信道，用来传输命令或者文件。 
+这是一个开发者中心特性，拓展插件可以从任何不同地方加载::
 
     connection_plugins = ~/.ansible/plugins/connection_plugins/:/usr/share/ansible_plugins/connection_plugins
 
-Most users will not need to use this feature.  See :doc:`developing_plugins` for more details
-
+大多数用户会用到这一特性， 详见：:doc:`developing_plugins`
 .. _deprecation_warnings:
 
 deprecation_warnings
@@ -183,31 +167,28 @@ deprecation_warnings
 
 .. versionadded:: 1.3
 
-Allows disabling of deprecating warnings in ansible-playbook output::
+允许在ansible-playbook输出结果中禁用“不建议使用”警告::
 
     deprecation_warnings = True
 
-Deprecation warnings indicate usage of legacy features that are slated for removal in a future release of Ansible.
+“不建议警告”指的是使用一些在新版本中可能会被淘汰的遗留特性。 
 
 .. _display_skipped_hosts:
 
 display_skipped_hosts
 =====================
 
-If set to `False`, ansible will not display any status for a task that is skipped. The default behavior is to display skipped tasks::
-
+如果设置为`False`,ansible 将不会显示任何跳过任务的状态。默认选项是现实跳过任务的状态:: 
     display_skipped_hosts=True
 
-Note that Ansible will always show the task header for any task, regardless of whether or not the task is skipped.
+注意Ansible 总是会显示任何任务的头文件， 不管这个任务被跳过与否。 
 
 .. _error_on_undefined_vars:
 
 error_on_undefined_vars
 =======================
 
-On by default since Ansible 1.3, this causes ansible to fail steps that reference variable names that are likely
-typoed::
-
+从Ansible 1.3开始，这个选项将为默认，如果所引用的变量名称错误的话， 将会导致ansible在执行步骤上失败::
     error_on_undefined_vars=True
 
 If set to False, any '{{ template_expression }}' that contains undefined variables will be rendered in a template
@@ -218,9 +199,7 @@ or ansible action line exactly as written.
 executable
 ==========
 
-This indicates the command to use to spawn a shell under a sudo environment.  Users may need to change this in
-rare instances to /bin/bash in rare instances when sudo is constrained, but in most cases it may be left as is::
-
+这个选项可以在sudo环境下产生一个shell交互接口。 用户只在/bin/bash的或者sudo限制的一些场景中需要修改。大部分情况下不需要修改::
     executable = /bin/bash
 
 .. _filter_plugins:
@@ -228,22 +207,21 @@ rare instances to /bin/bash in rare instances when sudo is constrained, but in m
 filter_plugins
 ==============
 
-Filters are specific functions that can be used to extend the template system.
+过滤器是一种特殊的函数，用来拓展模版系统 。
 
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+这是一个开发者核心的特性，允许Ansible从任何地方载入底层拓展模块:: 
 
     filter_plugins = ~/.ansible/plugins/filter_plugins/:/usr/share/ansible_plugins/filter_plugins
 
 Most users will not need to use this feature.  See :doc:`developing_plugins` for more details
+大部分用户不会用到这个特性，详见:doc:`developing_plugins`。
 
 .. _force_color:
 
 force_color
 ===========
 
-This options forces color mode even when running without a TTY::
-
+到没有使用TTY终端的时候，这个选项当用来强制颜色模式::
     force_color = 1
 
 .. _force_handlers:
@@ -253,65 +231,58 @@ force_handlers
 
 .. versionadded:: 1.9.1
 
-This option causes notified handlers to run on a host even if a failure occurs on that host::
+即便这个用户崩溃，这个选项仍可以继续运行这个用户:: 
 
 		force_handlers = True
 
 The default is False, meaning that handlers will not run if a failure has occurred on a host.
 This can also be set per play or on the command line. See :doc:`_handlers_and_failure` for more details.
+如果这个选项是False. 如果一个主机崩溃了，handlers将不会再运行这个主机。这个选项也可以通过命令行临时使用。详见:doc:`_handlers_and_failure`.
 
 .. _forks:
 
 forks
 =====
 
-This is the default number of parallel processes to spawn when communicating with remote hosts.  Since Ansible 1.3,
-the fork number is automatically limited to the number of possible hosts, so this is really a limit of how much
-network and CPU load you think you can handle.  Many users may set this to 50, some set it to 500 or more.  If you
-have a large number of hosts, higher values will make actions across all of those hosts complete faster.  The default
-is very very conservative::
-
-    forks=5
-
+这个选项设置在与主机通信时的默认并行进程数。从Ansible 1.3开始，fork数量默认自动设置为主机数量或者潜在的主机数量，
+这将直接控制有多少网络资源活着cpu可以被使用。很多用户把这个设置为50，有些设置为500或者更多。如果你有很多的主机，
+高数值将会使得跨主机行为变快。默认值比较保守::
+    _forks=5 	
+	
+	
 .. _gathering:
 
 gathering
 =========
 
-New in 1.6, the 'gathering' setting controls the default policy of facts gathering (variables discovered about remote systems).
-
-The value 'implicit' is the default, meaning facts will be gathered per play unless 'gather_facts: False' is set in the play.  The value 'explicit' is the inverse, facts will not be gathered unless directly requested in the play.
-
-The value 'smart' means each new host that has no facts discovered will be scanned, but if the same host is addressed in multiple plays it will not be contacted again in the playbook run.  This option can be useful for those wishing to save fact gathering time.
+1.6版本中的新特性，这个设置控制默认facts收集（远程系统变量）。
+默认值为'implicit', 每一次play，facts都会被手机,除非设置'gather_facts: False'。 选项‘explicit’正好相反，facts不会被收集，直到play中需要。 
+‘smart’选项意思是，没有facts的新hosts将不会被扫描， 但是如果同样一个主机，在不同的plays里面被记录地址，在playbook运行中将不会通信。这个选项当有需求节省fact收集时比较有用。 
 
 hash_behaviour
 ==============
 
-Ansible by default will override variables in specific precedence orders, as described in :doc:`playbooks_variables`.  When a variable
-of higher precedence wins, it will replace the other value.
+Ansible 默认将会以一种特定的优先级覆盖变量，详见:doc:`playbooks_variables`。拥有更高优先级的参数将会覆盖掉其他参数
 
-Some users prefer that variables that are hashes (aka 'dictionaries' in Python terms) are merged.  This setting is called 'merge'. This is not the default behavior and it does not affect variables whose values are scalars (integers, strings) or
-arrays.  We generally recommend not using this setting unless you think you have an absolute need for it, and playbooks in the
-official examples repos do not use this setting::
+有些用户希望被hashed的参数（python 中的数据结构'dictionaries'）被合并。 这个设置叫做‘merge’。这不是一个默认设置，而且不影响数组类型的数组。我不建议使用这个设置除非你觉得一定需要这个设置。官方实例中不使用这个选项:: 
 
     hash_behaviour=replace
 
-The valid values are either 'replace' (the default) or 'merge'.
+合法的值为'replace'(默认值)或者‘merge’。
 
 .. _hostfile:
 
 hostfile
 ========
 
-This is a deprecated setting since 1.9, please look at :ref:`inventory` for the new setting.
+在1.9版本中，这不是一个合法设置。详见:ref:`inventory`。
 
 .. _host_key_checking:
 
 host_key_checking
 =================
 
-As described in :doc:`intro_getting_started`, host key checking is on by default in Ansible 1.3 and later.  If you understand the
-implications and wish to disable it, you may do so here by setting the value to False::
+这个特性详见:doc:`intro_getting_started`,在Ansible 1.3或更新版本中将会检测主机密钥。 如果你了解怎么使用并且希望禁用这个功能，你可以将这个值设置为False::
 
     host_key_checking=True
 
@@ -320,78 +291,72 @@ implications and wish to disable it, you may do so here by setting the value to 
 inventory
 =========
 
-This is the default location of the inventory file, script, or directory that Ansible will use to determine what hosts it has available
-to talk to::
+这个事默认库文件位置，脚本，或者存放可通信主机的目录::
 
     inventory = /etc/ansible/hosts
 
-It used to be called hostfile in Ansible before 1.9
+在1.9版本中被叫做hostfile. 
 
 .. _jinja2_extensions:
 
 jinja2_extensions
 =================
 
-This is a developer-specific feature that allows enabling additional Jinja2 extensions::
+这是一个开发者中心特性，允许开启Jinja2拓展模块:: 
 
     jinja2_extensions = jinja2.ext.do,jinja2.ext.i18n
 
-If you do not know what these do, you probably don't need to change this setting :)
+如果你不太清楚这些都是啥，还是不要改的好:)
 
 .. _library:
 
 library
 =======
 
-This is the default location Ansible looks to find modules::
+这个事Ansible默认搜寻模块的位置::
 
      library = /usr/share/ansible
 
-Ansible knows how to look in multiple locations if you feed it a colon separated path, and it also will look for modules in the
-"./library" directory alongside a playbook.
+Ansible知道如何搜寻多个用冒号隔开的路径，同时也会搜索在playbook中的“./library”。
 
 .. _log_path:
 
 log_path
 ========
 
-If present and configured in ansible.cfg, Ansible will log information about executions at the designated location.  Be sure
-the user running Ansible has permissions on the logfile::
+如果出现在ansible.cfg文件中。Ansible 将会在选定的位置登陆执行信息。请留意用户运行的Ansible对于logfile有权限::
 
     log_path=/var/log/ansible.log
 
-This behavior is not on by default.  Note that ansible will, without this setting, record module arguments called to the
-syslog of managed machines.  Password arguments are excluded.
+这个特性不是默认开启的。如果不设置，ansible将会吧模块加载纪录在系统日志系统中。不包含用密码。 
 
-For Enterprise users seeking more detailed logging history, you may be interested in :doc:`tower`.
+对于需要了解更多日志系统的企业及用户，你也许对:doc:`tower` 感兴趣。 
 
 .. _lookup_plugins:
 
 lookup_plugins
 ==============
 
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+这是一个开发者中心选项，允许模块插件在不同区域被加载::
 
     lookup_plugins = ~/.ansible/plugins/lookup_plugins/:/usr/share/ansible_plugins/lookup_plugins
 
-Most users will not need to use this feature.  See :doc:`developing_plugins` for more details
+绝大部分用户将不会使用这个特性，详见:doc:`developing_plugins`
 
 .. _module_lang:
 
 module_lang
 ===========
 
-This is to set the default language to communicate between the module and the system. By default, the value is 'C'.
+这是默认模块和系统之间通信的计算机语言，默认为'C'语言。 
 
 .. _module_name:
 
 module_name
 ===========
 
-This is the default module name (-m) value for /usr/bin/ansible.  The default is the 'command' module.
-Remember the command module doesn't support shell variables, pipes, or quotes, so you might wish to change
-it to 'shell'::
+这个是/usr/bin/ansible的默认模块名（-m）。 默认是'command'模块。 之前提到过，command模块不支持shell变量，管道，配额。
+所以也许你希望把这个参数改为'shell'::
 
     module_name = command
 
@@ -400,8 +365,7 @@ it to 'shell'::
 nocolor
 =======
 
-By default ansible will try to colorize output to give a better indication of failure and status information.
-If you dislike this behavior you can turn it off by setting 'nocolor' to 1::
+默认ansible会为输出结果加上颜色，用来更好的区分状态信息和失败信息。如果你想关闭这一功能，可以把'nocolor'设置为‘1’:：
 
     nocolor=0
 
@@ -410,9 +374,8 @@ If you dislike this behavior you can turn it off by setting 'nocolor' to 1::
 nocows
 ======
 
-By default ansible will take advantage of cowsay if installed to make /usr/bin/ansible-playbook runs more exciting.
-Why?  We believe systems management should be a happy experience.  If you do not like the cows, you can disable them
-by setting 'nocows' to 1::
+默认ansible可以调用一些cowsay的特性，使得/usr/bin/ansible-playbook运行起来更加愉快。为啥呢，因为我们相信系统应该是一
+比较愉快的经历。如果你不喜欢cows，你可以通通过将'nocows'设置为‘1’来禁用这一选项::
 
     nocows=0
 
@@ -421,21 +384,20 @@ by setting 'nocows' to 1::
 pattern
 =======
 
-This is the default group of hosts to talk to in a playbook if no "hosts:" stanza is supplied.  The default is to talk
-to all hosts.  You may wish to change this to protect yourself from surprises::
+如果没有提供“hosts”节点，这是playbook要通信的默认主机组。默认值是对所有主机通信，如果不想被惊吓到，最好还是设置个个选项::
+
 
     hosts=*
 
-Note that /usr/bin/ansible always requires a host pattern and does not use this setting, only /usr/bin/ansible-playbook.
+注意 /usr/bin/ansible 一直需要一个host pattern，并且不使用这个选项。这个选项只作用于/usr/bin/ansible-playbook. 
 
 .. _poll_interval:
 
 poll_interval
 =============
 
-For asynchronous tasks in Ansible (covered in :doc:`playbooks_async`), this is how often to check back on the status of those
-tasks when an explicit poll interval is not supplied.  The default is a reasonably moderate 15 seconds which is a tradeoff
-between checking in frequently and providing a quick turnaround when something may have completed::
+对于Ansible中的异步任务(详见 :doc:`playbooks_async`）， 这个是设置定义，当具体的poll interval 没有定义时，多少时间回查一下这些任务的状态，
+默认值是一个折中选择15秒钟。这个时间是个回查频率和任务完成叫回频率和当任务完成时的回转频率的这种:: 
 
     poll_interval=15
 
@@ -444,8 +406,7 @@ between checking in frequently and providing a quick turnaround when something m
 private_key_file
 ================
 
-If you are using a pem file to authenticate with machines rather than SSH agent or passwords, you can set the default
-value here to avoid re-specifying ``--ansible-private-keyfile`` with every invocation::
+如果你是用pem密钥文件而不是SSH 客户端或秘密啊认证的话，你可以设置这里的默认值，来避免每一次提醒设置密钥文件位置``--ansible-private-keyfile``::
 
     private_key_file=/path/to/file.pem
 
@@ -454,8 +415,7 @@ value here to avoid re-specifying ``--ansible-private-keyfile`` with every invoc
 remote_port
 ===========
 
-This sets the default SSH port on all of your systems, for systems that didn't specify an alternative value in inventory.
-The default is the standard 22::
+这个设置是你系统默认的远程SSH端口，如果不指定，默认为22号端口:: 
 
     remote_port = 22
 
@@ -464,22 +424,19 @@ The default is the standard 22::
 remote_tmp
 ==========
 
-Ansible works by transferring modules to your remote machines, running them, and then cleaning up after itself.  In some
-cases, you may not wish to use the default location and would like to change the path.  You can do so by altering this
-setting::
+Ansible 通过远程传输模块到远程主机，然后远程执行，执行后在清理现场。在有些场景下，你也许想使用默认路径希望像更换补丁一样使用，
+这时候你可以使用这个选项。::
 
     remote_tmp = $HOME/.ansible/tmp
 
-The default is to use a subdirectory of the user's home directory.  Ansible will then choose a random directory name
-inside this location.
+默认路径是在用户家目录下属的目录。Ansible 会在这个目录中使用一个随机的文件夹名称。 
 
 .. _remote_user:
 
 remote_user
 ===========
 
-This is the default username ansible will connect as for /usr/bin/ansible-playbook.  Note that /usr/bin/ansible will
-always default to the current user if this is not defined::
+这是个ansible使用/usr/bin/ansible-playbook链接的默认用户名。 注意如果不指定，/usr/bin/ansible默认使用当前用户名称:: 
 
     remote_user = root
 
@@ -490,26 +447,23 @@ roles_path
 
 .. versionadded: '1.4'
 
-The roles path indicate additional directories beyond the 'roles/' subdirectory of a playbook project to search to find Ansible
-roles.  For instance, if there was a source control repository of common roles and a different repository of playbooks, you might
-choose to establish a convention to checkout roles in /opt/mysite/roles like so::
+roles 路径指的是'roles/'下的额外目录，用于playbook搜索Ansible roles。比如， 如果我们有个用于common roles源代码控制仓库和一个不同的
+playbooks仓库，你也许会建立一个惯例去在 /opt/mysite/roles 里面查找roles。::
 
     roles_path = /opt/mysite/roles
 
-Additional paths can be provided separated by colon characters, in the same way as other pathstrings::
+多余的路径可以用冒号分隔，类似于其他path字符串::
 
     roles_path = /opt/mysite/roles:/opt/othersite/roles
 
-Roles will be first searched for in the playbook directory.  Should a role not be found, it will indicate all the possible paths
-that were searched.
+Roles将会在playbook目录中开始搜索。如果role没有找到，这个参数指定了其它可能的搜索路径。 
 
 .. _sudo_exe:
 
 sudo_exe
 ========
 
-If using an alternative sudo implementation on remote machines, the path to sudo can be replaced here provided
-the sudo implementation is matching CLI flags with the standard sudo::
+如果在其他远程主机上使用另一种方式执行sudo草做， sudo程序的路径可以用这个参数更换，使用命令行标签来拟合标准sudo::
 
    sudo_exe=sudo
 
@@ -518,9 +472,8 @@ the sudo implementation is matching CLI flags with the standard sudo::
 sudo_flags
 ==========
 
-Additional flags to pass to sudo when engaging sudo support.  The default is '-H' which preserves the environment
-of the original user.  In some situations you may wish to add or remove flags, but in general most users
-will not need to change this setting::
+当使用sudo支持的时候，传递给sudo而外的标签。 默认值为"-H", 意思是保留原用户的环境。在有些场景下也许需要添加或者删除
+标签，大多数用户不需要修改这个选项::
 
    sudo_flags=-H
 
@@ -529,8 +482,8 @@ will not need to change this setting::
 sudo_user
 =========
 
-This is the default user to sudo to if ``--sudo-user`` is not specified or 'sudo_user' is not specified in an Ansible
-playbook.  The default is the most logical: 'root'::
+这个是sudo使用的默认用户，如果``--sudo-user`` 没有特指或者'sudo_user' 在Ansible playbooks中没有特指，在大多数的逻辑中
+默认为: 'root' :: 
 
    sudo_user=root
 
@@ -541,18 +494,18 @@ system_warnings
 
 .. versionadded:: 1.6
 
-Allows disabling of warnings related to potential issues on the system running ansible itself (not on the managed hosts)::
+允许禁用系统运行ansible相关的潜在问题警告（不包括操作主机）::
 
    system_warnings = True
 
-These may include warnings about 3rd party packages or other conditions that should be resolved if possible.
+这个包括第三方库或者一些需要解决问题的警告。
 
 .. _timeout:
 
 timeout
 =======
 
-This is the default SSH timeout to use on connection attempts::
+这个事默认SSH链接尝试超市时间::
 
     timeout = 10
 
@@ -561,25 +514,22 @@ This is the default SSH timeout to use on connection attempts::
 transport
 =========
 
-This is the default transport to use if "-c <transport_name>" is not specified to /usr/bin/ansible or /usr/bin/ansible-playbook.
-The default is 'smart', which will use 'ssh' (OpenSSH based) if the local operating system is new enough to support ControlPersist
-technology, and then will otherwise use 'paramiko'.  Other transport options include 'local', 'chroot', 'jail', and so on.
+如果"-c  <transport_name>" 选项没有在使用/usr/bin/ansible 或者 /usr/bin/ansible-playbook 特指的话，这个参数提供了默认通信机制。默认
+值为'smart'， 如果本地系统支持 ControlPersist技术的话，将会使用(基于OpenSSH)‘ssh’，如果不支持讲使用‘paramiko’。其他传输选项包括‘local’,
+'chroot','jail'等等。 
 
-Users should usually leave this setting as 'smart' and let their playbooks choose an alternate setting when needed with the
-'connection:' play parameter.
+用户通常可以这个设置为‘smart’,让playbook在需要的条件自己选择‘connectin:’参数。 
 
 .. _vars_plugins:
 
 vars_plugins
 ============
 
-This is a developer-centric feature that allows low-level extensions around Ansible to be loaded from
-different locations::
+这是一个开发者中心选项，允许底层拓展模块从任何地方加载::
 
     vars_plugins = ~/.ansible/plugins/vars_plugins/:/usr/share/ansible_plugins/vars_plugins
 
-Most users will not need to use this feature.  See :doc:`developing_plugins` for more details
-
+大部分的用户不会用到这个特性，详见:doc:`developing_plugins` 
 
 .. _vault_password_file:
 
@@ -588,28 +538,26 @@ vault_password_file
 
 .. versionadded:: 1.7
 
-Configures the path to the Vault password file as an alternative to specifying ``--vault-password-file`` on the command line::
+这个用来设置密码文件，也可以通过命令行指定``--vault-password-file``::
 
    vault_password_file = /path/to/vault_password_file
 
-As of 1.7 this file can also be a script. If you are using a script instead of a flat file, ensure that it is marked as executable, and that the password is printed to standard output. If your script needs to prompt for data, prompts can be sent to standard error.
+在1.7版本中，这个文件也可以称为一个脚本的形式。如果你使用脚本而不是单纯文件的话，请确保它可以执行并且密码可以在标准输出上打印出来。如果你的脚本需要提示请求数据，请求将会发到标准错误输出中。 
 
 .. _paramiko_settings:
 
 Paramiko Specific Settings
 --------------------------
 
-Paramiko is the default SSH connection implementation on Enterprise Linux 6 or earlier, and is not used by default on other
-platforms.  Settings live under the [paramiko] header.
+Paramiko 是商业版linux 6 的默认SSH链接。但在其他平台上不是默认使用的。请在[paramiko]头文件下激活它。
 
 .. _record_host_keys:
 
 record_host_keys
 ================
 
-The default setting of yes will record newly discovered and approved (if host key checking is enabled) hosts in the user's hostfile.
-This setting may be inefficient for large numbers of hosts, and in those situations, using the ssh transport is definitely recommended
-instead.  Setting it to False will improve performance and is recommended when host key checking is disabled::
+默认设置会记录并验证通过在用户hostfile中新发现的的主机（如果host key checking 被激活的话）。 这个选项在有很多主机的时候将会性能很差。在
+这种情况下，建议使用SSH传输代替。 当设置为False时， 性能将会提升，在hostkey checking 被禁用时候，建议使用。::
 
     record_host_keys=True
 
@@ -618,53 +566,47 @@ instead.  Setting it to False will improve performance and is recommended when h
 OpenSSH Specific Settings
 -------------------------
 
-Under the [ssh_connection] header, the following settings are tunable for SSH connections.  OpenSSH is the default connection type for Ansible
-on OSes that are new enough to support ControlPersist.  (This means basically all operating systems except Enterprise Linux 6 or earlier).
+在[ssh_connection]头文件之下，用来调整SSH的通信连接。OpenSSH是Ansible在操作系统上默认的通讯连接，对于支持ControlPersist足够新了。（意思除了Enterprise linux 6版以及更早的系统外的所有的操作系统)。 
 
 .. _ssh_args:
 
 ssh_args
 ========
 
-If set, this will pass a specific set of options to Ansible rather than Ansible's usual defaults::
+如果设置了的话，这个选项将会传递一组选项给Ansible 然不是使用以前的默认值::
 
     ssh_args = -o ControlMaster=auto -o ControlPersist=60s
 
-In particular, users may wish to raise the ControlPersist time to encourage performance.  A value of 30 minutes may
-be appropriate.
+用户可以提高ControlPersist值来提高性能。30 分钟通常比较合适。 
 
 .. _control_path:
 
 control_path
 ============
 
-This is the location to save ControlPath sockets. This defaults to::
+这个是保存ControlPath套接字的位置。 默认值是::
 
     control_path=%(directory)s/ansible-ssh-%%h-%%p-%%r
 
-On some systems with very long hostnames or very long path names (caused by long user names or
-deeply nested home directories) this can exceed the character limit on
-file socket names (108 characters for most platforms). In that case, you
-may wish to shorten the string to something like the below::
+在有些系统上面，会遇到很长的主机名或者很长的路径名称（也许因为很长的用户名，或者比较深的家目录），这些都会
+超出套接字文件名字符上限（对于大多数平台上限为108个字符）。在这种情况下，你也许希望按照以下方式缩短字符串::
 
     control_path = %(directory)s/%%h-%%r
 
-Ansible 1.4 and later will instruct users to run with "-vvvv" in situations where it hits this problem
-and if so it is easy to tell there is too long of a Control Path filename.  This may be frequently
-encountered on EC2.
+Ansible 1.4 以后的版本会引导用户在这种情况下使用"-vvvv"参数，这样很容易分辨 Control Path 文件名是否过长。这个
+问题在EC2上会频繁的遇到。 
 
 .. _scp_if_ssh:
 
 scp_if_ssh
 ==========
 
-Occasionally users may be managing a remote system that doesn't have SFTP enabled.  If set to True, we can
-cause scp to be used to transfer remote files instead::
+又是用户操控一个一个没有开启SFTP协议的远程系统。如果这个设置为True，scp将代替用来为远程主机传输文件:: 
 
     scp_if_ssh=False
 
-There's really no reason to change this unless problems are encountered, and then there's also no real drawback
-to managing the switch.  Most environments support SFTP by default and this doesn't usually need to be changed.
+如果没有遇到这样的问题没有必要来修改这个设置。当然修改这个设置也没有什么明显的弊端。大部分的系统环境都默认支持SFTP，
+通常情况下不需要修改。 
 
 
 .. _pipelining:
@@ -672,14 +614,11 @@ to managing the switch.  Most environments support SFTP by default and this does
 pipelining
 ==========
 
-Enabling pipelining reduces the number of SSH operations required to
-execute a module on the remote server, by executing many ansible modules without actual file transfer. 
-This can result in a very significant performance improvement when enabled, however when using "sudo:" operations you must
-first disable 'requiretty' in /etc/sudoers on all managed hosts.
+在不通过实际文件传输的情况下执行ansible模块来使用管道特性，从而减少执行远程模块SSH操作次数。如果开启这个设置，将显著提高性能。
+然而当使用"sudo:"操作的时候， 你必须在所有管理的主机的/etc/sudoers中禁用'requiretty'。
 
-By default, this option is disabled to preserve compatibility with
-sudoers configurations that have requiretty (the default on many distros), but is highly
-recommended if you can enable it, eliminating the need for :doc:`playbooks_acceleration`::
+默认这个选项为了保证与sudoers requiretty的设置（在很多发行版中时默认的设置）的兼容性是禁用的。 
+但是为了提高性能强烈建议开启这个设置。详见:doc:`playbooks_acceleration`::
 
     pipelining=False
 
@@ -688,9 +627,8 @@ recommended if you can enable it, eliminating the need for :doc:`playbooks_accel
 Accelerated Mode Settings
 -------------------------
 
-Under the [accelerate] header, the following settings are tunable for :doc:`playbooks_acceleration`.  Acceleration is 
-a useful performance feature to use if you cannot enable :ref:`pipelining` in your environment, but is probably
-not needed if you can.
+在[accelerate]首部下， 以下设置可以调整，详见:doc:`playbooks_acceleration`。如果你不能在你的环境中开启:ref:`pipelining` ，
+Accelertation 是一个很有用的性能特性。 但是如果你可以开启管道，这个选项也许对你无用。
 
 .. _accelerate_port:
 
@@ -699,7 +637,7 @@ accelerate_port
 
 .. versionadded:: 1.3
 
-This is the port to use for accelerated mode::
+在急速模式下使用的端口::
 
     accelerate_port = 5099
 
@@ -710,7 +648,7 @@ accelerate_timeout
 
 .. versionadded:: 1.4
 
-This setting controls the timeout for receiving data from a client. If no data is received during this time, the socket connection will be closed. A keepalive packet is sent back to the controller every 15 seconds, so this timeout should not be set lower than 15 (by default, the timeout is 30 seconds)::
+这个设置时用来控制从客户机获取数据的超时时间。如果在这段时间内没有数据传输，套接字连接会被关闭。 一个保持连接（keepalive）数据包通常每15秒回发回给控制台，所以这个超时时间不应该低于15秒（默认值为30秒）::
 
     accelerate_timeout = 30
 
@@ -721,11 +659,11 @@ accelerate_connect_timeout
 
 .. versionadded:: 1.4
 
-This setting controls the timeout for the socket connect call, and should be kept relatively low. The connection to the `accelerate_port` will be attempted 3 times before Ansible will fall back to ssh or paramiko (depending on your default connection setting) to try and start the accelerate daemon remotely. The default setting is 1.0 seconds::
+这个设置空着套接字调用的超时时间。这个应该设置相对比较短。这个和`accelerate_port`连接在回滚到ssh或者paramiko（受限于你默认的连接设置）连接方式之前会尝试三次开始远程加速daemon守护进程。默认设置为1.0秒::
 
     accelerate_connect_timeout = 1.0
 
-Note, this value can be set to less than one second, however it is probably not a good idea to do so unless you're on a very fast and reliable LAN. If you're connecting to systems over the internet, it may be necessary to increase this timeout.
+注意，这个选项值可以设置为小于1秒钟，但是除非你拥有一个速度很快而且很可靠的网络，否则也许这样并不是一个很好的选择。如果你使用英特网访问你的系统，最好提高这个值。  
 
 .. _accelerate_daemon_timeout:
 
@@ -735,10 +673,11 @@ accelerate_daemon_timeout
 .. versionadded:: 1.6
 
 This setting controls the timeout for the accelerated daemon, as measured in minutes. The default daemon timeout is 30 minutes::
+这个控制加速daemon守护进程的超时时间，用分钟来衡量。默认为30分钟::
 
     accelerate_daemon_timeout = 30
 
-Note, prior to 1.6, the timeout was hard-coded from the time of the daemon's launch. For version 1.6+, the timeout is now based on the last activity to the daemon and is configurable via this option.
+注意， 在1.6版本之前，daemon发起的超时时间是硬编码的。对于1.6以后的版本，超时时间是根据daemon上一次活动信息和这个可设置的选项。 
 
 .. _accelerate_multi_key:
 
@@ -748,8 +687,8 @@ accelerate_multi_key
 .. versionadded:: 1.6
 
 If enabled, this setting allows multiple private keys to be uploaded to the daemon. Any clients connecting to the daemon must also enable this option::
+如果这个选项开启，这个设置将允许多个私钥被加载到daemon。 任何客户端要想连接daemon都需要开启这个选项::
 
     accelerate_multi_key = yes
 
-New clients first connect to the target node over SSH to upload the key, which is done via a local socket file, so they must have the same access as the user that launched the daemon originally.
-
+通过本地套接字文件连接的通过SSH上传密钥文件到目标节点的新客户端，必须在登陆daemon时使用原始的登陆密钥登陆。 
