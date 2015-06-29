@@ -36,7 +36,7 @@ Ansible提供两种方式去完成任务,一是 ad-hoc 命令,一是写 Ansible 
 .. _parallelism_and_shell_commands:
 
 Parallelism and Shell Commands
-``````````````````````````````
+````````````````````````````````
 
 举一个例子
 
@@ -110,7 +110,7 @@ system look like you state, and run the commands necessary to get it there.这�
 .. _file_transfer:
 
 File Transfer
-`````````````
+```````````````
 
 这是 `/usr/bin/ansible` 的另一种用法.Ansible 能够以并行的方式同时 SCP 大量的文件到多台机器.
 命令如下::
@@ -136,7 +136,7 @@ File Transfer
 .. _managing_packages:
 
 Managing Packages
-`````````````````
+```````````````````
 
 Ansible 提供对 yum 和 apt 的支持.这里是关于 yum 的示例.
 
@@ -158,7 +158,7 @@ Ansible 提供对 yum 和 apt 的支持.这里是关于 yum 的示例.
 .. _users_and_groups:
 
 Users and Groups
-````````````````
+``````````````````
 
 使用 'user' 模块可以方便的创建账户,删除账户,或是管理现有的账户::
 
@@ -171,7 +171,7 @@ Users and Groups
 .. _from_source_control:
 
 Deploying From Source Control
-`````````````````````````````
+```````````````````````````````
 
 直接使用 git 部署 webapp::
 
@@ -183,7 +183,7 @@ Deploying From Source Control
 .. _managing_services:
 
 Managing Services
-`````````````````
+```````````````````
 	
 确认某个服务在所有的webservers上都已经启动::
 
@@ -201,7 +201,7 @@ Managing Services
 .. _time_limited_background_operations:
 
 Time Limited Background Operations
-``````````````````````````````````
+````````````````````````````````````
 
 需要长时间运行的命令可以放到后台去,在命令开始运行后我们也可以检查运行的状态.如果运行命令后,不想获取返回的信息,
 可执行如下命令::
@@ -228,7 +228,7 @@ Polling 获取状态信息的操作会在后台工作任务启动之后开始.�
 .. _checking_facts:
 
 Gathering Facts
-```````````````
+`````````````````
 
 在 playbooks 中有对于 Facts 做描述,它代表的是一个系统中已发现的变量.These can be used to implement conditional execution 
 of tasks but also just to get ad-hoc information about your system. 可通过如下方式查看所有的 facts::
