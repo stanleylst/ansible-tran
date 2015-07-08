@@ -11,9 +11,6 @@ Accelerated Mode
 
 对于使用 1.5 及之后版本的用户，加速模式只在以下情况下有用处： (A) 管理红帽企业版 Linux 6 或者更早的那些依然使用 paramiko 的版本 或者 (B) 像在文档中描述的那样：无法在 TTYs 中使用 sudo。
 
-If you can use pipelining, Ansible will reduce the amount of files transferred over the wire, 
-making everything much more efficient, and performance will be on par with accelerated mode in nearly all cases, possibly excluding very large file transfer.   Because less moving parts are involved, pipelining is better than accelerated mode for nearly all use cases.
-
 如果你能够使用pipelining，Ansible 将会降低通过 wire 传输文件的总量来提升有效率，并且在几乎所有情况下（甚至可能包括了传输大型文件）都能与加速模式相匹敌。归功于更少的移动文件块，管道几乎在所有的情况下优于加速模式。
 
 加速模式将为了支持那些仍使用红帽企业版 Linux 6 做主控机或因其他环境因素受限制而保留。
