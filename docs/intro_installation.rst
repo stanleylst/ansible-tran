@@ -52,7 +52,7 @@ Ansible一般每两个月出一个发行版本。小bugs一般在下一个发行
 
 若你希望使用Ansible的最新版本，并且你使用的操作系统是 Red Hat Enterprise Linux (TM), CentOS, Fedora, Debian, Ubuntu，我们建议使用系统的软件包管理器。
 
-另有一种选择是通过"pip"工具安装，"pip"是一个Python写的软件包管理器。
+另有一种选择是通过"pip"工具安装，"pip"是一个安装和管理Python包的工具。
 
 若你希望跟进开发版本，想使用和测试最新的功能特性，我们会分享如何从源码运行Ansible的方法。从源码运行程序不需要进行软件安装。
 
@@ -327,7 +327,7 @@ To install on a Mac, make sure you have Homebrew, then run:
 Ansible can be installed via "pip", the Python package manager.  If 'pip' isn't already available in
 your version of Python, you can get pip by::
 
-Ansible可通过 "pip" 安装(Python写的软件包管理器)，若你还没有安装 pip，可执行如下命令安装::
+Ansible可通过 "pip" 安装(安装和管理Python包的工具)，若你还没有安装 pip，可执行如下命令安装::
 
    $ sudo easy_install pip
 
