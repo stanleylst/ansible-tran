@@ -53,8 +53,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ansible-cn'
-copyright = u'2015, magedu-stanley'
-author = u'magedu-stanley'
+copyright = u'2015, www.magedu.com, AUTHORS: 薛定谔的章鱼 & guli & 以马内利'
+author = u'www.magedu.com'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -229,7 +229,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   (master_doc, 'ansible-cn.tex', u'ansible-cn Documentation',
-   u'magedu-stanley', 'manual'),
+   u'www.magedu.com', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
