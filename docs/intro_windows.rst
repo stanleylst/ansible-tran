@@ -56,7 +56,7 @@ Ansible's支持windows需要依赖于少量标准变量来表明远程主机的u
 
 需要注意的是这里的 ssh_port 不是真正的SSH协议的端口,but this is a holdover variable name from how Ansible is mostly an SSH-oriented system.(这句也没看懂)再重复一遍,Windows 管理主机不是通过SSH协议.
 
-如果你已经安装了 ``kerberos`` 模块和 ``ansible_ssh_user`` 包括 ``@`` (e.g. ``username@realm``), Ansible会先尝试Kerberos认证. *这种方式主要用你通过Kerberos在远程主机上的认证而不是 ``ansible_ssh_user`` *.如果上述办法失败了,要么是因为你没有在管理机上签署(signed into)Kerberos,要么是因为远程主机上对应的域帐户不可用,接着 Ansible 将返回原始("plain")username/password的认证方式.
+如果你已经安装了 ``kerberos`` 模块和 ``ansible_ssh_user`` 包括 ``@`` (e.g. ``username@realm``), Ansible会先尝试Kerberos认证. * 这种方式主要用你通过Kerberos在远程主机上的认证而不是 ``ansible_ssh_user`` * . 如果上述办法失败了,要么是因为你没有在管理机上签署(signed into)Kerberos,要么是因为远程主机上对应的域帐户不可用,接着 Ansible 将返回原始("plain")username/password的认证方式.
 
 当你使用 playbook 时,请不要忘记指定 --ask-vault-pass 提供密码来解锁文件.
 
