@@ -56,11 +56,9 @@ Ansible's支持windows需要依赖于少量标准变量来表明远程主机的u
 
 需要注意的是这里的 ssh_port 不是真正的SSH协议的端口,but this is a holdover variable name from how Ansible is mostly an SSH-oriented system.(这句也没看懂)再重复一遍,Windows 管理主机不是通过SSH协议.
 
-如果你已经安装了 ``kerberos`` 模块和 ``ansible_ssh_user`` 包括 ``@`` (e.g. ``username@realm``), Ansible会先尝试Kerberos认证. * 这种方式主要用你通过Kerberos在远程主机上的认证而不是 ``ansible_ssh_user`` * . 如果上述办法失败了,要么是因为你没有在管理机上签署(signed into)Kerberos,要么是因为远程主机上对应的域帐户不可用,接着 Ansible 将返回原始("plain")username/password的认证方式.
+如果你已经安装了 ``kerberos`` 模块和 ``ansible_ssh_user`` 包括 ``@`` (e.g. ``username@realm``), Ansible会先尝试Kerberos认证. * 这种方式主要用你通过Kerberos在远程主机上的认证而不是 ``ansible_ssh_user`` * .如果上述办法失败了,要么是因为你没有在管理机上签署(signed into)Kerberos,要么是因为远程主机上对应的域帐户不可用,接着 Ansible 将返回原始("plain")username/password的认证方式.
 
 当你使用 playbook 时,请不要忘记指定 --ask-vault-pass 提供密码来解锁文件.
-
-When using your playbook, don't forget to specify --ask-vault-pass to provide the password to unlock the file.
 
 使用如下命令来测试你的配置,尝试连接你的 Windows 节点.注意:这不是ICMP ping,只是利用 Windows 远程工具来检测 Ansible 的信道是否正常::
 
@@ -74,24 +72,18 @@ When using your playbook, don't forget to specify --ask-vault-pass to provide th
 
 Windows System Prep
 ```````````````````
+为了 Ansible 能管理你的windows机器,你将必须开启并配置远程机器上PowerShell.
 
-In order for Ansible to manage your windows machines, you will have to enable PowerShell remoting configured.
+为了能自动化设置 WinRM,你可以在远程机器上执行 `this PowerShell script <https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1>`_
 
-To automate setup of WinRM, you can run `this PowerShell script <https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1>`_ on the remote machine. 
-
-Admins may wish to modify this setup slightly, for instance to increase the timeframe of
-the certificate.
+Admins有可能希望微调配置,例如延长证过期时间.
 
 .. note::
-   On Windows 7 and Server 2008 R2 machines, due to a bug in Windows 
-   Management Framework 3.0, it may be necessary to install this
-   hotfix http://support.microsoft.com/kb/2842230 to avoid receiving
-   out of memory and stack overflow exceptions.  Newly-installed Server 2008
-   R2 systems which are not fully up to date with windows updates are known
-   to have this issue.   
+   
+   Windows 7 和 Server 2008 R2 系统因为 Windows 
+   Management Framework 3.0的BUG,你必须安装 hotfix http://support.microsoft.com/kb/2842230 来避免内存溢出(OOM)和堆栈异常. 新安装的 Server 2008 R2 系统没有升级到最新版本的均存在这个问题.
 
-   Windows 8.1 and Server 2012 R2 are not affected by this issue as they
-   come with Windows Management Framework 4.0.
+   Windows 8.1 and Server 2012 R2 不受影响是因为他们自身默认使用的是 Windows Management Framework 4.0. 
 
 .. _getting_to_powershell_three_or_higher:
 
