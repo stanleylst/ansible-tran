@@ -1,0 +1,241 @@
+Windows Support
+===============
+
+.. contents:: Topics
+
+.. _windows_how_does_it_work:
+
+windows下的运行方式
+`````````````````````
+
+就如你刚所了解到的,Ansible默认是通过SSH协议来管理Linux/Unix服务器.
+
+从1.7版本开始,Ansible也开始支持Windows机器的管理.不过是通过本机的PowerShell来实现远程管理,而不是SSH.
+
+Ansible仍然通过一台Linux系统机器来进行集中管理,使用Python的 "winrm" 模块来和远程主机交互.
+
+在管理的过程是 Ansible无需在远程主机上安装任何额外的软件,Ansible仍然使用 agentless(非c/s架构) 来保证其在 Linux/Unix的流行度.
+
+需要注意的是有开始这章前你最好对对 Ansible 有一个预先的了解,如果你还没有写过一个 Playbook, 那最好先跳到playbook的章节先了解熟悉再开始本章内容.
+
+.. _windows_installing:
+
+安装管理机
+```````````
+
+On a Linux control machine::
+
+   pip install http://github.com/diyan/pywinrm/archive/master.zip#egg=pywinrm
+
+如果你想通过活动目录连接域帐户进行发布(相对本地帐户在远程主机上创建)::
+
+   pip install kerberos
+
+Kerberos 在 OS X 和许多 Linux 发行版中是默认安装且配置好的.如果你的管理机上还没有安装,那你需要执行如上的命令.
+
+.. _windows_inventory:
+
+Inventory
+`````````
+
+Ansible's支持windows需要依赖于少量标准变量来表明远程主机的username, password, and connection type (windows).这些变量大部分都很容易被设置好.在 Ansible 中通过用来代替 SSH-keys 或 密码输入::
+
+    [windows]
+    winserver1.example.com
+    winserver2.example.com
+
+在 group_vars/windows.yml,定义如下 inventory 变量::
+
+    # it is suggested that these be encrypted with ansible-vault:
+    # ansible-vault edit group_vars/windows.yml
+
+    ansible_ssh_user: Administrator
+    ansible_ssh_pass: SecretPasswordGoesHere
+    ansible_ssh_port: 5986
+    ansible_connection: winrm
+
+需要注意的是这里的 ssh_port 不是真正的SSH协议的端口,but this is a holdover variable name from how Ansible is mostly an SSH-oriented system.(这句也没看懂)再重复一遍,Windows 管理主机不是通过SSH协议.
+
+如果你已经安装了 ``kerberos`` 模块和 ``ansible_ssh_user`` 包括 ``@`` (e.g. ``username@realm``), Ansible会先尝试Kerberos认证. *这种方式主要用你通过Kerberos在远程主机上的认证而不是 ``ansible_ssh_user`` *.如果上述办法失败了,要么是因为你没有在管理机上签署(signed into)Kerberos,要么是因为远程主机上对应的域帐户不可用,接着 Ansible 将返回原始("plain")username/password的认证方式.
+
+当你使用 playbook 时,请不要忘记指定 --ask-vault-pass 提供密码来解锁文件.
+
+When using your playbook, don't forget to specify --ask-vault-pass to provide the password to unlock the file.
+
+使用如下命令来测试你的配置,尝试连接你的 Windows 节点.注意:这不是ICMP ping,只是利用 Windows 远程工具来检测 Ansible 的信道是否正常::
+
+    ansible windows [-i inventory] -m win_ping --ask-vault-pass
+
+如果你还没有在你的系统上做任何准备工作,那上面的命令是无法正常工作的. 在下面最近的章节将会介绍 "how to enable PowerShell remoting" - 如果有需要的话也将介绍 "how to upgrade PowerShell to a version that is 3 or higher" .
+
+你可以稍后再执行该命令,以确保一切都能正常工作.
+
+.. _windows_system_prep:
+
+Windows System Prep
+```````````````````
+
+In order for Ansible to manage your windows machines, you will have to enable PowerShell remoting configured.
+
+To automate setup of WinRM, you can run `this PowerShell script <https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1>`_ on the remote machine. 
+
+Admins may wish to modify this setup slightly, for instance to increase the timeframe of
+the certificate.
+
+.. note::
+   On Windows 7 and Server 2008 R2 machines, due to a bug in Windows 
+   Management Framework 3.0, it may be necessary to install this
+   hotfix http://support.microsoft.com/kb/2842230 to avoid receiving
+   out of memory and stack overflow exceptions.  Newly-installed Server 2008
+   R2 systems which are not fully up to date with windows updates are known
+   to have this issue.   
+
+   Windows 8.1 and Server 2012 R2 are not affected by this issue as they
+   come with Windows Management Framework 4.0.
+
+.. _getting_to_powershell_three_or_higher:
+
+Getting to PowerShell 3.0 or higher
+```````````````````````````````````
+
+PowerShell 3.0 or higher is needed for most provided Ansible modules for Windows, and is also required to run the above setup script. Note that PowerShell 3.0 is only supported on Windows 7 SP1, Windows Server 2008 SP1, and later releases of Windows.
+
+Looking at an ansible checkout, copy the `examples/scripts/upgrade_to_ps3.ps1 <https://github.com/cchurch/ansible/blob/devel/examples/scripts/upgrade_to_ps3.ps1>`_ script onto the remote host and run a PowerShell console as an administrator.  You will now be running PowerShell 3 and can try connectivity again using the win_ping technique referenced above.
+
+.. _what_windows_modules_are_available:
+
+What modules are available
+``````````````````````````
+
+Most of the Ansible modules in core Ansible are written for a combination of Linux/Unix machines and arbitrary web services, though there are various 
+Windows modules as listed in the `"windows" subcategory of the Ansible module index <http://docs.ansible.com/list_of_windows_modules.html>`_.  
+
+Browse this index to see what is available.
+
+In many cases, it may not be necessary to even write or use an Ansible module.
+
+In particular, the "script" module can be used to run arbitrary PowerShell scripts, allowing Windows administrators familiar with PowerShell a very native way to do things, as in the following playbook::
+
+    - hosts: windows
+      tasks:
+        - script: foo.ps1 --argument --other-argument
+
+Note there are a few other Ansible modules that don't start with "win" that also function, including "slurp", "raw", and "setup" (which is how fact gathering works).
+
+.. _developers_developers_developers:
+
+Developers: Supported modules and how it works
+``````````````````````````````````````````````
+
+Developing ansible modules are covered in a `later section of the documentation <http://docs.ansible.com/developing_modules.html>`_, with a focus on Linux/Unix.
+What if you want to write Windows modules for ansible though?
+
+For Windows, ansible modules are implemented in PowerShell.  Skim those Linux/Unix module development chapters before proceeding.
+
+Windows modules live in a "windows/" subfolder in the Ansible "library/" subtree.  For example, if a module is named
+"library/windows/win_ping", there will be embedded documentation in the "win_ping" file, and the actual PowerShell code will live in a "win_ping.ps1" file.  Take a look at the sources and this will make more sense.
+
+Modules (ps1 files) should start as follows::
+
+    #!powershell
+    # <license>
+
+    # WANT_JSON
+    # POWERSHELL_COMMON
+
+    # code goes here, reading in stdin as JSON and outputting JSON
+
+The above magic is necessary to tell Ansible to mix in some common code and also know how to push modules out.  The common code contains some nice wrappers around working with hash data structures and emitting JSON results, and possibly a few more useful things.  Regular Ansible has this same concept for reusing Python code - this is just the windows equivalent.
+
+What modules you see in windows/ are just a start.  Additional modules may be submitted as pull requests to github.
+
+.. _windows_and_linux_control_machine:
+
+Reminder: You Must Have a Linux Control Machine
+```````````````````````````````````````````````
+
+Note running Ansible from a Windows control machine is NOT a goal of the project.  Refrain from asking for this feature,
+as it limits what technologies, features, and code we can use in the main project in the future.  A Linux control machine
+will be required to manage Windows hosts.
+
+Cygwin is not supported, so please do not ask questions about Ansible running from Cygwin.
+
+.. _windows_facts:
+
+Windows Facts
+`````````````
+
+Just as with Linux/Unix, facts can be gathered for windows hosts, which will return things such as the operating system version.  To see what variables are available about a windows host, run the following::
+
+    ansible winhost.example.com -m setup
+
+Note that this command invocation is exactly the same as the Linux/Unix equivalent.
+
+.. _windows_playbook_example:
+
+Windows Playbook Examples
+`````````````````````````
+
+Look to the list of windows modules for most of what is possible, though also some modules like "raw" and "script" also work on Windows, as do "fetch" and "slurp".
+
+Here is an example of pushing and running a PowerShell script::
+
+    - name: test script module
+      hosts: windows
+      tasks:
+        - name: run test script
+          script: files/test_script.ps1
+
+Running individual commands uses the 'raw' module, as opposed to the shell or command module as is common on Linux/Unix operating systems::
+
+    - name: test raw module
+      hosts: windows
+      tasks:
+        - name: run ipconfig
+          raw: ipconfig
+          register: ipconfig
+        - debug: var=ipconfig
+
+And for a final example, here's how to use the win_stat module to test for file existence.  Note that the data returned by the win_stat module is slightly different than what is provided by the Linux equivalent::
+
+    - name: test stat module
+      hosts: windows
+      tasks:
+        - name: test stat module on file
+          win_stat: path="C:/Windows/win.ini"
+          register: stat_file
+
+        - debug: var=stat_file
+
+        - name: check stat_file result
+          assert:
+              that:
+                 - "stat_file.stat.exists"
+                 - "not stat_file.stat.isdir"
+                 - "stat_file.stat.size > 0"
+                 - "stat_file.stat.md5"
+
+Again, recall that the Windows modules are all listed in the Windows category of modules, with the exception that the "raw", "script", and "fetch" modules are also available.  These modules do not start with a "win" prefix.
+
+.. _windows_contributions:
+
+Windows Contributions
+`````````````````````
+
+Windows support in Ansible is still very new, and contributions are quite welcome, whether this is in the
+form of new modules, tweaks to existing modules, documentation, or something else.  Please stop by the ansible-devel mailing list if you would like to get involved and say hi.
+
+.. seealso::
+
+   :doc:`developing_modules`
+       How to write modules
+   :doc:`playbooks`
+       Learning ansible's configuration management language
+   `List of Windows Modules <http://docs.ansible.com/list_of_windows_modules.html>`_
+       Windows specific module list, all implemented in PowerShell
+   `Mailing List <http://groups.google.com/group/ansible-project>`_
+       Questions? Help? Ideas?  Stop by the list on Google Groups
+   `irc.freenode.net <http://irc.freenode.net>`_
+       #ansible IRC chat channel
+
+
