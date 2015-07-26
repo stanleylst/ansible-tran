@@ -1,13 +1,12 @@
 Playbooks: Special Topics
 `````````````````````````
-Here are some playbook features that not everyone may need to learn, but can be quite useful for particular applications. 
-Browsing these topics is recommended as you may find some useful tips here, but feel free to learn the basics of Ansible first 
-and adopt these only if they seem relevant or useful to your environment.
+
+这里的一些 playbook 特性可能不是每个人都需要学习的，但是它们对于一些特定的应用来说是相当有用的。推荐你浏览这些主题，你也许能在其中发现有用的贴士。
+但请先学习 Ansible 的基础知识，并仅在他们对你的环境看似有关或有用时再采用。
 
 .. toctree::
    :maxdepth: 1
 
-   become
    playbooks_acceleration
    playbooks_async
    playbooks_checkmode
