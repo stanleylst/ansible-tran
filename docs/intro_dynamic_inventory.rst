@@ -14,7 +14,7 @@
 Ansible 通过外部 inventory 系统支持以上的选择。插件目录包已经含有一些选项 -- 包括 EC2/Eucalyptus, Rackspace Cloud, and OpenStack, 稍后会详细介绍它们。
 
 
-:doc:`tower` 也提供了一个数据库来存储 inventory , 支持 web 或 REST 访问。Tower 与所有你使用的 Ansible 动态 inventory 源保持同步，也提供一个
+:doc: `tower` 也提供了一个数据库来存储 inventory , 支持 web 或 REST 访问。Tower 与所有你使用的 Ansible 动态 inventory 源保持同步，也提供一个
 图形化的 inventory 编辑器。有了记录着你的所有主机的数据库记录，便可以关联过去的事件历史，可以看到在上一次 playbook 运行时，哪一个出现了运行失败的情况。
 
 更多关于如何编写你自己的动态 inventory 源的信息，请参见 :doc:`developing_inventory`.

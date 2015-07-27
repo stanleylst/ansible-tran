@@ -1,19 +1,14 @@
-Asynchronous Actions and Polling
+异步操作和轮询
 ================================
 
 
-默认情况下,在 playbook 块中的任务意味着 SSH 连接会保持着直至每个节点都完成任务.
-这也许不是一直是你想要,你也许会想要任务的运行时间长于 SSH 的超时时间.
+默认情况下playbook中的任务执行时会一直保持连接,直到该任务在每个节点都执行完毕.有时这是不必要的,比如有些操作运行时间比SSH超时时间还要长.
 
+解决该问题最简单的方式是一起执行它们,然后轮询直到任务执行完毕.
 
-最容易的实现方法是一次启动所有的任务然后不停地轮询直至所有的任务都完成.
+你也可以对执行时间非常长（有可能遭遇超时）的操作使用异步模式.
 
-
-你也会想要在执行容易超时的任务时使用异步模式.
-
-
-要想使一个任务异步执行,你需要指定它的最长运行时间以及对它状态的轮询频率.如果你
-不指定 poll 的值,那么默认下每 10 秒会查询一次. `poll`::
+为了异步启动一个任务,可以指定其最大超时时间以及轮询其状态的频率.如果你没有为 `poll` 指定值,那么默认的轮询频率是10秒钟::
 
     ---
 
@@ -28,9 +23,10 @@ Asynchronous Actions and Polling
         poll: 5
 
 .. note::
-   异步的执行时间没有设置默认值.如果你设置 'async' 的默认值,那么 Ansible 默认就会同步执行该任务.
 
-另外,如果你不需要等待任务的完成,你可以通过设定 poll 的值为 0 即可实现"发射后不管" ::
+   `async` 并没有默认值,如果你没有指定 `async` 关键字,那么任务会以同步的方式运行,这是Ansible的默认行为.
+
+另外,如果你不需要等待任务执行完毕,你可以指定 `poll` 值为0而启用 "启动并忽略" ::
 
     ---
 
@@ -45,13 +41,14 @@ Asynchronous Actions and Polling
         poll: 0
 
 .. note::
-   你不应该将任何要求排它锁的任务设置为"发射后不管",诸如 yum 操作.
-   如果你希望稍后对同样的资源执行 playbook 中的其他任务,这将产生冲突.
+
+   对于要求排它锁的操作,如果你需要在其之后对同一资源执行其它任务,那么你不应该对该操作使用"启动并忽略".比如yum事务.
 
 .. note::
-   给 ``--forks`` 选项设置一个更高的值会使异步任务启动的更快.这也会增加轮询的效率.
 
-如果你想要是一个任务执行"发射后不管"的变种,即"发射后暂不管,稍后检查",你可以以如下的方式实现::
+   ``--forks`` 参数值过大会更快的触发异步任务.也会加快轮询的效率.
+
+当你想对 "启动并忽略" 做个变种,改为"启动并忽略,稍后再检查",你可以使用以下方式执行任务::
 
       --- 
       # Requires ansible 1.8+
@@ -68,15 +65,17 @@ Asynchronous Actions and Polling
         retries: 30
 
 .. note::
-   如果 ``async:`` 设置的值不够高,这会造成"check on it later"的任务执行失败.
-   因为用来检验 ``async_status:`` 临时状态文件还未被写入.
+
+如果 ``async:`` 值太小,可能会导致 "稍后检查" 任务执行失败,因为 ``async_status::`` 的临时状态文件还未被写入信息,而"稍后检查"任务就试图读取此文件.
+
 
 .. seealso::
 
+
    :doc:`playbooks`
-       An introduction to playbooks
-   `User Mailing List <http://groups.google.com/group/ansible-devel>`_
-       Have a question?  Stop by the google group!
+       playbook介绍
+   `用户邮件列表 <http://groups.google.com/group/ansible-devel>`_
+       有问题请访问google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #ansible IRC 聊天频道
 
