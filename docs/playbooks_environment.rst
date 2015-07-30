@@ -1,5 +1,5 @@
-Setting the Environment (and Working With Proxies)
-==================================================
+配置环境 (在代理环境中)
+========================
 
 .. versionadded:: 1.1
 
