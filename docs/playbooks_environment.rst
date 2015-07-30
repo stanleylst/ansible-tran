@@ -16,7 +16,7 @@ Ansible 使用 'environment' 关键字对于环境部署的配置非常简单容
           environment:
             http_proxy: http://proxy.example.com:8080
 
-The environment can also be stored in a variable, and accessed like so::
+environment 也可以被存储在变量中,像如下方式访问::
 
     - hosts: all
       remote_user: root
@@ -31,8 +31,7 @@ The environment can also be stored in a variable, and accessed like so::
         - apt: name=cobbler state=installed
           environment: proxy_env
 
-While just proxy settings were shown above, any number of settings can be supplied.  The most logical place
-to define an environment hash might be a group_vars file, like so::
+虽然上面只展示了 proxy 设置,但其实可以同时其实支持多个设置. 大部分合合乎逻辑的地方来定义一个环境变量都可以成为 group_vars 文件,示例如下::
 
     ---
     # file: group_vars/boston
