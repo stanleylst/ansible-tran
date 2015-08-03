@@ -44,37 +44,35 @@ Cobbler 除了主要用于操作系统的 kickoff 安装，管理 DHCP 和 DNS, 
     cobbler system edit --name=foo --dns-name="foo.example.com" --mgmt-classes="atlanta" --ksmeta="c=4"
     cobbler system edit --name=bar --dns-name="bar.example.com" --mgmt-classes="atlanta" --ksmeta="c=5"
 
-In the example above, the system 'foo.example.com' will be addressable by ansible directly, but will also be addressable when using the group names 'webserver' or 'atlanta'.  Since Ansible uses SSH, we'll try to contact system foo over 'foo.example.com', only, never just 'foo'.  Similarly, if you try "ansible foo" it wouldn't find the system... but "ansible 'foo*'" would, because the system DNS name starts with 'foo'.
+上面这个例子中, system 中的 'foo.example.com' 将直接被 ansible 寻址, 但在使用组 'webserver' 或 'atlanta' 时也将被寻址. 因为 Ansible使用的是 SSH，所以我们可以而且只能通过'foo.example.com' 来connect system foo,如果只是 'foo' 则找不到.类似的,如果你尝试使用 "ansible foo" 也无法找到 system...但是 "ansible 'foo*'" 是可以的,因为 system DNS name 是以 foo 开头的.
 
-The script doesn't just provide host and group info.  In addition, as a bonus, when the 'setup' module is run (which happens automatically when using playbooks), the variables 'a', 'b', and 'c' will all be auto-populated in the templates::
+该脚本不仅提供了主机和组信息. 额外的,作为奖励,当 'setup' 模块运行的时候(当使用 playbooks 时会自动运行), 'a','b','c' 变量会自动填充到模块::
 
     # file: /srv/motd.j2
     Welcome, I am templated with a value of a={{ a }}, b={{ b }}, and c={{ c }}
 
-Which could be executed just like this::
+可以像如下方式运行::
 
     ansible webserver -m setup
     ansible webserver -m template -a "src=/tmp/motd.j2 dest=/etc/motd"
 
 .. note::
-   The name 'webserver' came from cobbler, as did the variables for
-   the config file.  You can still pass in your own variables like
-   normal in Ansible, but variables from the external inventory script
-   will override any that have the same name.
 
-So, with the template above (motd.j2), this would result in the following data being written to /etc/motd for system 'foo'::
+   'webserver' 来自cobbler, 配置文件中的变量也一样. 你可以像往常一样在 Ansible中声明变量,但是如果引用自外部inventory脚本的变量名和声名的脚本名称冲突一样,那么你声明的变量将会被外部inventory脚本中的变量值所覆盖.
+
+所以,在应用如上示例的的模板时(motd.j2),会导致system 'foo' 被写入 /etc/motd 中::
 
     Welcome, I am templated with a value of a=2, b=3, and c=4
 
-And on system 'bar' (bar.example.com)::
+还有 system 'bar' (bar.example.com)::
 
     Welcome, I am templated with a value of a=2, b=3, and c=5
 
-And technically, though there is no major good reason to do it, this also works too::
+从技术上来讲,虽然没有非常好的理由推荐如下方式,但它确实能正常工作::
 
     ansible webserver -m shell -a "echo {{ a }}"
 
-So in other words, you can use those variables in arguments/actions as well.
+换而言之,你可以在 arguments/actions 中同样使用那些变量.
 
 .. _aws_example:
 
