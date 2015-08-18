@@ -5,32 +5,20 @@
 
 .. contents:: Topics
 
-Often a user of a configuration management system will want to keep inventory
-in a different software system.  Ansible provides a basic text-based system as described in
-:doc:`intro_inventory` but what if you want to use something else?
-
 使用配置管理系统经常有一种需求，可能要在其他的软件系统中保存自己的 inventory 配置信息。
 
 Ansible 本身通过基于文本的方式来记录 inventory 配置信息，这在前面已介绍过（详见 :doc:`intro_inventory` ）。 
 
 除此之外，Ansible 也支持用其他方式保存配置信息。
 
-Frequent examples include pulling inventory from a cloud provider, LDAP, `Cobbler <http://cobbler.github.com>`_,
-or a piece of expensive enterprisey CMDB software.
-
 在其他软件系统保存配置信息的例子有::
-1， 从云端拉取 inventory
-2， LDAP（Lightweight Directory Access Protocol，轻量级目录访问协议）
-3， `Cobbler <http://cobbler.github.com>`_ 
-4， 或者是一份昂贵的企业版的 CMDB（配置管理数据库） 软件。
 
-Ansible easily supports all of these options via an external inventory system.  The plugins directory contains some of these already -- including options for EC2/Eucalyptus, Rackspace Cloud, and OpenStack, examples of some of which will be detailed below.
+	1， 从云端拉取 inventory
+	2， LDAP（Lightweight Directory Access Protocol，轻量级目录访问协议）
+	3， `Cobbler <http://cobbler.github.com>`_ 
+	4， 或者是一份昂贵的企业版的 CMDB（配置管理数据库） 软件。
 
 对于这些需求，Ansible 可通过一个外部 inventory 系统来支持。在 ansible 的 "/plugins" 插件目录下已经含有一些选项 -- 包括 EC2/Eucalyptus， Rackspace Cloud，and OpenStack，我们稍后会详细介绍它们。
-
-:doc:`tower` also provides a database to store inventory results that is both web and REST Accessible.  Tower syncs with all Ansible dynamic inventory sources you might be using, and also includes a graphical inventory editor. By having a database record of all of your hosts, it's easy to correlate past event history and see which ones have had failures on their last playbook runs.
-
-For information about writing your own dynamic inventory source, see :doc:`developing_inventory`.
 
 Ansible :doc:`tower` 提供了一个数据库来存储 inventory 配置信息, 这个数据库可以通过 web 访问，或通过 REST 访问。
 Tower 与所有你使用的 Ansible 动态 inventory 源保持同步，并提供了一个图形化的 inventory 编辑器。
@@ -143,52 +131,46 @@ inventory 文件的核心部分，是一些名字到目的地址的映射。默�
 改为一个实例的私有 DNS 名。对于在私有子网的 VPC 上运行 Ansible ，这种设置很重要，使得我们可以使用内部IP地址之外的方式访问到一个VPC。在 ``ec2.ini`` 文件中，
 `vpc_destination_variable` 可以命名为任意一个 `boto.ec2.instance <http://docs.pythonboto.org/en/latest/ref/ec2.html#module-boto.ec2.instance>`_ 变量。
 
-EC2 外部 inventory 提供了一种从多个组到实例的映射::
+EC2 外部 inventory 提供了一种从多个组到实例的映射:
 
 	Global
 	全局
-	  All instances are in group ``ec2``.
-	  所有的实例都属于 ``ec2``这个组。
+	  所有的实例都属于 ``ec2`` 这个组。
 
 	Instance ID
 	实例ID
-	  These are groups of one since instance IDs are unique.
 	  例如:
 	  ``i-00112233``
 	  ``i-a1b1c1d1``
 	  
 
 	Region
-	  A group of all instances in an AWS region.
 	  属于一个 AWS region 的所有实例构成的一个组。
-	  e.g.
+	  例如:
 	  ``us-east-1``
 	  ``us-west-2``
 
 	Availability Zone
 	可用性区域
-	  A group of all instances in an availability zone.
 	  所有属于 availability zone 的实例构成一个组。
-	  e.g.
+	  例如:
 	  ``us-east-1a``
 	  ``us-east-1b``
 
 	Security Group
 	安全组
-	  Instances belong to one or more security groups. A group is created for each security group, with all characters except alphanumerics, dashes (-) converted to underscores (_). Each group is prefixed by ``security_group_``
-	  实例可属于一个或多个安全组。每一个组的前缀都是 ``security_group_``，符号(-) 已被转换为(_). with all characters except alphanumerics (这句没明白)
+	  实例可属于一个或多个安全组。每一个组的前缀都是 ``security_group_`` ，符号(-) 已被转换为(_). with all characters except alphanumerics (这句没明白)
 	  
-	  e.g.
+	  例如:
 	  ``security_group_default``
 	  ``security_group_webservers``
 	  ``security_group_Pete_s_Fancy_Group``
 
 	Tags
 	标签
-	  Each instance can have a variety of key/value pairs associated with it called Tags. The most common tag key is 'Name', though anything is possible. Each key/value pair is its own group of instances, again with special characters converted to underscores, in the format ``tag_KEY_VALUE``
 	  每一个实例可有多个不同的 key/value 键值对，这些键值对被称为标签。标签名可以随意定义，最常见的标签是 'Name'。每一个键值对是这个实例自己的组。
 	  特殊字符已转换为下划线，格式为 ``tag_KEY_VALUE``
-	  e.g.
+	  例如:
 	  ``tag_Name_Web``
 	  ``tag_Name_redis-master-001``
 	  ``tag_aws_cloudformation_logical-id_WebServerGroup``
