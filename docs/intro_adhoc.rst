@@ -75,6 +75,7 @@ Parallelism and Shell Commands
 
 
 .. note::
+
     在有些比较罕见的情况下,一些用户会受到安全规则的限制,使用 sudo 切换时只能运行指定的命令.这与 ansible
     的 no-bootstrapping 思想相悖,而且 ansible 有几百个模块,在这种限制下无法进行正常的工作.
     所以执行 ansible 命令时,应使用一个没有受到这种限制的账号来执行.One way of doing this without sharing access to unauthorized users would be gating Ansible with :doc:`tower`, which
@@ -92,6 +93,7 @@ ansible有许多模块,默认是 'command',也就是命令模块,我们可以通
 默认设定就OK了.一会在其他例子中,我们会使用 ``-m`` 运行其他的模块,详情参见 :doc:`modules` .
 
 .. note::
+
     :ref:`command` 模块不支持 shell 变量,也不支持管道等 shell 相关的东西.如果你想使用 shell相关的这些东西,
     请使用'shell' 模块.两个模块之前的差别请参考 :doc:`modules` .
 

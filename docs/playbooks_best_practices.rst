@@ -295,8 +295,6 @@ Stage vs Production
 +++++++++++++++++++
 
 如前所述,通过使用不同的清单文件来分离你的 stage 和 生产环境是个好方法.你可以通过 -i 来指定.把它们放在同一个文件中会有惊喜哦！
-
-size and you can use group variables to control the differences between those environments.
 在部署到生产环境之前,先在 stage 环境中做测试是个好主意.你的环境不必保持同样的大小,你可以通过 分组变量来对不同的环境进行控制.
 
 .. _rolling_update:

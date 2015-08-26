@@ -131,8 +131,8 @@ Ansible将会对远程系统模块参数记录在远程的syslog中,除非一个
    `irc.freenode.net <http://irc.freenode.net>`_
        #ansible IRC chat channel
 
-#.. 同样参见::
-#
+.. 同样参见::
+
 #   :doc:`intro_inventory`
 #       更多的关于 inventory的信息
 #   :doc:`intro_adhoc`

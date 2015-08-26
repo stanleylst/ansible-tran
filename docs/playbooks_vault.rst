@@ -9,104 +9,102 @@ Ansible 1.5的新版本中, "Vault" 作为 ansible 的一项新功能可将例�
 
 .. _what_can_be_encrypted_with_vault:
 
-What Can Be Encrypted With Vault
-````````````````````````````````
+Vault可以加密些什么
+````````````````````````````
 
-The vault feature can encrypt any structured data file used by Ansible.  This can include "group_vars/" or "host_vars/" inventory variables, variables loaded by "include_vars" or "vars_files", or variable files passed on the ansible-playbook command line with "-e @file.yml" or "-e @file.json".  Role variables and defaults are also included!
+vault 可以加密任何 Ansible 使用的结构化数据文件. 甚至可以包括 "group_vars/" 或 "host_vars/" inventory 变量, "include_vars" 或 "vars_files" 加载的变量, 通过 ansible-playbook 命令行使用 "-e @file.yml" 或 "-e @file.json" 命令传输的变量文件. Role 变量和所有默认的变量都可以被 vault 加密.
 
-Because Ansible tasks, handlers, and so on are also data, these can also be encrypted with vault.  If you'd like to not betray what variables you are even using, you can go as far to keep an individual task file entirely encrypted.  However, that might be a little much and could annoy your coworkers :)
+因为 Ansible tasks, handlers等都是数据文件, 所有的这些均可以被 vault 加密. 如果你不喜欢你使用的变量被泄漏,你可以将整个 task 文件部分加密. 然后,这个工作量比较大而且可能给你的同事带来不便哦 :)
 
 .. _creating_files:
 
-Creating Encrypted Files
+创建加密文件
 ````````````````````````
 
-To create a new encrypted data file, run the following command::
+执行如下命令,创建加密文件::
 
    ansible-vault create foo.yml
 
-First you will be prompted for a password.  The password used with vault currently must be the same for all files you wish to use together at the same time.
+首先你将被提示输出密码, 经过Vault加密过的文件如需查看需同时输入密码后才能进行.
 
-After providing a password, the tool will launch whatever editor you have defined with $EDITOR, and defaults to vim.  Once you are done with the editor session, the file will be saved as encrypted data.
+提供密码后, 工具将加载你定义的 $EDITOR 的编辑工具默认是 vim, 一旦你关闭了编辑会话框,生成后的文件将会是加密文件.
 
-The default cipher is AES (which is shared-secret based).
+默认加密方式是 AES (基于共享密钥)
 
 .. _editing_encrypted_files:
 
-Editing Encrypted Files
+Editing加密文件
 ```````````````````````
 
-To edit an encrypted file in place, use the `ansible-vault edit` command.
-This command will decrypt the file to a temporary file and allow you to edit
-the file, saving it back when done and removing the temporary file::
+编辑加密文件,使用 `ansible-vault edit` . 该命令会先加密文件为临时文件并允许你编辑这个文件,当完成编辑后会保存回你所命名的文件并删除临时文件::
 
    ansible-vault edit foo.yml
 
 .. _rekeying_files:
 
-Rekeying Encrypted Files
+密钥更新加密文件
 ````````````````````````
 
-Should you wish to change your password on a vault-encrypted file or files, you can do so with the rekey command::
+如果你希望变更密码,使用如下 命令::
 
     ansible-vault rekey foo.yml bar.yml baz.yml
 
-This command can rekey multiple data files at once and will ask for the original
-password and also the new password.
+如上命令可以同时批量修改多个文件的组织密码并重新设置新密码.
 
 .. _encrypting_files:
 
-Encrypting Unencrypted Files
+加密普通文件
 ````````````````````````````
 
-If you have existing files that you wish to encrypt, use the `ansible-vault encrypt` command.  This command can operate on multiple files at once::
+如果你希望加密一个已经存在的文件,使用 `ansible-vault encrypt` . 该命令也可同时批量操作多个文件::
  
    ansible-vault encrypt foo.yml bar.yml baz.yml
 
 .. _decrypting_files:
 
-Decrypting Encrypted Files
+解密已加密文件
 ``````````````````````````
 
-If you have existing files that you no longer want to keep encrypted, you can permanently decrypt them by running the `ansible-vault decrypt` command.  This command will save them unencrypted to the disk, so be sure you do not want `ansible-vault edit` instead::
+如果不希望继续加密一个已经加密过的文件,通过 `ansible-vault decrypt`  你可以永久解密. 命令将解密并保存到硬盘上,这样你不用再使用 `ansible-vault edit` 来编辑文件了::
 
     ansible-vault decrypt foo.yml bar.yml baz.yml
 
 .. _viewing_files:
 
-Viewing Encrypted Files
+查阅已加密文件
 ```````````````````````
 
 *Available since Ansible 1.8*
 
-If you want to view the contents of an encrypted file without editing it, you can use the `ansible-vault view` command::
+如果你不希望通过编辑的方式来查看文件, `ansible-vault view`  可以满足你的需要::
 
     ansible-vault view foo.yml bar.yml baz.yml
 
 .. _running_a_playbook_with_vault:
 
-Running a Playbook With Vault
+在Vault下运行Playbook
 `````````````````````````````
 
-To run a playbook that contains vault-encrypted data files, you must pass one of two flags.  To specify the vault-password interactively::
+执行 vault 加密后的playbook文件,最少需要提交如下两个标志之一. 交互式的指定 vault 的密码文件::
 
     ansible-playbook site.yml --ask-vault-pass
 
-This prompt will then be used to decrypt (in memory only) any vault encrypted files that are accessed.  Currently this requires that all files be encrypted with the same password.
+该提示被用来解密(仅在内存中)任何 vault 加密访问过的文件. 目前这些文件中所有的指令请求将被使用相同的密码加密.
 
-Alternatively, passwords can be specified with a file or a script, the script version will require Ansible 1.7 or later.  When using this flag, ensure permissions on the file are such that no one else can access your key and do not add your key to source control::
+另外,密码也可以定义在一个文件或者一个脚本中,但是需要 Ansible 1.7 以上的版本才能支持. 当使用该功能时,一定要确认密码文件的权限是安全的以确保没有人可以随意访问或者变更密码文件::
 
     ansible-playbook site.yml --vault-password-file ~/.vault_pass.txt
 
     ansible-playbook site.yml --vault-password-file ~/.vault_pass.py
 
-The password should be a string stored as a single line in the file.
+密码存储一行一个
 
-If you are using a script instead of a flat file, ensure that it is marked as executable, and that the password is printed to standard output.  If your script needs to prompt for data, prompts can be sent to standard error.
+如果你使用的是脚本而不是普通文件,确保脚本是可执行的,这样密码可以输出至标准设备.如果你的脚本需要提示输入数据,那提示可以被发送到标准错误.
 
-This is something you may wish to do if using Ansible from a continuous integration system like Jenkins.
+如果你是从持续集成系统(例如Jenkins)中使用 Ansible 的话上面的这种情况你会用的到.
 
-(The `--vault-password-file` option can also be used with the :ref:`ansible-pull` command if you wish, though this would require distributing the keys to your nodes, so understand the implications -- vault is more intended for push mode).
+(`--vault-password-file` 参数可以在 :ref:`ansible-pull` 命令中被使用,尽管这将需要分发keys到对应的节点上,所以 这些了解这些隐性问题后 --  vault 更倾向使用 push 方式)
+
 
 
 

@@ -5,7 +5,7 @@ Patterns
 
 在Ansible中，Patterns 是指我们怎样确定由哪一台主机来管理。 意思就是与哪台主机进行交互。 但是在:doc:`playbooks` 中它指的是对应主机应用特定的配置或执行特定进程.
 
-我们再来复习下:doc:`intro_adhoc`章节中介绍的命令用法,命令格式如下::
+我们再来复习下:doc:`intro_adhoc` 章节中介绍的命令用法,命令格式如下::
 
     ansible <pattern_goes_here> -m <module_name> -a <arguments>
 
