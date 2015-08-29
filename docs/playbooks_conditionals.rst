@@ -6,7 +6,7 @@
 
 常常来说，一个play的结果经常取决于一个变量的值，事件（从远端系统得到事件），
 或者之前任务的结果。在有些情况下，这些变量的值也会取决于其他变量。
-进而，可以建立多余的组机基于这些主机是否符合某些条件来操控主机，
+进而，可以建立多余的组基于这些主机是否符合某些条件来操控主机，
 Ansible 提供了很多不同选项，来控制执行流。 
 让我们详细看看这些都是啥。 
 
@@ -138,8 +138,7 @@ When 语句
       - name: make sure apache is running
         service: name={{ apache }} state=running
 
-.. 注意::
-   'ansible_os_family'已经被导入到为vars_files定义的文件名列表中了。 
+.. 注意::'ansible_os_family'已经被导入到为vars_files定义的文件名列表中了。 
 
 提醒一下，很多的不同的YAML文件只是包含键和值:: 
 
@@ -183,7 +182,6 @@ Ansible 中的设置方式———— 从任务中把参数分开，这样可�
            - search_location_one/somedir/
            - /opt/other_location/somedir/
 
-Register Variables
 注册变量
 ``````````````````
 
@@ -204,7 +202,7 @@ Register Variables
           - shell: echo "motd contains the word hi"
             when: motd_contents.stdout.find('hi') != -1
 
-就像上面展示的，这个注册后的参数的内容为字符串'stdout'是可以访问。 
+就像上面展示的那样，这个注册后的参数的内容为字符串'stdout'是可以访问。 
 这个注册了以后的结果，如果像上面展示的，可以转化为一个list（或者已经是一个list）,就可以在任务中的"with_items"中使用。
 "stdout_lines"在对象中已经可以访问了，当然如果你喜欢也可以调用 "home_dirs.stdout.split()" , 也可以用其它字段切割::
 
