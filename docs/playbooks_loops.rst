@@ -330,6 +330,8 @@ Finding First Matched Files
 This isn't exactly a loop, but it's close.  What if you want to use a reference to a file based on the first file found
 that matches a given criteria, and some of the filenames are determined by variable names?  Yes, you can do that as follows::
 
+这其实不是一个循环，但和循环很相似。如果你想引用一个文件，而
+
     - name: INTERFACES | Create Ansible header for /etc/network/interfaces
       template: src={{ item }} dest=/etc/foo.conf
       with_first_found:
