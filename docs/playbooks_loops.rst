@@ -323,14 +323,14 @@ The registered variable will also have a new key "attempts" which will have the 
 Finding First Matched Files
 
 查找第一个匹配的文件
-```````````````````````````
+``````````````````````````
 
 .. note:: This is an uncommon thing to want to do, but we're documenting it for completeness.  You probably won't be reaching for this one often.
 
 This isn't exactly a loop, but it's close.  What if you want to use a reference to a file based on the first file found
 that matches a given criteria, and some of the filenames are determined by variable names?  Yes, you can do that as follows::
 
-这其实不是一个循环，但和循环很相似。如果你想引用一个文件，而
+这其实不是一个循环，但和循环很相似。如果你想引用一个文件，而想基于第一个符合给定条件的文件，而其中一些文件名中的部分则是变量名，那么你可以这样做::
 
     - name: INTERFACES | Create Ansible header for /etc/network/interfaces
       template: src={{ item }} dest=/etc/foo.conf
@@ -339,6 +339,8 @@ that matches a given criteria, and some of the filenames are determined by varia
         - "default_foo.conf"
 
 This tool also has a long form version that allows for configurable search paths.  Here's an example::
+
+该功能还有一个更完整的版本，可以配置搜索路径。请看以下示例::
 
     - name: some configuration template
       template: src={{ item }} dest=/etc/file.cfg mode=0444 owner=root group=root
@@ -356,6 +358,8 @@ This tool also has a long form version that allows for configurable search paths
 .. _looping_over_the_results_of_a_program_execution:
 
 Iterating Over The Results of a Program Execution
+
+对程序的执行结果进行迭代
 `````````````````````````````````````````````````
 
 .. note:: This is an uncommon thing to want to do, but we're documenting it for completeness.  You probably won't be reaching for this one often.
@@ -364,6 +368,8 @@ Sometimes you might want to execute a program, and based on the output of that p
 Ansible provides a neat way to do that, though you should remember, this is always executed on the control machine, not the local
 machine::
 
+有时你想执行一个程序，而且基于该程序的输出，按行进行循环。Ansible提供了一个优雅的方式来达到这点。但请记住，该功能始终只能在控制机上执行，而不是本地机器::
+
     - name: Example of looping over a command result
       shell: /usr/bin/frobnicate {{ item }}
       with_lines: /usr/bin/frobnications_per_host --param {{ inventory_hostname }}
@@ -371,7 +377,11 @@ machine::
 Ok, that was a bit arbitrary.  In fact, if you're doing something that is inventory related you might just want to write a dynamic
 inventory source instead (see :doc:`intro_dynamic_inventory`), but this can be occasionally useful in quick-and-dirty implementations.
 
+好吧，这好像有点武断。事实上，如果你在做一些与inventory有关的事情，比如你想编写一个动态的inventory源(参见 :doc:`intro_dynamic_inventory`)，那么借助该功能能够快速实现。
+
 Should you ever need to execute a command remotely, you would not use the above method.  Instead do this::
+
+如果你想一直远程执行命令，那么以上方法则不行。但你可以这样写::
 
     - name: Example of looping over a REMOTE command result
       shell: /usr/bin/something
@@ -384,6 +394,8 @@ Should you ever need to execute a command remotely, you would not use the above 
 .. _indexed_lists:
 
 Looping Over A List With An Index
+
+循环带索引的列表
 `````````````````````````````````
 
 .. note:: This is an uncommon thing to want to do, but we're documenting it for completeness.  You probably won't be reaching for this one often.
@@ -393,6 +405,8 @@ Looping Over A List With An Index
 If you want to loop over an array and also get the numeric index of where you are in the array as you go, you can also do that.
 It's uncommonly used::
 
+如果你想循环一个列表，同时得到一个数字索引来标明你当前处于列表什么位置，那么你可以这样做。虽然该方法不太常用::
+
     - name: indexed loop demo
       debug: msg="at array position {{ item.0 }} there is a value {{ item.1 }}"
       with_indexed_items: some_list
@@ -400,12 +414,16 @@ It's uncommonly used::
 .. _flattening_a_list:
 
 Flattening A List
+
+扁平化列表
 `````````````````
 
 .. note:: This is an uncommon thing to want to do, but we're documenting it for completeness.  You probably won't be reaching for this one often.
 
 In rare instances you might have several lists of lists, and you just want to iterate over every item in all of those lists.  Assume
 a really crazy hypothetical datastructure::
+
+在罕见的情况下，你可能要几组列表，列表中会嵌套列表。而你只是想迭代所有列表中的每个元素。比如一个非常疯狂的假定的数据结构::
 
     ----
     # file: roles/foo/vars/main.yml
@@ -417,6 +435,8 @@ a really crazy hypothetical datastructure::
 
 As you can see the formatting of packages in these lists is all over the place.  How can we install all of the packages in both lists?::
 
+你可以看到列表中的包到处都是。那么如果安装两个列表中的所有包那?::
+
     - name: flattened loop demo
       yum: name={{ item }} state=installed 
       with_flattened:
@@ -425,14 +445,22 @@ As you can see the formatting of packages in these lists is all over the place. 
 
 That's how!
 
+这就行了！
+
 .. _using_register_with_a_loop:
 
 Using register with a loop
+
+循环中使用注册器
 ``````````````````````````
 
 When using ``register`` with a loop the data structure placed in the variable during a loop, will contain a ``results`` attribute, that is a list of all responses from the module.
 
+当在一个循环中，对循环的数据结构中使用``register``来注册变量时，数据结构会包含一个``results``属性，这是从模块中得到的所有响应的一个列表.
+
 Here is an example of using ``register`` with ``with_items``::
+
+以下是在``with_items``中使用``register``的示例::
 
     - shell: echo "{{ item }}"
       with_items:
@@ -441,6 +469,8 @@ Here is an example of using ``register`` with ``with_items``::
       register: echo
 
 This differs from the data structure returned when using ``register`` without a loop::
+
+返回的数据结构如下，与非循环结构中使用``register``的返回结果是不同的::
 
     {
         "changed": true,
@@ -481,6 +511,8 @@ This differs from the data structure returned when using ``register`` without a 
 
 Subsequent loops over the registered variable to inspect the results may look like::
 
+随后的任务可以用以下方式来循环注册变量，用来检查结果值::
+
     - name: Fail if return code is not 0
       fail:
         msg: "The command ({{ item.cmd }}) did not have a 0 return code"
@@ -490,10 +522,14 @@ Subsequent loops over the registered variable to inspect the results may look li
 .. _writing_your_own_iterators:
 
 Writing Your Own Iterators
+
+自定义迭代
 ``````````````````````````
 
 While you ordinarily shouldn't have to, should you wish to write your own ways to loop over arbitrary datastructures, you can read :doc:`developing_plugins` for some starter
 information.  Each of the above features are implemented as plugins in ansible, so there are many implementations to reference.
+
+虽然你通常无需自定义实现自己的迭代，但如果你想按你自己的方式来循环任意数据结构，你可以阅读:doc:`developing_plugins`来获取一些信息。以上的每个功能都以插件的方式来实现，所以有很多实现可供引用。
 
 .. seealso::
 
