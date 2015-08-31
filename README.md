@@ -7,7 +7,7 @@
 
 翻译后的文档地址:
 
-
+[http://www.178linux.com/doc/ansible/](http://www.178linux.com/doc/ansible/)
 
 
 翻译进度:
