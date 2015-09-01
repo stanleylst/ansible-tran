@@ -3,18 +3,18 @@ Python API
 
 .. contents:: Topics
 
-本章将展示几种有趣的Ansible API调用方式.你可以使用Ansible的Python API来管理节点，可以通过扩展Ansible来响应大量的Python事件，你可以写各种的插件，并且，你可以通过插件来调取外部数据源.本文主要向读者简单介绍一下 Runner 和 Playbook 的API.
+本章将展示几种有趣的Ansible API调用方式.你可以使用Ansible的Python API来管理节点,可以通过扩展Ansible来响应大量的Python事件,你可以写各种的插件,并且,你可以通过插件来调取外部数据源.本文主要向读者简单介绍一下 Runner 和 Playbook 的API.
 
-如果你想使用除Python的其他方法调用Ansible，使用其异步回调事件，或者访问控制，日志管理，可以访问 :doc:`tower`，它提供了非常丰富的 REST API.
+如果你想使用除Python的其他方法调用Ansible,使用其异步回调事件,或者访问控制,日志管理,可以访问 :doc:`tower`,它提供了非常丰富的 REST API.
 
-此外，Ansible本身也是基于他本身的API来实现的，所以你将拥有足够的权限来进行二次封装.本章将讨论Python API的使用.
+此外,Ansible本身也是基于他本身的API来实现的,所以你将拥有足够的权限来进行二次封装.本章将讨论Python API的使用.
 
 .. _python_api:
 
 Python API
 --------------
 
-Ansible的Python API 功能十分强大，它造就了ansible CLI和ansible-playbook.
+Ansible的Python API 功能十分强大,它造就了ansible CLI和ansible-playbook.
 
 以下是一个简单调用的例子::
 
@@ -41,7 +41,7 @@ Ansible的Python API 功能十分强大，它造就了ansible CLI和ansible-play
     }
 
 
-每个模型均可以返回任意JSON格式数据，所以Ansible可以作为一个框架被封装在各种应用程序和脚本之中.
+每个模型均可以返回任意JSON格式数据,所以Ansible可以作为一个框架被封装在各种应用程序和脚本之中.
 
 .. _detailed_api_example:
 
@@ -81,7 +81,7 @@ Ansible的Python API 功能十分强大，它造就了ansible CLI和ansible-play
         print "%s >>> %s" % (hostname, result)
 
 
-高级的开发人员可能会去阅读ansible的源码，但使用 Runner() API （使用它能提供的选项）可以增强命令行执行 ``ansible`` 和 ``ansible-playbook`` 的功能.
+高级的开发人员可能会去阅读ansible的源码,但使用 Runner() API （使用它能提供的选项）可以增强命令行执行 ``ansible`` 和 ``ansible-playbook`` 的功能.
 
 .. seealso::
 
