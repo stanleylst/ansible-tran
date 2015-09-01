@@ -53,7 +53,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ansible-cn'
-copyright = u'2015, www.magedu.com, AUTHORS: 薛定谔的章鱼 & guli & 以马内利'
+copyright = u'2015, www.magedu.com, AUTHORS: 薛定谔的章鱼 & guli & 以马内利 & 黄博文 & stanley'
 author = u'www.magedu.com'
 
 # The version info for the project you're documenting, acts as replacement for
