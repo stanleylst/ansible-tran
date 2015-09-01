@@ -33,7 +33,7 @@
 
 yum和apt模块中使用with_items执行时会有较少的包管理事务。
 
-请注意使用'with_items'用于迭代的条目类型不仅仅支持简单的字符串列表。如果你有一个哈希列表，那么你可以用以下方式来引用子项::
+请注意使用 'with_items' 用于迭代的条目类型不仅仅支持简单的字符串列表。如果你有一个哈希列表，那么你可以用以下方式来引用子项::
 
     - name: add several users
       user: name={{ item.name }} state=present groups={{ item.groups }}
@@ -42,7 +42,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
         - { name: 'testuser2', groups: 'root' }
 
 
-请注意如果同时使用`when`和`with_items`（或其它循环声明）,`when`声明会为每个条目单独执行。请参见 :ref:`the_when_statement`示例。
+请注意如果同时使用 `when` 和 `with_items` （或其它循环声明）,`when`声明会为每个条目单独执行。请参见 :ref:`the_when_statement`示例。
 
 .. _nested_loops:
 
@@ -83,7 +83,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
         name: Bob Bananarama
         telephone: 987-654-3210
 
-你想打印出每个用户的名称和电话号码。你可以使用``with_dict``来循环哈希表中的元素::
+你想打印出每个用户的名称和电话号码。你可以使用 ``with_dict`` 来循环哈希表中的元素::
 
     tasks:
       - name: Print phone records
@@ -95,7 +95,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
 对文件列表使用循环
 ``````````````````````
 
-``with_fileglob``可以以非递归的方式来模式匹配单个目录中的文件。如下面所示::
+``with_fileglob`` 可以以非递归的方式来模式匹配单个目录中的文件。如下面所示::
 
     ---
     - hosts: all
@@ -110,7 +110,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
           with_fileglob:
             - /playbooks/files/fooapp/*
             
-.. 注意:: 当在role中对``with_fileglob``使用相对路径时, Ansible会把路径映射到`roles/<rolename>/files`目录。
+.. 注意:: 当在role中对 ``with_fileglob`` 使用相对路径时, Ansible会把路径映射到`roles/<rolename>/files`目录。
 
 对并行数据集使用循环
 ``````````````````````````````````
@@ -197,7 +197,7 @@ records.
 对整数序列使用循环
 ``````````````````````````````
 
-``with_sequence``可以以升序数字顺序生成一组序列。你可以指定起始值、终止值，以及一个可选的步长值。
+``with_sequence`` 可以以升序数字顺序生成一组序列。你可以指定起始值、终止值，以及一个可选的步长值。
 
 指定参数时也可以使用key=value这种键值对的方式。如果采用这种方式，'format'是一个可打印的字符串。
 
@@ -270,7 +270,7 @@ Do-Until循环
 
 .. 注意:: 这是一个不常见的使用方式，但为了文档完整性我们还是把它写出来。你可能不会经常使用这种方式。
 
-这其实不是一个循环，但和循环很相似。如果你想引用一个文件，而该文件是从一组文件中根据给定条件匹配出来的。这组文件中部分文明名由变量拼接而成。针对该场景你可以这样做::
+这其实不是一个循环，但和循环很相似。如果你想引用一个文件，而该文件是从一组文件中根据给定条件匹配出来的。这组文件中部分文件名由变量拼接而成。针对该场景你可以这样做::
 
     - name: INTERFACES | Create Ansible header for /etc/network/interfaces
       template: src={{ item }} dest=/etc/foo.conf
@@ -349,7 +349,7 @@ ini插件可以使用正则表达式来获取一组键值对。因此，我们�
     value1=section2/value1
     value2=section2/value2
 
-以下是使用``with_ini``的例子::
+以下是使用 ``with_ini`` 的例子::
 
     - debug: msg="{{item}}"
       with_ini: value[1-2] section=section1 file=lookup.ini re=true
@@ -414,11 +414,9 @@ ini插件可以使用正则表达式来获取一组键值对。因此，我们�
 循环中使用注册器
 ``````````````````````````
 
-When using ``register`` with a loop the data structure placed in the variable during a loop, will contain a ``results`` attribute, that is a list of all responses from the module.
+当对处于循环中的某个数据结构使用 ``register`` 来注册变量时，结果包含一个 ``results`` 属性，这是从模块中得到的所有响应的一个列表.
 
-当对处于循环中的某个数据结构使用``register``来注册变量时，结果包含一个``results``属性，这是从模块中得到的所有响应的一个列表.
-
-以下是在``with_items``中使用``register``的示例::
+以下是在 ``with_items`` 中使用 ``register`` 的示例::
 
     - shell: echo "{{ item }}"
       with_items:
@@ -426,7 +424,7 @@ When using ``register`` with a loop the data structure placed in the variable du
         - two
       register: echo
 
-返回的数据结构如下，与非循环结构中使用``register``的返回结果是不同的::
+返回的数据结构如下，与非循环结构中使用 ``register`` 的返回结果是不同的::
 
     {
         "changed": true,
