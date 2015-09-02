@@ -79,29 +79,23 @@ Include 指令类似如下,可以像普通 tasks 命令一样在 playbook 中混
 Playbooks 也同样可以 include 引用其它 playbooks,但这部分内容将在另外章节介绍.
 
 .. note::
-   As of 1.0, task include statements can be used at arbitrary depth.
-   They were previously limited to a single level, so task includes
-   could not include other files containing task includes.
 
-Includes can also be used in the 'handlers' section, for instance, if you
-want to define how to restart apache, you only have to do that once for all
-of your playbooks.  You might make a handlers.yml that looks like::
+   截止1.0版本,task include 声明可以在任意层级目录使用.在这之前,变量只能同层级目录引用,所以 task includes 不能引用其实包含有 task includes 引用的task文件.
+
+Includes 功能也可以被用在用 handlers 区域,例如,如果你希望定义如何重启apache,你只需要定义一个playbook,只需要做一次.编辑类似如下样例的 handers.yml::
 
    ---
    # this might be in a file like handlers/handlers.yml
    - name: restart apache
      service: name=apache state=restarted
 
-And in your main playbook file, just include it like so, at the bottom
-of a play::
+然后像如下方式在 main playbook 的询问引用play即可::
 
    handlers:
      - include: handlers/handlers.yml
 
-You can mix in includes along with your regular non-included tasks and handlers.
-
-Includes can also be used to import one playbook file into another. This allows
-you to define a top-level playbook that is composed of other playbooks.
+Includes也可以在常规不包含 included 的tasks和handlers文件中混合引用.
+Includes常被用作将一个playbook文件中的命令导入到另外一个playbook.这种方式允许我们定义由其它playbooks组成的顶层playbook(top-level playbook).
 
 For example::
 
@@ -119,17 +113,14 @@ For example::
     - include: webservers.yml
     - include: dbservers.yml
 
-Note that you cannot do variable substitution when including one playbook
-inside another.
+注意: 引用playbook到其它playbook时,变量替换功能将失效不可用.
 
 .. note::
-   You can not conditionally path the location to an include file,
-   like you can with 'vars_files'.  If you find yourself needing to do
-   this, consider how you can restructure your playbook to be more
-   class/role oriented.  This is to say you cannot use a 'fact' to
-   decide what include file to use.  All hosts contained within the
-   play are going to get the same tasks.  ('*when*' provides some
-   ability for hosts to conditionally skip tasks).
+
+   你不能有条件的指定位置的 include 文件,就像在你使用 'vars_files' 时一样.
+   如果你发展你必须这么做,那请重新规划调整 playbook 的class/role 编排.这样
+   说其实是想明确告诉你不要妄想 include 指定位置的file. 所有被包含在 play 
+   中的主机都将执行相同的tasks.('*when*'提供了一些指定条件来跳过tasks)
 
 .. _roles:
 
