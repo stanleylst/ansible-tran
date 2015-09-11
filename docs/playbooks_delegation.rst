@@ -1,4 +1,4 @@
-Delegation, Rolling Updates, and Local Actions
+委托，滚动更新，本地动作
 ==============================================
 
 .. contents:: Topics
@@ -66,17 +66,17 @@ Rolling Update Batch Size
 
 .. _delegation:
 
-Delegation
+委任
 ``````````
 
 .. versionadded:: 0.7
 
 This isn't actually rolling update specific but comes up frequently in those cases.
+这个虽然不属于滚动更新，但是在那些场景下经常会出现。
 
-If you want to perform a task on one host with reference to other hosts, use the 'delegate_to' keyword on a task.
-This is ideal for placing nodes in a load balanced pool, or removing them.  It is also very useful for controlling
-outage windows.  Using this with the 'serial' keyword to control the number of hosts executing at one time is also
-a good idea::
+如果你想参考其它主机来在一个主机上执行一个任务，我们就可以使用'delegate_to'关键词在你要执行的任务上。
+这个对于把节点放在一个负载均衡池里面活着从里面移除非常理想。 这个选项也对处理窗口中断非常有用。
+使用'serial'关键词来控制一定数量的主机也是一个好想法::
 
     ---
 
@@ -97,8 +97,7 @@ a good idea::
         delegate_to: 127.0.0.1
 
 
-These commands will run on 127.0.0.1, which is the machine running Ansible. There is also a shorthand syntax that you can use on a per-task basis: 'local_action'. Here is the same playbook as above, but using the shorthand syntax for delegating to 127.0.0.1::
-
+这些命令可以在127.0.0.1上面运行，这个运行Ansible的主机。这个也是一个简写的语法用在每一个任务基础（per-task basis）: 'local_action'。以上就是这样一个playbook。但是使用的是简化后的语法在172.0.0.1上面做代理::
     ---
 
     # ...
@@ -123,8 +122,7 @@ Here is an example::
       - name: recursively copy files from management server to target
         local_action: command rsync -a /path/to/files {{ inventory_hostname }}:/path/to/target/
 
-Note that you must have passphrase-less SSH keys or an ssh-agent configured for this to work, otherwise rsync
-will need to ask for a passphrase.
+注意你必须拥有不需要密码SSH密钥或者ssh-agent配置，不然的话rsync会需要询问密码。
 
 .. _run_once:
 
@@ -133,8 +131,7 @@ Run Once
 
 .. versionadded:: 1.7
 
-In some cases there may be a need to only run a task one time and only on one host. This can be achieved
-by configuring "run_once" on a task::
+有时候你有这样的需求，在一个主机上面只执行一次一个任务。这样的配置可以配置"run_once"来实现::
 
     ---
     # ...
@@ -148,35 +145,34 @@ by configuring "run_once" on a task::
 
         # ...
 
-This can be optionally paired with "delegate_to" to specify an individual host to execute on::
+这样可以添加在"delegat_to"选项对中来定义要执行的主机::
 
         - command: /opt/application/upgrade_db.py
           run_once: true
           delegate_to: web01.example.org
 
-When "run_once" is not used with "delegate_to" it will execute on the first host, as defined by inventory,
-in the group(s) of hosts targeted by the play. e.g. webservers[0] if the play targeted "hosts: webservers".
+当"run_once" 没有喝"delegate_to"一起使用，这个任务将会被清单指定的第一个主机。
+在一组被play制定主机。例如 webservers[0]， 如果play指定为 "hosts: webservers"。
 
-This approach is similar, although more concise and cleaner than applying a conditional to a task such as::
+这个方法也很类似，虽然比使用条件更加简单粗暴，如下事例::
 
         - command: /opt/application/upgrade_db.py
           when: inventory_hostname == webservers[0]
 
 .. _local_playbooks:
 
-Local Playbooks
+本地Playbooks
 ```````````````
 
-It may be useful to use a playbook locally, rather than by connecting over SSH.  This can be useful
-for assuring the configuration of a system by putting a playbook on a crontab.  This may also be used
-to run a playbook inside an OS installer, such as an Anaconda kickstart.
+在本地使用playbook有时候比ssh远程使用更加有用。可以通过把playbook放在crontab中，来确保一个系统的配置，可以很有用。
+在OS installer 中运行一个playbook也很有用。例如Anaconda kickstart. 
 
-To run an entire playbook locally, just set the "hosts:" line to "hosts:127.0.0.1" and then run the playbook like so::
+要想在本地运行一个play，可以直接设置"host:" 与 "hosts:127.0.0.1", 然后使用下面的命令运行::
 
     ansible-playbook playbook.yml --connection=local
 
-Alternatively, a local connection can be used in a single playbook play, even if other plays in the playbook
-use the default remote connection type::
+或者，一个本地连接也可以作为一个单独的playbook play应用在playbook中， 即便playbook中其他的plays使用默认远程
+连接如下::
 
     - hosts: 127.0.0.1
       connection: local
