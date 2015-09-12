@@ -136,96 +136,75 @@ playbook基础
    切换到 root 账户时，不会发生，如从 'bob' 切换到 'root'，直接以普通用户或root身份登录也不会发生。
    如果你不希望这些数据在短暂的时间内可以被读取（不可写），请避免在 `sudo_user` 中传递未加密的密码。
    其他情况下，'/tmp' 目录不被使用，这种情况不会发生。Ansible 也有意识的在日志中不记录密码参数。
-   
-   
+
+
+
 .. _tasks_list:
 
-Tasks list
+Tasks 列表
 ++++++++++
 
-Each play contains a list of tasks.  Tasks are executed in order, one
-at a time, against all machines matched by the host pattern,
-before moving on to the next task.  It is important to understand that, within a play,
-all hosts are going to get the same task directives.  It is the purpose of a play to map
-a selection of hosts to tasks.
+每一个 play 包含了一个 task 列表（任务列表）。一个 task 在其所对应的所有主机上（通过 host pattern 匹配的所有主机）执行完毕之后，下一个 task 才会执行。有一点需要明白的是（很重要），在一个 play 之中，所有 hosts 会获取相同的任务指令，这是 play 的一个目的所在，也就是将一组选出的 hosts 映射到 task。（注：此处翻译未必准确，暂时保留原文）
 
-When running the playbook, which runs top to bottom, hosts with failed tasks are
-taken out of the rotation for the entire playbook.  If things fail, simply correct the playbook file and rerun.
+在运行 playbook 时（从上到下执行），如果一个 host 执行 task 失败，这个 host 将会从整个 playbook 的 rotation 中移除。
+如果发生执行失败的情况，请修正 playbook 中的错误，然后重新执行即可。
 
-The goal of each task is to execute a module, with very specific arguments.
-Variables, as mentioned above, can be used in arguments to modules.
+每个 task 的目标在于执行一个 moudle, 通常是带有特定的参数来执行。在参数中可以使用变量（variables）。
 
-Modules are 'idempotent', meaning if you run them
-again, they will make only the changes they must in order to bring the
-system to the desired state.  This makes it very safe to rerun
-the same playbook multiple times.  They won't change things
-unless they have to change things.
+modules 具有"幂等"性，意思是如果你再一次地执行 moudle（译者注：比如遇到远端系统被意外改动，需要恢复原状），moudle 
+只会执行必要的改动，只会改变需要改变的地方。所以重复多次执行 playbook 也很安全。
 
-The `command` and `shell` modules will typically rerun the same command again,
-which is totally ok if the command is something like
-'chmod' or 'setsebool', etc.  Though there is a 'creates' flag available which can
-be used to make these modules also idempotent.
+对于 `command` module 和 `shell` module，重复执行 playbook，实际上是重复运行同样的命令。如果执行的命令类似于 'chmod' 或者 'setsebool' 这种命令，这没有任何问题。也可以使用一个叫做 'creates' 的 flag 使得这两个 module 变得具有"幂等"特性
+（不是必要的）。
 
-Every task should have a `name`, which is included in the output from
-running the playbook.   This is output for humans, so it is
-nice to have reasonably good descriptions of each task step.  If the name
-is not provided though, the string fed to 'action' will be used for
-output.
+每一个 task 必须有一个名称 `name`，这样在运行 playbook 时，从其输出的任务执行信息中可以很好的辨别出是属于哪一个 task 的。
+如果没有定义 `name`，‘action’ 的值将会用作输出信息中标记特定的 task。
 
-Tasks can be declared using the legacy "action: module options" format, but 
-it is recommended that you use the more conventional "module: options" format.
-This recommended format is used throughout the documentation, but you may
-encounter the older format in some playbooks.
+如果要声明一个 task，以前有一种格式： "action: module options" （可能在一些老的 playbooks 中还能见到）。现在推荐使用更常见的格式："module: options" ，本文档使用的就是这种格式。
 
-Here is what a basic task looks like. As with most modules,
-the service module takes key=value arguments::
+下面是一种基本的 task 的定义，service moudle 使用 key=value 格式的参数，这也是大多数 module 使用的参数格式::
 
    tasks:
      - name: make sure apache is running
        service: name=httpd state=running
 
-The `command` and `shell` modules are the only modules that just take a list
-of arguments and don't use the key=value form.  This makes
-them work as simply as you would expect::
+比较特别的两个 modudle 是  `command` 和 `shell` ，它们不使用 key=value 格式的参数，而是这样::
 
    tasks:
      - name: disable selinux
        command: /sbin/setenforce 0
 
-The command and shell module care about return codes, so if you have a command
-whose successful exit code is not zero, you may wish to do this::
+使用 command module 和 shell module 时，我们需要关心返回码信息，如果有一条命令，它的成功执行的返回码不是0，
+你或许希望这样做::
 
    tasks:
      - name: run this command and ignore the result
        shell: /usr/bin/somecommand || /bin/true
 
-Or this::
+或者是这样::
 
    tasks:
      - name: run this command and ignore the result
        shell: /usr/bin/somecommand
        ignore_errors: True
 
-
-If the action line is getting too long for comfort you can break it on
-a space and indent any continuation lines::
+如果 action 行看起来太长，你可以使用 space（空格） 或者 indent（缩进） 隔开连续的一行::
 
     tasks:
       - name: Copy ansible inventory file to client
         copy: src=/etc/ansible/hosts dest=/etc/ansible/hosts
                 owner=root group=root mode=0644
 
-Variables can be used in action lines.   Suppose you defined
-a variable called 'vhost' in the 'vars' section, you could do this::
+在 action 行中可以使用变量。假设在 'vars' 那里定义了一个变量 'vhost' ，可以这样使用它::
 
    tasks:
      - name: create a virtual host file for {{ vhost }}
        template: src=somefile.j2 dest=/etc/httpd/conf.d/{{ vhost }}
 
-Those same variables are usable in templates, which we'll get to later.
+这些变量在 tempates 中也是可用的，稍后会讲到。
 
-Now in a very basic playbook all the tasks will be listed directly in that play, though it will usually
-make more sense to break up tasks using the 'include:' directive.  We'll show that a bit later.
+在一个基础的 playbook 中，所有的 task 都是在一个 play 中列出，稍后将介绍一种更合理的安排 task 的方式：使用 'include:' 
+指令。
 
 
 
@@ -236,36 +215,32 @@ Action Shorthand
 
 .. versionadded:: 0.8
 
-Ansible prefers listing modules like this in 0.8 and later::
+在 0.8 及以后的版本中，ansible 更喜欢使用如下的格式列出 modules::
 
     template: src=templates/foo.j2 dest=/etc/foo.conf
 
-You will notice in earlier versions, this was only available as::
+在早期的版本中，使用以下的格式::
 
     action: template src=templates/foo.j2 dest=/etc/foo.conf
 
-The old form continues to work in newer versions without any plan of deprecation.
+早期的格式在新版本中仍然可用，并且没有计划将这种旧的格式弃用。
 
 
 
 .. _handlers:
 
-Handlers: Running Operations On Change
+Handlers: 在发生改变时执行的操作
 ``````````````````````````````````````
 
-As we've mentioned, modules are written to be 'idempotent' and can relay  when
-they have made a change on the remote system.   Playbooks recognize this and
-have a basic event system that can be used to respond to change.
+上面我们曾提到过，module 具有"幂等"性，所以当远端系统被人改动时，可以重放 playbooks 达到恢复的目的。
+playbooks 本身可以识别这种改动，并且有一个基本的 event system（事件系统），可以响应这种改动。
 
-These 'notify' actions are triggered at the end of each block of tasks in a playbook, and will only be
-triggered once even if notified by multiple different tasks.
+（当发生改动时）'notify' actions 会在 playbook 的每一个 task 结束时被触发，而且即使有多个不同的 task 通知改动的发生，
+'notify' actions 只会被触发一次。
 
-For instance, multiple resources may indicate
-that apache needs to be restarted because they have changed a config file,
-but apache will only be bounced once to avoid unnecessary restarts.
+举例来说，比如多个 resources 指出因为一个配置文件被改动，所以 apache 需要重新启动，但是重新启动的操作只会被执行一次。
 
-Here's an example of restarting two services when the contents of a file
-change, but only if the file changes::
+这里有一个例子，当一个文件的内容被改动时，重启两个 services::
 
    - name: template configuration file
      template: src=template.j2 dest=/etc/foo.conf
@@ -273,16 +248,12 @@ change, but only if the file changes::
         - restart memcached
         - restart apache
 
-The things listed in the 'notify' section of a task are called
-handlers.
+'notify' 下列出的即是 handlers。
 
-Handlers are lists of tasks, not really any different from regular
-tasks, that are referenced by name.  Handlers are what notifiers
-notify.  If nothing notifies a handler, it will not run.  Regardless
-of how many things notify a handler, it will run only once, after all
-of the tasks complete in a particular play.
+Handlers 也是一些 task 的列表，通过名字来引用，它们和一般的 task 并没有什么区别。Handlers 是由通知者进行 notify，
+如果没有被 notify，handlers 不会执行。不管有多少个通知者进行了 notify，等到 play 中的所有 task 执行完成之后，handlers  也只会被执行一次。
 
-Here's an example handlers section::
+这里是一个 handlers 的示例::
 
     handlers:
         - name: restart memcached
@@ -290,35 +261,30 @@ Here's an example handlers section::
         - name: restart apache
           service: name=apache state=restarted
 
-Handlers are best used to restart services and trigger reboots.  You probably
-won't need them for much else.
-
+Handlers 最佳的应用场景是用来重启服务，或者触发系统重启操作。除此以外很少用到了。
+  
 .. note::
-   Notify handlers are always run in the order written.
+   handlers 会按照声明的顺序执行
 
-Roles are described later on.  It's worthwhile to point out that handlers are
-automatically processed between 'pre_tasks', 'roles', 'tasks', and 'post_tasks'
-sections.  If you ever want to flush all the handler commands immediately though,
-in 1.2 and later, you can::
+Roles 将在下一章节讲述。值得指出的是，handlers 会在 'pre_tasks', 'roles', 'tasks', 和 'post_tasks' 之间自动执行。
+如果你想立即执行所有的 handler 命令，在1.2及以后的版本，你可以这样做::
 
     tasks:
        - shell: some tasks go here
        - meta: flush_handlers
        - shell: some other tasks
 
-In the above example any queued up handlers would be processed early when the 'meta'
-statement was reached.  This is a bit of a niche case but can come in handy from
-time to time.
+在以上的例子中，任何在排队等候的 handlers 会在执行到 'meta' 部分时，优先执行。这个技巧在有些时候也能派上用场。
 
 
 
 .. _executing_a_playbook:
 
-Executing A Playbook
+执行一个 playbook
 ````````````````````
 
-Now that you've learned playbook syntax, how do you run a playbook?  It's simple.
-Let's run a playbook using a parallelism level of 10::
+既然现在你已经学习了 playbook 的语法，那要如何运行一个 playbook 呢？这很简单，这里的示例是并行的运行 playbook，并行的级别
+是10（译者注：是10个并发的进程？）::
 
     ansible-playbook playbook.yml -f 10
 
@@ -326,43 +292,39 @@ Let's run a playbook using a parallelism level of 10::
 	
 .. _ansible-pull:
 
-Ansible-Pull
-````````````
+Ansible-Pull（拉取配置而非推送配置）
+`````````````````````````````````````
 
-Should you want to invert the architecture of Ansible, so that nodes check in to a central location, instead
-of pushing configuration out to them, you can.
+我们可不可以将 ansible 的体系架构颠倒过来，让托管节点从一个 central location 做 check in 获取配置信息，而不是
+推送配置信息到所有的托管节点？是可以的。
 
-Ansible-pull is a small script that will checkout a repo of configuration instructions from git, and then
-run ansible-playbook against that content.
+Ansible-pull 是一个小脚本，它从 git 上 checkout 一个关于配置指令的 repo，然后以这个配置指令来运行 ansible-playbook。
 
-Assuming you load balance your checkout location, ansible-pull scales essentially infinitely.
+假设你对你的 checkout location 做负载均衡，ansible-pull 基本上可以无限的提升规模。
 
-Run ``ansible-pull --help`` for details.
+可执行 ``ansible-pull --help`` 获取详细的帮助信息。
 
-There's also a `clever playbook <https://github.com/ansible/ansible-examples/blob/master/language_features/ansible_pull.yml>`_ available to configure ansible-pull via a crontab from push mode.
+也有一个叫做 clever playbook 的东西:  `clever playbook <https://github.com/ansible/ansible-examples/blob/master/language_features/ansible_pull.yml>`_ 。
+这个可以通过 crontab 来配置 ansible-pull（from push mode）。
 
 
 
 .. _tips_and_tricks:
 
-Tips and Tricks
+提示与技巧
 ```````````````
 
-Look at the bottom of the playbook execution for a summary of the nodes that were targeted
-and how they performed.   General failures and fatal "unreachable" communication attempts are
-kept separate in the counts.
+在 playbook 执行输出信息的底部，可以找到关于托管节点的信息。也可看到一般的失败信息，和严重的 "unreachable" 信息。
+这两个是分开计数的。
 
-If you ever want to see detailed output from successful modules as well as unsuccessful ones,
-use the ``--verbose`` flag.  This is available in Ansible 0.5 and later.
+如果你想看到执行成功的 modules 的输出信息，使用 ``--verbose`` flag（否则只有执行失败的才会有输出信息）。这在 0.5 及以后的版本中可用。
 
-Ansible playbook output is vastly upgraded if the cowsay
-package is installed.  Try it!
+如果安装了 cowsay 软件包，ansible playbook 的输出已经进行了广泛的升级。可以尝试一下！
 
-To see what hosts would be affected by a playbook before you run it, you
-can do this::
+在执行一个 playbook 之前，想看看这个 playbook 的执行会影响到哪些 hosts，你可以这样做::
 
     ansible-playbook playbook.yml --list-hosts
-
+   
 .. seealso::
 
    :doc:`YAMLSyntax`
