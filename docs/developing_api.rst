@@ -55,7 +55,6 @@ Ansible的Python API 功能十分强大,它造就了ansible CLI和ansible-playbo
     import ansible.runner
     import sys
 
-    # construct the ansible runner and execute on all hosts
     # 构造ansible runner 并且开启10个线程向远程主机执行uptime命令
     results = ansible.runner.Runner(
         pattern='*', forks=10,
