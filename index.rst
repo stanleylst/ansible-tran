@@ -11,7 +11,6 @@ Contents:
 .. toctree::
    :maxdepth: 3
 
-
    docs/intro
    docs/quickstart
    docs/playbooks
@@ -26,4 +25,5 @@ Contents:
    docs/test_strategies
    docs/faq
    docs/glossary
+   docs/YAMLSyntax
    docs/YAMLSyntaxdocs

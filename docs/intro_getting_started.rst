@@ -1,7 +1,7 @@
 新手上路
 ===============
 
-.. contents:: 主题
+.. contents:: Topics
 
 .. _gs_about:
 
@@ -131,17 +131,3 @@ Ansible将会对远程系统模块参数记录在远程的syslog中,除非一个
    `irc.freenode.net <http://irc.freenode.net>`_
        #ansible IRC chat channel
 
-.. 同样参见::
-
-#   :doc:`intro_inventory`
-#       更多的关于 inventory的信息
-#   :doc:`intro_adhoc`
-#       基础命令的例子
-#   :doc:`playbooks`
-#       学习 Ansible的配置管理语言
-#   `Mailing List <http://groups.google.com/group/ansible-project>`_
-#       Questions? Help? Ideas?  Stop by the list on Google Groups
-#       疑问?求助?想法?请来Google Groups上的列表溜达
-#   `irc.freenode.net <http://irc.freenode.net>`_
-#       #Ansible IRC 频道
-#
