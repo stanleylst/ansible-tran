@@ -7,7 +7,7 @@ Ansible可以通过一个已存在的特权加强系统使一个用户以另外�
 
 Become
 ``````
-Ansible 1.9之前主要允许用户使用sudo和有限的su命令来以不同用户的身份/权限远程登陆执行task,及创建资源. 在1.9版本中'become'取代了之前的sudo/su，但是sudo/su依旧向后兼容. 这个新系统使得我们更加容易的增加其他的特权提升工具，例如pbrun(Powerbroker), pfexec等.
+Ansible 1.9之前主要允许用户使用sudo和有限的su命令来以不同用户的身份/权限远程登陆执行task,及创建资源. 在1.9版本中'become'取代了之前的sudo/su, 但是sudo/su依旧向后兼容. 这个新系统使得我们更加容易的增加其他的特权提升工具, 例如pbrun(Powerbroker), pfexec等.
 
 
 新指令
@@ -20,7 +20,7 @@ become_user
     等同于添加 'sudo_user:' 或 'su_user:' (指令)去执行task/playbook, 设置为拥有所渴望权限的用户
 
 become_method
-    运行task/playbook时的特权提升method，覆盖ansible.cfg中的默认配置, 可以设置为'sudo'/'su'/'pbrun'/'pfexec'/'doas'
+    运行task/playbook时的特权提升method, 覆盖ansible.cfg中的默认配置, 可以设置为'sudo'/'su'/'pbrun'/'pfexec'/'doas'
 
 
 新的ansible\_ 变量
