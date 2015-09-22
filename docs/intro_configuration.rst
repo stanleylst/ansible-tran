@@ -160,7 +160,7 @@ connection_plugins
 
     connection_plugins = ~/.ansible/plugins/connection_plugins/:/usr/share/ansible_plugins/connection_plugins
 
-大多数用户会用到这一特性, 详见：:doc:`developing_plugins`
+大多数用户会用到这一特性, 详见::doc:`developing_plugins`
 .. _deprecation_warnings:
 
 deprecation_warnings
@@ -367,7 +367,7 @@ module_name
 nocolor
 =======
 
-默认ansible会为输出结果加上颜色,用来更好的区分状态信息和失败信息.如果你想关闭这一功能,可以把'nocolor'设置为‘1’:：
+默认ansible会为输出结果加上颜色,用来更好的区分状态信息和失败信息.如果你想关闭这一功能,可以把'nocolor'设置为‘1’::
 
     nocolor=0
 

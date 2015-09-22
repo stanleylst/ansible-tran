@@ -42,7 +42,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务.
         - { name: 'testuser2', groups: 'root' }
 
 
-请note如果同时使用 `when` 和 `with_items` （或其它循环声明）,`when`声明会为每个条目单独执行.请参见 :ref:`the_when_statement`示例.
+请note如果同时使用 `when` 和 `with_items` （或其它循环声明）,`when`声明会为每个条目单独执行.请参见 :ref:`the_when_statement` 示例.
 
 .. _nested_loops:
 
@@ -476,7 +476,7 @@ ini插件可以使用正则表达式来获取一组键值对.因此,我们可以
 自定义迭代
 ``````````````````````````
 
-虽然你通常无需自定义实现自己的迭代,但如果你想按你自己的方式来循环任意数据结构,你可以阅读:doc:`developing_plugins`来作为开始.以上的每个功能都以插件的方式来实现,所以有很多的实现可供引用.
+虽然你通常无需自定义实现自己的迭代,但如果你想按你自己的方式来循环任意数据结构,你可以阅读:doc:`developing_plugins` 来作为开始.以上的每个功能都以插件的方式来实现,所以有很多的实现可供引用.
 
 .. seealso::
 

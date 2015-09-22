@@ -44,7 +44,7 @@ Cobbler 主要用于操作系统的 kickoff 安装,以及管理 DHCP 和 DNS,除
 
 在使用 Ansible 之前,先启动 cobblerd 进程.
 
-现在使用 Ansible 要加上  ``-i`` 选项 （ 例如：``-i /etc/ansible/cobbler.py``）.cobbler.py这个脚本使用 Cobbler 的 XMLRPC API 与 Cobbler 通信.
+现在使用 Ansible 要加上  ``-i`` 选项 （ 例如:``-i /etc/ansible/cobbler.py``）.cobbler.py这个脚本使用 Cobbler 的 XMLRPC API 与 Cobbler 通信.
 
 执行脚本 ``/etc/ansible/cobbler.py`` ,应该能看到一些 JSON 格式的数据输出（也许还没有具体的内容）.
 
@@ -108,7 +108,7 @@ AWS EC2 外部 inventory 脚本
 第二种方式,把脚本拷贝为 `/etc/ansible/hosts` ,并赋予可执行权限.还需把 `ec2.ini  <https://raw.githubusercontent.com/ansible/ansible/devel/plugins/inventory/ec2.ini>`_ 文件拷贝到 `/etc/ansible/ec2.ini`,然后运行 ansible.
 
 
-要成功的调用 API 访问 AWS,需要配置 Boto （Boto 是 AWS 的 Python 接口）.可用的方法有多种,请参见： `methods <http://docs.pythonboto.org/en/latest/boto_config_tut.html>`_ .
+要成功的调用 API 访问 AWS,需要配置 Boto （Boto 是 AWS 的 Python 接口）.可用的方法有多种,请参见: `methods <http://docs.pythonboto.org/en/latest/boto_config_tut.html>`_ .
 
 最简单的方法是定义两个环境变量::
 
@@ -257,7 +257,7 @@ Region
 
 动态组作为静态组的子组
 ```````````````````````````````
-在静态 inventory 文件中,如果定义一个由一些组作为子成员的组,这些子组也需要定义（译者注：即包含具体的 host）,否则执行时 ansible 会返回一个错误.
+在静态 inventory 文件中,如果定义一个由一些组作为子成员的组,这些子组也需要定义（译者注:即包含具体的 host）,否则执行时 ansible 会返回一个错误.
 如果定义一些动态组作为一个静态组的子组,也需在静态 inventory 文件中定义动态组,但是动态组定义为一个空的组即可::
 
     [tag_Name_staging_foo]

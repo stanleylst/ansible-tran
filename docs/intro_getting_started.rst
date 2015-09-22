@@ -33,7 +33,7 @@ Ansible 1.3及之后的版本默认会在本地的 OpenSSH可用时会尝试用�
 
 说起远程设备,Ansible会默认假定你使用 SSH Key(我们推荐这种)但是密码也一样可以.通过在需要的地方添加 --ask-pass选项 来启用密码验证.如果使用了sudo 特性,当sudo需要密码时,也同样适当的提供了--ask-sudo-pass选项.
 
-也许这是常识,但也值得分享：任何管理系统受益于被管理的机器在主控机附近运行.如果在云中运行,可以考虑在使用云中的一台机器来运行Ansible.
+也许这是常识,但也值得分享:任何管理系统受益于被管理的机器在主控机附近运行.如果在云中运行,可以考虑在使用云中的一台机器来运行Ansible.
 
 作为一个进阶话题,Ansible不止支持SSH来远程连接.连接方式是插件化的而且还有许多本地化管理的选项诸如管理 chroot, lxc, 和 jail containers.一个叫做‘ansible-pull’的模式能够反转主控关系并使远程系统通过定期从中央git目录检出 并 拉取 配置指令来实现背景连接通信.
 
@@ -51,7 +51,7 @@ Ansible 1.3及之后的版本默认会在本地的 OpenSSH可用时会尝试用�
 
 这里有个节点设置文件(inventory file)将会在 :doc:`intro_inventory` 中得到深入说明.
 我们假定你使用SSH Key来授权.为了避免在建立SSH连接时,重复输入密码你可以这么
-做：
+做:
 
 .. code-block:: bash
 
@@ -66,7 +66,7 @@ Ansible 1.3及之后的版本默认会在本地的 OpenSSH可用时会尝试用�
    $ ansible all -m ping
 
 Ansible会像SSH那样试图用你的当前用户名来连接你的远程机器.要覆写远程用户名,只需使用'-u'参数.
-如果你想访问 sudo模式,这里也有标识(flags)来实现：
+如果你想访问 sudo模式,这里也有标识(flags)来实现:
 
 .. code-block:: bash
 
@@ -95,7 +95,7 @@ Ansible会像SSH那样试图用你的当前用户名来连接你的远程机器.
 
 Ansible1.2.1及其之后的版本都会默认启用公钥认证.
 
-如果有个主机重新安装并在“known_hosts”中有了不同的key,这会提示一个错误信息直到被纠正为止.在使用Ansible时,你可能不想遇到这样的情况：如果有个主机没有在“known_hosts”中被初始化将会导致在交互使用Ansible或定时执行Ansible时对key信息的确认提示.
+如果有个主机重新安装并在“known_hosts”中有了不同的key,这会提示一个错误信息直到被纠正为止.在使用Ansible时,你可能不想遇到这样的情况:如果有个主机没有在“known_hosts”中被初始化将会导致在交互使用Ansible或定时执行Ansible时对key信息的确认提示.
 
 如果你想禁用此项行为并明白其含义,你能够通过编辑 /etc/ansible/ansible.cfg or ~/.ansible.cfg来实现::
 

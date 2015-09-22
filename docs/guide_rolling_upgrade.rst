@@ -85,7 +85,7 @@
 你如何组织你的 roles 是由你和你的应用程序所决定, 但是大部分网站都将适用一个或多个共同的 roles, 和一些列关于应用程序特定的 roles 来安装和配置这个网站的特定部分. 
 
 Roles 可以用变量和依赖关系, 你可以通过参数来调整它们的行为.
-你可以在 :doc:`playbooks_roles`章节中阅读更多关于 roles
+你可以在 :doc:`playbooks_roles` 章节中阅读更多关于 roles
 
 .. _lamp_group_variables:
 
