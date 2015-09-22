@@ -1,10 +1,8 @@
 Ansible Tower
 `````````````
 
-`Ansible Tower <http://ansible.com/tower>`_ (formerly 'AWX') is a web-based solution that makes Ansible even more easy to use for IT teams of all kinds.  It's designed to be the hub for all of your automation tasks.
+`Ansible Tower <http://ansible.com/tower>`_ (以前叫'AWX')是能够帮助任何IT团队更容易使用Ansible的解决方案。该方案基于web。
 
-Tower allows you to control access to who can access what, even allowing sharing of SSH credentials without someone being able to transfer those credentials.  Inventory can be graphically managed or synced with a wide variety of cloud sources.  It logs all of your jobs, integrates well with LDAP, and has an amazing browsable REST API.  Command line tools are available for easy integration with Jenkins as well.  Provisioning callbacks provide great support for autoscaling topologies.
+Tower允许对用户进行权限控制，即使某用户不能传送某SSH凭证，你也可以通过Tower来对该用户共享该凭证。我们可以通过图形化界面来管理Inventory，也可以对各种各样的云资源做同步。Tower可以记录所有job的日志，也可以与LDAP集成，并且拥有强大的可浏览的REST API。Tower也提供了命令行工具，可以与Jenkins轻松集成。Provisioning回调对自动伸缩拓扑图提供了强大的支持。
 
-Find out more about Tower features and how to download it on the `Ansible Tower webpage <http://ansible.com/tower>`_.  Tower
-is free for usage for up to 10 nodes, and comes bundled with amazing support from Ansible, Inc.  As you would expect, Tower is
-installed using Ansible playbooks!
+请在`Ansible Tower 页面 <http://ansible.com/tower>`_了解Tower更多的功能，并且了解如何下载使用。Tower的免费版本最多支持10个节点，并且Ansible公司会提供强大的支持。正如你期望的那样，可以用Ansible playbook来安装Tower！
