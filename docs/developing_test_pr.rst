@@ -1,97 +1,80 @@
-Helping Testing PRs
+帮助测试PR
 ```````````````````
 
-If you're a developer, one of the most valuable things you can do is look at the github issues list and help fix bugs.  We almost always prioritize bug fixing over
-feature development, so clearing bugs out of the way is one of the best things you can do.
+作为一名开发者，最具能展现自我价值的事情就是在github上看讨论列表来帮助修复bug。我们通常在解决了bug之后再进行新功能的开发，因此解决bug将是一个非常有价值的事情。
 
-Even if you're not a developer, helping test pull requests for bug fixes and features is still immensely valuable.  
+即使你不是一个开发者，帮助测试bug的修复情况以及新功能还是非常有必要的。
 
-This goes for testing new features as well as testing bugfixes.  
+这同样适用于测试新功能以及测试错误修正。
 
-In many cases, code should add tests that prove it works but that's not ALWAYS possible and tests are not always comprehensive, especially when a user doesn't have access
-to a wide variety of platforms, or that is using an API or web service.  
+通常情况下，编码工作应当包含测试用例来保证编码的正确性，但这并不总能照顾到代码的方方面面，尤其在各平台下测试用户没有足够的访问权限，或者使用的是API或者web服务。
 
-In these cases, live testing against real equipment can be more valuable than automation that runs against simulated interfaces.
-In any case, things should always be tested manually the first time too.
+在这种情况下，在真实的环境下上线测试将会比自动测试更有价值。在任何情况下，都是应该进行一次人工测试。
 
-Thankfully helping test ansible is pretty straightforward, assuming you are already used to how ansible works.
+幸运的是在你充分了解ansible的工作机制的情况下，帮助测试ansible是一件非常简单的事情。
 
-Get Started with A Source Checkout
+开始测试
 ++++++++++++++++++++++++++++++++++
 
-You can do this by checking out ansible, making a test branch off the main one, merging a GitHub issue, testing, 
-and then commenting on that particular issue on GitHub. Here's how:
+你可以在ansible主分支上切出一个分支来保持和主分支隔离，合并GitHub上的问题，测试，然后在GitHub对这一特定问题做一个回馈。具体方法如下：
 
 .. note::
-   Testing source code from GitHub pull requests sent to us does have some inherent risk, as the source code
-   sent may have mistakes or malicious code that could have a negative impact on your system. We recommend
-   doing all testing on a virtual machine, whether a cloud instance, or locally.  Some users like Vagrant
-   or Docker for this, but they are optional.  It is also useful to have virtual machines of different Linux or 
-   other flavors, since some features (apt vs. yum, for example) are specific to those OS versions.
+   帮助测试GitHub上那些提交合并请求的代码是否存在风险，这些风险可能包括存在错误或恶意代码。我们建议在虚拟机上测试，无论是云，或在本地。有些人喜欢Vagrant，或Docker，这是可以的，但我们并不推荐。 在不同的Linux系统环境下进行测试也是非常有意义的，因为某些功能（诸如APT和yum等包管理工具）专用于这些操作系统。
 
-First, you will need to configure your testing environment with the necessary tools required to run our test
-suites. You will need at least::
+当然配置您的测试环境来运行我们的测试套件需要一系列工具。以下软件是必须的::
 
    git
    python-nosetests (sometimes named python-nose)
    python-passlib
    python-mock
 
-If you want to run the full integration test suite you'll also need the following packages installed::
+如果你想运行完整的集成测试套件，你还需要安装以下软件包::
 
    svn
    hg
    python-pip
    gem 
 
-Second, if you haven't already, clone the Ansible source code from GitHub::
+当准备完以上环境后，您可以从github上拉取Ansible的原代码进行测试了::
 
    git clone https://github.com/ansible/ansible.git --recursive
    cd ansible/
 
 .. note::
-   If you have previously forked the repository on GitHub, you could also clone it from there.
+   如果您已经Fork了我们的代码，您就可以从你自己代码仓库里克隆了。
 
 .. note::
-   If updating your repo for testing something module related, use "git rebase origin/devel" and then "git submodule update" to fetch
-   the latest development versions of modules.  Skipping the "git submodule update" step will result in versions that will be stale.
+   如果你打算更新你的仓库作为测试一些相关模块，请使用"git rebase origin/devel"，并且使用"git submodule update"更新子模块，如不更新，您将使用旧版本的模块。
 
-Activating The Source Checkout
+使用开发环境
 ++++++++++++++++++++++++++++++
 
-The Ansible source includes a script that allows you to use Ansible directly from source without requiring a
-full installation, that is frequently used by developers on Ansible. 
+Ansible源代码包括一个脚本，可以让你直接使用Ansible从源代码，而无需完全安装，这对于的Ansible开发者来说十分便利。
 
-Simply source it (to use the Linux/Unix terminology) to begin using it immediately::
+使用以下命令进入开发环境，这主要针对的是Linux/Unix的终端测试环境::
 
    source ./hacking/env-setup
 
-This script modifies the PYTHONPATH enviromnent variables (along with a few other things), which will be temporarily
-set as long as your shell session is open.  
+该脚本修改了PYTHONPATH（以及一些其他的东西），这仅仅对于当次shell 会话有效。
 
-If you'd like your testing environment to always use the latest source, you could call the command from startup scripts (for example,
-`.bash_profile`).
+如果你想永久使测试环境生效，你可以将其放入开机启动脚本中（例如，`.bash_profile`）。
 
-Finding A Pull Request and Checking It Out On A Branch
+找到对应分支并测试
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Next, find the pull request you'd like to test and make note of the line at the top which describes the source
-and destination repositories. It will look something like this::
+接下来，手动合并你想测试的提交请求，并且记录下源和仓库的信息。它会是这个样子::
 
    Someuser wants to merge 1 commit into ansible:devel from someuser:feature_branch_name
 
 .. note::
-   It is important that the PR request target be ansible:devel, as we do not accept pull requests into any other branch.
-   Dot releases are cherry-picked manually by ansible staff.
+   请务必将提交合并请求提交到ansible:devel分支，我们不会接受您提交到其他分支。版本的更新将由我们的工作人员手动进行。
 
-The username and branch at the end are the important parts, which will be turned into git commands as follows::
+用户名和分支名是十分重要的，这将显示在以下命令行中::
 
    git checkout -b testing_PRXXXX devel
    git pull https://github.com/someuser/ansible.git feature_branch_name
 
-The first command creates and switches to a new branch named testing_PRXXXX, where the XXXX is the actual issue number associated 
-with the pull request (for example, 1234). This branch is based on the devel branch. The second command pulls the new code from the 
-users feature branch into the newly created branch.
+第一行命令表示在devel分支上新建一个新分支名叫testing_PRXXXX，而XXXX是实际合并请求申请的ID号（例如，1234），并切换到该分支下。第二行命令则表示拉取对应用户的对应分支的代码。
 
 .. note::
    If the GitHub user interface shows that the pull request will not merge cleanly, we do not recommend proceeding if you
