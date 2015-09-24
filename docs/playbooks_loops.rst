@@ -1,9 +1,9 @@
 循环
 =====
 
-通常你想在一个任务中干很多事，比如创建一群用户，安装很多包，或者重复一个轮询步骤直到收到某个特定结果。
+通常你想在一个任务中干很多事,比如创建一群用户,安装很多包,或者重复一个轮询步骤直到收到某个特定结果.
 
-本章将对在playbook中如何使用循环做全面的介绍。
+本章将对在playbook中如何使用循环做全面的介绍.
 
 .. contents:: Topics
 
@@ -12,7 +12,7 @@
 标准循环
 ``````````````
 
-为了保持简洁，重复的任务可以用以下简写的方式::
+为了保持简洁,重复的任务可以用以下简写的方式::
 
     - name: add several users
       user: name={{ item }} state=present groups=wheel
@@ -20,7 +20,7 @@
          - testuser1
          - testuser2
 
-如果你在变量文件中或者 'vars' 区域定义了一组YAML列表，你也可以这样做::
+如果你在变量文件中或者 'vars' 区域定义了一组YAML列表,你也可以这样做::
 
     with_items: "{{somelist}}"
 
@@ -31,9 +31,9 @@
     - name: add user testuser2
       user: name=testuser2 state=present groups=wheel
 
-yum和apt模块中使用with_items执行时会有较少的包管理事务。
+yum和apt模块中使用with_items执行时会有较少的包管理事务.
 
-请note使用 'with_items' 用于迭代的条目类型不仅仅支持简单的字符串列表。如果你有一个哈希列表，那么你可以用以下方式来引用子项::
+请note使用 'with_items' 用于迭代的条目类型不仅仅支持简单的字符串列表.如果你有一个哈希列表,那么你可以用以下方式来引用子项::
 
     - name: add several users
       user: name={{ item.name }} state=present groups={{ item.groups }}
@@ -42,7 +42,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
         - { name: 'testuser2', groups: 'root' }
 
 
-请note如果同时使用 `when` 和 `with_items` （或其它循环声明）,`when`声明会为每个条目单独执行。请参见 :ref:`the_when_statement`示例。
+请note如果同时使用 `when` 和 `with_items` （或其它循环声明）,`when`声明会为每个条目单独执行.请参见 :ref:`the_when_statement` 示例.
 
 .. _nested_loops:
 
@@ -57,7 +57,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
         - [ 'alice', 'bob' ]
         - [ 'clientdb', 'employeedb', 'providerdb' ]
 
-和以上介绍的'with_items'一样，你也可以使用预定义变量。::
+和以上介绍的'with_items'一样,你也可以使用预定义变量.::
 
     - name: here, 'users' contains the above list of employees
       mysql_user: name={{ item[0] }} priv={{ item[1] }}.*:ALL append_privs=yes password=foo
@@ -83,7 +83,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
         name: Bob Bananarama
         telephone: 987-654-3210
 
-你想打印出每个用户的名称和电话号码。你可以使用 ``with_dict`` 来循环哈希表中的元素::
+你想打印出每个用户的名称和电话号码.你可以使用 ``with_dict`` 来循环哈希表中的元素::
 
     tasks:
       - name: Print phone records
@@ -95,7 +95,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
 对文件列表使用循环
 ``````````````````````
 
-``with_fileglob`` 可以以非递归的方式来模式匹配单个目录中的文件。如下面所示::
+``with_fileglob`` 可以以非递归的方式来模式匹配单个目录中的文件.如下面所示::
 
     ---
     - hosts: all
@@ -110,12 +110,12 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
           with_fileglob:
             - /playbooks/files/fooapp/*
             
-.. note:: 当在role中对 ``with_fileglob`` 使用相对路径时, Ansible会把路径映射到`roles/<rolename>/files`目录。
+.. note:: 当在role中对 ``with_fileglob`` 使用相对路径时, Ansible会把路径映射到`roles/<rolename>/files`目录.
 
 对并行数据集使用循环
 ``````````````````````````````````
 
-.. note:: 这是一个不常见的使用方式，但为了文档完整性我们还是把它写出来。你可能不会经常使用这种方式。
+.. note:: 这是一个不常见的使用方式,但为了文档完整性我们还是把它写出来.你可能不会经常使用这种方式.
 
 假设你通过某种方式加载了以下变量数据::
 
@@ -123,7 +123,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
     alpha: [ 'a', 'b', 'c', 'd' ]
     numbers:  [ 1, 2, 3, 4 ]
 
-如果你想得到'(a, 1)'和'(b, 2)'之类的集合。可以使用'with_together'::
+如果你想得到'(a, 1)'和'(b, 2)'之类的集合.可以使用'with_together'::
 
     tasks:
         - debug: msg="{{ item.0 }} and {{ item.1 }}"
@@ -134,9 +134,9 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
 对子元素使用循环
 ````````````````````````
 
-假设你想对一组用户做一些动作，比如创建这些用户，并且允许它们使用一组SSH key来登录。
+假设你想对一组用户做一些动作,比如创建这些用户,并且允许它们使用一组SSH key来登录.
 
-如何实现那? 先假设你有按以下方式定义的数据，可以通过"vars_files"或"group_vars/all"文件加载::
+如何实现那? 先假设你有按以下方式定义的数据,可以通过"vars_files"或"group_vars/all"文件加载::
 
     ---
     users:
@@ -175,7 +175,7 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
          - users
          - authorized
 
-根据mysql hosts以及预先给定的privs subkey列表，我们也可以在嵌套的subkey中迭代列表::
+根据mysql hosts以及预先给定的privs subkey列表,我们也可以在嵌套的subkey中迭代列表::
 
     - name: Setup MySQL users
       mysql_user: name={{ item.0.user }} password={{ item.0.mysql.password }} host={{ item.1 }} priv={{ item.0.mysql.privs | join('/') }}
@@ -187,9 +187,9 @@ yum和apt模块中使用with_items执行时会有较少的包管理事务。
 Subelements walks a list of hashes (aka dictionaries) and then traverses a list with a given key inside of those
 records.
 
-你也可以为字元素列表添加第三个元素，该元素可以放置标志位字典。现在你可以加入'skip_missing'标志位。如果设置为True，那么查找插件会跳过不包含指定子键的列表条目。如果没有该标志位，或者标志位值为False，插件会产生错误并指出缺少该子键。
+你也可以为字元素列表添加第三个元素,该元素可以放置标志位字典.现在你可以加入'skip_missing'标志位.如果设置为True,那么查找插件会跳过不包含指定子键的列表条目.如果没有该标志位,或者标志位值为False,插件会产生错误并指出缺少该子键.
 
-这就是authorized_key模式中key的获取方式。
+这就是authorized_key模式中key的获取方式.
 
 
 .. _looping_over_integer_sequences:
@@ -197,11 +197,11 @@ records.
 对整数序列使用循环
 ``````````````````````````````
 
-``with_sequence`` 可以以升序数字顺序生成一组序列。你可以指定起始值、终止值，以及一个可选的步长值。
+``with_sequence`` 可以以升序数字顺序生成一组序列.你可以指定起始值、终止值,以及一个可选的步长值.
 
-指定参数时也可以使用key=value这种键值对的方式。如果采用这种方式，'format'是一个可打印的字符串。
+指定参数时也可以使用key=value这种键值对的方式.如果采用这种方式,'format'是一个可打印的字符串.
 
-数字值可以被指定为10进制，16进制(0x3f8)或者八进制(0600)。负数则不受支持。请看以下示例::
+数字值可以被指定为10进制,16进制(0x3f8)或者八进制(0600).负数则不受支持.请看以下示例::
 
     ---
     - hosts: all
@@ -230,7 +230,7 @@ records.
 随机选择
 ``````````````
 
-'random_choice'功能可以用来随机获取一些值。它并不是负载均衡器(已经有相关的模块了)。它有时可以用作一个简化版的负载均衡器，比如作为条件判断::
+'random_choice'功能可以用来随机获取一些值.它并不是负载均衡器(已经有相关的模块了).它有时可以用作一个简化版的负载均衡器,比如作为条件判断::
 
     - debug: msg={{ item }}
       with_random_choice:
@@ -239,9 +239,9 @@ records.
          - "press the red button"
          - "do nothing"
 
-提供的字符串中的其中一个会被随机选中。 
+提供的字符串中的其中一个会被随机选中. 
 
-还有一个基本的场景，该功能可用于在一个可预测的自动化环境中添加混乱和兴奋点。
+还有一个基本的场景,该功能可用于在一个可预测的自动化环境中添加混乱和兴奋点.
 
 .. _do_until_loops:
 
@@ -250,7 +250,7 @@ Do-Until循环
 
 .. versionadded: 1.4
 
-有时你想重试一个任务直到达到某个条件。比如下面这个例子::
+有时你想重试一个任务直到达到某个条件.比如下面这个例子::
    
     - action: shell /usr/bin/foo
       register: result
@@ -258,19 +258,19 @@ Do-Until循环
       retries: 5
       delay: 10
 
-上面的例子递归运行shell模块，直到模块结果中的stdout输出中包含"all systems go"字符串，或者该任务按照10秒的延迟重试超过5次。"retries"和"delay"的默认值分别是3和5。
+上面的例子递归运行shell模块,直到模块结果中的stdout输出中包含"all systems go"字符串,或者该任务按照10秒的延迟重试超过5次."retries"和"delay"的默认值分别是3和5.
 
-该任务返回最后一个任务返回的结果。单次重试的结果可以使用-vv选项来查看。
-被注册的变量会有一个新的属性'attempts',值为该任务重试的次数。
+该任务返回最后一个任务返回的结果.单次重试的结果可以使用-vv选项来查看.
+被注册的变量会有一个新的属性'attempts',值为该任务重试的次数.
 
 .. _with_first_found:
 
 查找第一个匹配的文件
 ``````````````````````````
 
-.. note:: 这是一个不常见的使用方式，但为了文档完整性我们还是把它写出来。你可能不会经常使用这种方式。
+.. note:: 这是一个不常见的使用方式,但为了文档完整性我们还是把它写出来.你可能不会经常使用这种方式.
 
-这其实不是一个循环，但和循环很相似。如果你想引用一个文件，而该文件是从一组文件中根据给定条件匹配出来的。这组文件中部分文件名由变量拼接而成。针对该场景你可以这样做::
+这其实不是一个循环,但和循环很相似.如果你想引用一个文件,而该文件是从一组文件中根据给定条件匹配出来的.这组文件中部分文件名由变量拼接而成.针对该场景你可以这样做::
 
     - name: INTERFACES | Create Ansible header for /etc/network/interfaces
       template: src={{ item }} dest=/etc/foo.conf
@@ -278,7 +278,7 @@ Do-Until循环
         - "{{ansible_virtualization_type}}_foo.conf"
         - "default_foo.conf"
 
-该功能还有一个更完整的版本，可以配置搜索路径。请看以下示例::
+该功能还有一个更完整的版本,可以配置搜索路径.请看以下示例::
 
     - name: some configuration template
       template: src={{ item }} dest=/etc/file.cfg mode=0444 owner=root group=root
@@ -298,17 +298,17 @@ Do-Until循环
 迭代程序的执行结果
 `````````````````````````````````````````````````
 
-.. note:: 这是一个不常见的使用方式，但为了文档完整性我们还是把它写出来。你可能不会经常使用这种方式。
+.. note:: 这是一个不常见的使用方式,但为了文档完整性我们还是把它写出来.你可能不会经常使用这种方式.
 
-有时你想执行一个程序，而且按行循环该程序的输出。Ansible提供了一个优雅的方式来实现这一点。但请记住，该功能始终在控制机上执行，而不是本地机器::
+有时你想执行一个程序,而且按行循环该程序的输出.Ansible提供了一个优雅的方式来实现这一点.但请记住,该功能始终在控制机上执行,而不是本地机器::
 
     - name: Example of looping over a command result
       shell: /usr/bin/frobnicate {{ item }}
       with_lines: /usr/bin/frobnications_per_host --param {{ inventory_hostname }}
 
-好吧，这好像有点随意。事实上，如果你在做一些与inventory有关的事情，比如你想编写一个动态的inventory源(参见 :doc:`intro_dynamic_inventory`)，那么借助该功能能够快速实现。
+好吧,这好像有点随意.事实上,如果你在做一些与inventory有关的事情,比如你想编写一个动态的inventory源(参见 :doc:`intro_dynamic_inventory`),那么借助该功能能够快速实现.
 
-如果你想远程执行命令，那么以上方法则不行。但你可以这样写::
+如果你想远程执行命令,那么以上方法则不行.但你可以这样写::
 
     - name: Example of looping over a REMOTE command result
       shell: /usr/bin/something
@@ -323,11 +323,11 @@ Do-Until循环
 使用索引循环列表
 `````````````````````````````````
 
-.. note:: 这是一个不常见的使用方式，但为了文档完整性我们还是把它写出来。你可能不会经常使用这种方式。
+.. note:: 这是一个不常见的使用方式,但为了文档完整性我们还是把它写出来.你可能不会经常使用这种方式.
 
 .. versionadded: 1.3
 
-如果你想循环一个列表，同时得到一个数字索引来标明你当前处于列表什么位置，那么你可以这样做。虽然该方法不太常用::
+如果你想循环一个列表,同时得到一个数字索引来标明你当前处于列表什么位置,那么你可以这样做.虽然该方法不太常用::
 
     - name: indexed loop demo
       debug: msg="at array position {{ item.0 }} there is a value {{ item.1 }}"
@@ -339,7 +339,7 @@ Do-Until循环
 ``````````````````````````
 .. versionadded: 2.0
 
-ini插件可以使用正则表达式来获取一组键值对。因此，我们可以遍历该集合。以下是我们使用的ini文件::
+ini插件可以使用正则表达式来获取一组键值对.因此,我们可以遍历该集合.以下是我们使用的ini文件::
 
     [section1]
     value1=section1/value1
@@ -387,9 +387,9 @@ ini插件可以使用正则表达式来获取一组键值对。因此，我们�
 扁平化列表
 `````````````````
 
-.. note:: 这是一个不常见的使用方式，但为了文档完整性我们还是把它写出来。你可能不会经常使用这种方式。
+.. note:: 这是一个不常见的使用方式,但为了文档完整性我们还是把它写出来.你可能不会经常使用这种方式.
 
-在罕见的情况下，你可能有几组列表，列表中会嵌套列表。而你只是想迭代所有列表中的每个元素。比如有一个非常疯狂的假定的数据结构::
+在罕见的情况下,你可能有几组列表,列表中会嵌套列表.而你只是想迭代所有列表中的每个元素.比如有一个非常疯狂的假定的数据结构::
 
     ----
     # file: roles/foo/vars/main.yml
@@ -399,7 +399,7 @@ ini插件可以使用正则表达式来获取一组键值对。因此，我们�
       - [ ['one-package', 'two-package' ]]
       - [ ['red-package'], ['blue-package']]
 
-你可以看到列表中的包到处都是。那么如果想安装两个列表中的所有包那?::
+你可以看到列表中的包到处都是.那么如果想安装两个列表中的所有包那?::
 
     - name: flattened loop demo
       yum: name={{ item }} state=installed 
@@ -414,7 +414,7 @@ ini插件可以使用正则表达式来获取一组键值对。因此，我们�
 循环中使用注册器
 ``````````````````````````
 
-当对处于循环中的某个数据结构使用 ``register`` 来注册变量时，结果包含一个 ``results`` 属性，这是从模块中得到的所有响应的一个列表.
+当对处于循环中的某个数据结构使用 ``register`` 来注册变量时,结果包含一个 ``results`` 属性,这是从模块中得到的所有响应的一个列表.
 
 以下是在 ``with_items`` 中使用 ``register`` 的示例::
 
@@ -424,7 +424,7 @@ ini插件可以使用正则表达式来获取一组键值对。因此，我们�
         - two
       register: echo
 
-返回的数据结构如下，与非循环结构中使用 ``register`` 的返回结果是不同的::
+返回的数据结构如下,与非循环结构中使用 ``register`` 的返回结果是不同的::
 
     {
         "changed": true,
@@ -463,7 +463,7 @@ ini插件可以使用正则表达式来获取一组键值对。因此，我们�
         ]
     }
 
-随后的任务可以用以下方式来循环注册变量，用来检查结果值::
+随后的任务可以用以下方式来循环注册变量,用来检查结果值::
 
     - name: Fail if return code is not 0
       fail:
@@ -476,7 +476,7 @@ ini插件可以使用正则表达式来获取一组键值对。因此，我们�
 自定义迭代
 ``````````````````````````
 
-虽然你通常无需自定义实现自己的迭代，但如果你想按你自己的方式来循环任意数据结构，你可以阅读:doc:`developing_plugins`来作为开始。以上的每个功能都以插件的方式来实现，所以有很多的实现可供引用。
+虽然你通常无需自定义实现自己的迭代,但如果你想按你自己的方式来循环任意数据结构,你可以阅读:doc:`developing_plugins` 来作为开始.以上的每个功能都以插件的方式来实现,所以有很多的实现可供引用.
 
 .. seealso::
 

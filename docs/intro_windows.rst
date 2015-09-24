@@ -90,44 +90,43 @@ Admins有可能希望微调配置,例如延长证过期时间.
 Getting to PowerShell 3.0 or higher
 ```````````````````````````````````
 
-PowerShell 3.0 or higher is needed for most provided Ansible modules for Windows, and is also required to run the above setup script. Note that PowerShell 3.0 is only supported on Windows 7 SP1, Windows Server 2008 SP1, and later releases of Windows.
+多数 Ansible Windows 模块需要 PowerShell 3.0 或更高版本,同时也需要在其基础上运行安装脚本. 需要注意的是 PowerShell 3.0 只在 Windows 7 SP1 ,Windows Server 2008 SP1, 和更新的windows发布版才被支持.
 
-Looking at an ansible checkout, copy the `examples/scripts/upgrade_to_ps3.ps1 <https://github.com/cchurch/ansible/blob/devel/examples/scripts/upgrade_to_ps3.ps1>`_ script onto the remote host and run a PowerShell console as an administrator.  You will now be running PowerShell 3 and can try connectivity again using the win_ping technique referenced above.
+找到 Ansible 的checkout版本,复制 copy the `examples/scripts/upgrade_to_ps3.ps1 <https://github.com/cchurch/ansible/blob/devel/examples/scripts/upgrade_to_ps3.ps1>`_ 脚本到远程主机同时以Administrator角色的帐户运行 PowerShell 控制台. 你就可以运行 PowerShell 3 并可以通过上面介绍的 win_ping 技术来测试连通性.
 
-.. _what_windows_modules_are_available:
 
-What modules are available
+.. 可用的windows模块:
+
+可用的windows模块
 ``````````````````````````
 
-Most of the Ansible modules in core Ansible are written for a combination of Linux/Unix machines and arbitrary web services, though there are various 
-Windows modules as listed in the `"windows" subcategory of the Ansible module index <http://docs.ansible.com/list_of_windows_modules.html>`_.  
+大多数 Ansible 模块尤其核心Ansible设计来组合 Linux/Unix 机器和任意 web services. 尽管 `"windows" subcategory of the Ansible module index <http://docs.ansible.com/list_of_windows_modules.html>`_ 列举了各种各校的 Windows 模块. 
 
-Browse this index to see what is available.
+浏览上面的索引查看可用模块.
 
-In many cases, it may not be necessary to even write or use an Ansible module.
+很多情况下, 其实没有必要写或者使用 Ansible 模块.
 
-In particular, the "script" module can be used to run arbitrary PowerShell scripts, allowing Windows administrators familiar with PowerShell a very native way to do things, as in the following playbook::
+尤其, "script" 模块可以用来执行任意 PowerShell 脚本,允许 Windows administrators 组所有用户通过 PowerSehll 以非常本地化的方式做任何事情.就像如下的 playbook::
 
     - hosts: windows
       tasks:
         - script: foo.ps1 --argument --other-argument
 
-Note there are a few other Ansible modules that don't start with "win" that also function, including "slurp", "raw", and "setup" (which is how fact gathering works).
+注意: 有一小部分 Ansible 模块不是以 "win" 开头但依然是函数,包括 "slurp","raw",和"setup"(fact 收集的工作原理).
 
 .. _developers_developers_developers:
 
-Developers: Supported modules and how it works
+开发者:支持的模块及工作原理
 ``````````````````````````````````````````````
 
-Developing ansible modules are covered in a `later section of the documentation <http://docs.ansible.com/developing_modules.html>`_, with a focus on Linux/Unix.
-What if you want to write Windows modules for ansible though?
 
-For Windows, ansible modules are implemented in PowerShell.  Skim those Linux/Unix module development chapters before proceeding.
+开发 ansible 模块主要在 `later section of the documentation <http://docs.ansible.com/developing_modules.html>`_ 介绍,专注于 Linux/Unix 平台. 如果你想编写 Windows 的 ansible 模块该怎么办呢?
 
-Windows modules live in a "windows/" subfolder in the Ansible "library/" subtree.  For example, if a module is named
-"library/windows/win_ping", there will be embedded documentation in the "win_ping" file, and the actual PowerShell code will live in a "win_ping.ps1" file.  Take a look at the sources and this will make more sense.
+Windows 平台主要通过 PowerShell 模块实现. 开始之前可以先略过 Linux/Unix 模块开发章节.
 
-Modules (ps1 files) should start as follows::
+Windows 模块在 Ansible "library/" 子目录下的 "windows/" 子目录下. 例如,如果一个模块命名为 "library/windows/win_ping",那将会在 "win_ping" 文件中嵌入一个文档,实际的 PowerShell 代码将存在 "win_ping.ps1" 文件. 看下源代码会有更深入的了解.
+
+模块(ps1 files)文件应该以如下格式开头::
 
     #!powershell
     # <license>
@@ -137,20 +136,16 @@ Modules (ps1 files) should start as follows::
 
     # code goes here, reading in stdin as JSON and outputting JSON
 
-The above magic is necessary to tell Ansible to mix in some common code and also know how to push modules out.  The common code contains some nice wrappers around working with hash data structures and emitting JSON results, and possibly a few more useful things.  Regular Ansible has this same concept for reusing Python code - this is just the windows equivalent.
-
-What modules you see in windows/ are just a start.  Additional modules may be submitted as pull requests to github.
+如上代码是为了告诉 ansible 合入一些代码并且
+The above magic is necessary to tell Ansible to mix in some common code and also know how to push modules out.  常规代码包括好包装例如哈希数据结构,jason格式标准输出,还有一些更有用的东西.常规 Ansible 有着重复利用 Python 代码的理念 - 这点 Windows 也是等同的.
+你刚看到的 windows/ 模块只是一个开始. 附加模块已经被 git push 到 github上了.
 
 .. _windows_and_linux_control_machine:
 
-Reminder: You Must Have a Linux Control Machine
+提醒:控制机必须是Linux系统
 ```````````````````````````````````````````````
 
-Note running Ansible from a Windows control machine is NOT a goal of the project.  Refrain from asking for this feature,
-as it limits what technologies, features, and code we can use in the main project in the future.  A Linux control machine
-will be required to manage Windows hosts.
-
-Cygwin is not supported, so please do not ask questions about Ansible running from Cygwin.
+Windows 控制机不是这个项目的目标. Ansible 不会开发这个功能,因为受限于技术,产品和我们未来主要项目使用的代码. 一台Linux控制机是必须的,可以用来管理 Windows 机器. Cygwin 也是不被支持的,所以请不要要求 Ansible 基于 Cygwin 来运行.
 
 .. _windows_facts:
 

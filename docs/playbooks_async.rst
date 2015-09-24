@@ -66,16 +66,15 @@
 
 .. note::
 
-如果 ``async:`` 值太小,可能会导致 "稍后检查" 任务执行失败,因为 ``async_status::`` 的临时状态文件还未被写入信息,而"稍后检查"任务就试图读取此文件.
+   如果 ``async:`` 值太小,可能会导致 "稍后检查" 任务执行失败,因为 ``async_status::`` 的临时状态文件还未被写入信息,而"稍后检查"任务就试图读取此文件.
 
 
 .. seealso::
 
-
    :doc:`playbooks`
-       playbook介绍
-   `用户邮件列表 <http://groups.google.com/group/ansible-devel>`_
-       有问题请访问google group!
+       An introduction to playbooks
+   `User Mailing List <http://groups.google.com/group/ansible-devel>`_
+       Have a question?  Stop by the google group!
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC 聊天频道
+       #ansible IRC chat channel
 

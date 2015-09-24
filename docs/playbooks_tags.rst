@@ -1,8 +1,8 @@
 标签
 ====
 
-如果你有一个大型的 playbook，那能够只运行其中特定部分的配置而无需运行整个 playbook
-将会很有用。
+如果你有一个大型的 playbook,那能够只运行其中特定部分的配置而无需运行整个 playbook
+将会很有用.
 
 plays 和 tasks 都因这个理由而支持 "tags:"
 
@@ -21,11 +21,11 @@ plays 和 tasks 都因这个理由而支持 "tags:"
           tags:
              - configuration
 
-如果你只想运行一个非常大的 playbook 中的 "configuration" 和 "packages"，你可以这样做::
+如果你只想运行一个非常大的 playbook 中的 "configuration" 和 "packages",你可以这样做::
 
     ansible-playbook example.yml --tags "configuration,packages"
 
-另一方面，如果你只想执行 playbook 中某个特定任务 *之外* 的所有任务，你可以这样做::
+另一方面,如果你只想执行 playbook 中某个特定任务 *之外* 的所有任务,你可以这样做::
 
     ansible-playbook example.yml --skip-tags "notification"
 
@@ -38,7 +38,7 @@ plays 和 tasks 都因这个理由而支持 "tags:"
 
     - include: foo.yml tags=web,foo
 
-以上这样也有对每个 include 语句中的单个任务进行标签的功能。
+以上这样也有对每个 include 语句中的单个任务进行标签的功能.
 
 .. seealso::
 
