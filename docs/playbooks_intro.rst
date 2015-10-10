@@ -25,7 +25,7 @@ Playbooks 可用于声明配置,更强大的地方在于,在 playbooks 中可以
 Playbook 语言的示例
 `````````````````````````
 
-Playbooks 的格式是YAML（详见：:doc:`YAMLSyntax`）,语法做到最小化,意在避免 playbooks 成为一种编程语言或是脚本,但它也并不是一个配置模型或过程的模型.
+Playbooks 的格式是YAML（详见::doc:`YAMLSyntax`）,语法做到最小化,意在避免 playbooks 成为一种编程语言或是脚本,但它也并不是一个配置模型或过程的模型.
 
 playbook 由一个或多个 'plays' 组成.它的内容是一个以 'plays' 为元素的列表.
 
@@ -144,14 +144,14 @@ playbook基础
 Tasks 列表
 ++++++++++
 
-每一个 play 包含了一个 task 列表（任务列表）.一个 task 在其所对应的所有主机上（通过 host pattern 匹配的所有主机）执行完毕之后,下一个 task 才会执行.有一点需要明白的是（很重要）,在一个 play 之中,所有 hosts 会获取相同的任务指令,这是 play 的一个目的所在,也就是将一组选出的 hosts 映射到 task.（注：此处翻译未必准确,暂时保留原文）
+每一个 play 包含了一个 task 列表（任务列表）.一个 task 在其所对应的所有主机上（通过 host pattern 匹配的所有主机）执行完毕之后,下一个 task 才会执行.有一点需要明白的是（很重要）,在一个 play 之中,所有 hosts 会获取相同的任务指令,这是 play 的一个目的所在,也就是将一组选出的 hosts 映射到 task.（注:此处翻译未必准确,暂时保留原文）
 
 在运行 playbook 时（从上到下执行）,如果一个 host 执行 task 失败,这个 host 将会从整个 playbook 的 rotation 中移除.
 如果发生执行失败的情况,请修正 playbook 中的错误,然后重新执行即可.
 
 每个 task 的目标在于执行一个 moudle, 通常是带有特定的参数来执行.在参数中可以使用变量（variables）.
 
-modules 具有"幂等"性,意思是如果你再一次地执行 moudle（译者注：比如遇到远端系统被意外改动,需要恢复原状）,moudle 
+modules 具有"幂等"性,意思是如果你再一次地执行 moudle（译者注:比如遇到远端系统被意外改动,需要恢复原状）,moudle 
 只会执行必要的改动,只会改变需要改变的地方.所以重复多次执行 playbook 也很安全.
 
 对于 `command` module 和 `shell` module,重复执行 playbook,实际上是重复运行同样的命令.如果执行的命令类似于 'chmod' 或者 'setsebool' 这种命令,这没有任何问题.也可以使用一个叫做 'creates' 的 flag 使得这两个 module 变得具有"幂等"特性
@@ -160,7 +160,7 @@ modules 具有"幂等"性,意思是如果你再一次地执行 moudle（译者�
 每一个 task 必须有一个名称 `name`,这样在运行 playbook 时,从其输出的任务执行信息中可以很好的辨别出是属于哪一个 task 的.
 如果没有定义 `name`,‘action’ 的值将会用作输出信息中标记特定的 task.
 
-如果要声明一个 task,以前有一种格式： "action: module options" （可能在一些老的 playbooks 中还能见到）.现在推荐使用更常见的格式："module: options" ,本文档使用的就是这种格式.
+如果要声明一个 task,以前有一种格式: "action: module options" （可能在一些老的 playbooks 中还能见到）.现在推荐使用更常见的格式:"module: options" ,本文档使用的就是这种格式.
 
 下面是一种基本的 task 的定义,service moudle 使用 key=value 格式的参数,这也是大多数 module 使用的参数格式::
 
@@ -203,7 +203,7 @@ modules 具有"幂等"性,意思是如果你再一次地执行 moudle（译者�
 
 这些变量在 tempates 中也是可用的,稍后会讲到.
 
-在一个基础的 playbook 中,所有的 task 都是在一个 play 中列出,稍后将介绍一种更合理的安排 task 的方式：使用 'include:' 
+在一个基础的 playbook 中,所有的 task 都是在一个 play 中列出,稍后将介绍一种更合理的安排 task 的方式:使用 'include:' 
 指令.
 
 
@@ -284,7 +284,7 @@ Roles 将在下一章节讲述.值得指出的是,handlers 会在 'pre_tasks', '
 ````````````````````
 
 既然现在你已经学习了 playbook 的语法,那要如何运行一个 playbook 呢？这很简单,这里的示例是并行的运行 playbook,并行的级别
-是10（译者注：是10个并发的进程？）::
+是10（译者注:是10个并发的进程？）::
 
     ansible-playbook playbook.yml -f 10
 

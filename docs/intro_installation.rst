@@ -8,7 +8,7 @@ Installation
 从Github获取Ansible
 ````````````````````
 
-如果你有一个github账户,可以跟进Ansible在Github的项目： `Github project <https://github.com/ansible/ansible>`_ 我们在这里保持对bugs和feature ideas的跟踪.
+如果你有一个github账户,可以跟进Ansible在Github的项目: `Github project <https://github.com/ansible/ansible>`_ 我们在这里保持对bugs和feature ideas的跟踪.
 
 .. _what_will_be_installed:
 

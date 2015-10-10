@@ -18,7 +18,7 @@ Content Organization
 你对 Ansible 的使用应该符合你的需求而不是我们的,所以请随意根据你的需求来组织修改接下来的示例.
 
 有件事绝对是你想要做的,那就是使用 "roles" 组织特性.它作为主要的 playbook 的主要部分被文档化.详情参见 :doc:`playbooks_roles`. 你绝对应该使用 roles.
-roles 是极好的. 快去使用 roles！ roles！ 重要的事情要重复说！roles 是极好的.(译者：..老外也知道重要的事情重复三遍啊！~~~)
+roles 是极好的. 快去使用 roles！ roles！ 重要的事情要重复说！roles 是极好的.(译者:..老外也知道重要的事情重复三遍啊！~~~)
 
 .. _directory_layout:
 
@@ -320,7 +320,7 @@ Group By Roles
 ++++++++++++++
 
 在这条贴士中,我们某种程度上在重复自己,但这是值得的.一个系统可能被分成多分组.详情请查阅 :doc:`intro_inventory` 和 :doc:`intro_patterns`.
-在样例中,分组名之后的 *webservers* 和 *dbservers* ,它们因为是很重要的概念所以反复出现.(译者：恩,重要的事情要重复三遍！)一个系统可以出现在多个分组中.
+在样例中,分组名之后的 *webservers* 和 *dbservers* ,它们因为是很重要的概念所以反复出现.(译者:恩,重要的事情要重复三遍！)一个系统可以出现在多个分组中.
 
 
 通过给 role 赋予特定的变量,这允许 playbooks 能基于角色来锁定机器.

@@ -1,7 +1,7 @@
 .. _inventory:
 
 Inventory文件
-===============
+=================
 
 .. contents:: Topics
 
@@ -216,7 +216,7 @@ Inventory 参数的说明
 	  sudo 命令路径(适用于1.8及以上版本)
 	  
     ansible_connection
-	  与主机的连接类型.比如：local, ssh 或者 paramiko. Ansible 1.2 以前默认使用 paramiko.1.2 以后默认使用 'smart','smart' 方式会根据是否支持 ControlPersist, 来判断'ssh' 方式是否可行.
+	  与主机的连接类型.比如:local, ssh 或者 paramiko. Ansible 1.2 以前默认使用 paramiko.1.2 以后默认使用 'smart','smart' 方式会根据是否支持 ControlPersist, 来判断'ssh' 方式是否可行.
 	  
     ansible_ssh_private_key_file
 	  ssh 使用的私钥文件.适用于有多个密钥,而你不想使用 SSH 代理的情况.
