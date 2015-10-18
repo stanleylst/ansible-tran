@@ -1,9 +1,8 @@
-Quickstart Video
+快速学习视频
 ````````````````
 
-We've recorded a short video that shows how to get started with Ansible that you may like to use alongside the documentation.
+我们录制了一个简短的视频来展示如何开始使用Ansible，当你阅读文档时可以用到它。
 
-The `quickstart video <http://ansible.com/resources>`_ is about 30 minutes long and will show you some of the basics about your
-first steps with Ansible.
+`快速学习视频 <http://ansible.com/resources>`_ 长度大概为30分钟，介绍了刚开始使用Ansible的一些基本知识。
 
-Enjoy, and be sure to visit the rest of the documentation to learn more.
+欢迎观看本视频，请确保阅读剩余的文档来进行进一步的学习。

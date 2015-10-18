@@ -1,57 +1,46 @@
-YAML Syntax
+YAML 语法
 ===========
 
-This page provides a basic overview of correct YAML syntax, which is how Ansible
-playbooks (our configuration management language) are expressed.  
+这个页面提供一个正确的 YAML 语法的基本概述, 它被用来描述一个 playbooks(我们的配置管理语言).
 
-We use YAML because it is easier for humans to read and write than other common
-data formats like XML or JSON.  Further, there are libraries available in most
-programming languages for working with YAML.
+我们使用 YAML 是因为它像 XML 或 JSON 是一种利于人们读写的数据格式. 此外在大多数变成语言中有使用 YAML 的库.
 
-You may also wish to read :doc:`playbooks` at the same time to see how this
-is used in practice.
+你可能希望读 :doc:`playbooks` 实践中如何使用的.
 
 
-YAML Basics
+基本的 YAML
 -----------
 
-For Ansible, nearly every YAML file starts with a list.   
-Each item in the list is a list of key/value pairs, commonly
-called a "hash" or a "dictionary".  So, we need to know how
-to write lists and dictionaries in YAML.
+对于 Ansible, 每一个 YAML 文件都是从一个列表开始. 列表中的每一项都是一个键值对, 通常它们被称为一个 "哈希" 或 "字典". 所以, 我们需要知道如何在 YAML 中编写列表和字典.
 
-There's another small quirk to YAML.  All YAML files (regardless of their association with
-Ansible or not) should begin with ``---``.  This is part of the YAML
-format and indicates the start of a document.
+YAML 还有一个小的怪癖. 所有的 YAML 文件(无论和 Ansible 有没有关系)开始行都应该是 ``---``.  这是 YAML 格式的一部分, 表明一个文件的开始.
 
-All members of a list are lines beginning at the same indentation level starting
-with a ``"- "`` (a dash and a space)::
+列表中的所有成员都开始于相同的缩进级别, 并且使用一个 ``"- "`` 作为开头(一个横杠和一个空格)::
 
     ---
-    # A list of tasty fruits
+    # 一个美味水果的列表
     - Apple
     - Orange
     - Strawberry
     - Mango
 
-A dictionary is represented in a simple ``key: value`` form (the colon must be followed by a space)::
+一个字典是由一个简单的 ``键: 值`` 的形式组成(这个冒号后面必须是一个空格)::
 
     ---
-    # An employee record
+    # 一位职工的记录
     name: Example Developer
     job: Developer
     skill: Elite
 
-Dictionaries can also be represented in an abbreviated form if you really want to::
+字典也可以使用缩进形式来表示, 如果你喜欢这样的话::
 
     ---
-    # An employee record
+    # 一位职工的记录
     {name: Example Developer, job: Developer, skill: Elite}
 
 .. _truthiness:
 
-Ansible doesn't really use these too much, but you can also specify a 
-boolean value (true/false) in several forms::
+Ansible并不是太多的使用这种格式, 但是你可以通过以下格式来指定一个布尔值(true/fase)::
 
     ---
     create_key: yes
@@ -60,11 +49,10 @@ boolean value (true/false) in several forms::
     likes_emacs: TRUE
     uses_cvs: false
 
-Let's combine what we learned so far in an arbitrary YAML example.  This really
-has nothing to do with Ansible, but will give you a feel for the format::
+让我们把目前所学到的 YAML 例子组合在一起. 这些在 Ansible 中什么也干不了, 但这些格式将会给你感觉::
 
     ---
-    # An employee record
+    # 一位职工记录
     name: Example Developer
     job: Developer
     skill: Elite
@@ -79,24 +67,22 @@ has nothing to do with Ansible, but will give you a feel for the format::
         python: Elite
         dotnet: Lame
 
-That's all you really need to know about YAML to start writing
-`Ansible` playbooks.
+这就是你开始编写 `Ansible` playbooks 所需要知道的所有 YAML 语法.
 
 Gotchas
 -------
 
-While YAML is generally friendly, the following is going to result in a YAML syntax error::
+尽管 YAML 通常是友好的, 但是下面将会导致一个 YAML 语法错误::
 
     foo: somebody said I should put a colon here: so I did
 
-You will want to quote any hash values using colons, like so::
+你需要使用引号来包裹任何包含冒号的哈希值, 像这样::
 
     foo: "somebody said I should put a colon here: so I did"
 
-And then the colon will be preserved.
+然后这个冒号将会被结尾.
 
-Further, Ansible uses "{{ var }}" for variables.  If a value after a colon starts
-with a "{", YAML will think it is a dictionary, so you must quote it, like so::
+此外, Ansible 使用 "{{ var }}" 来引用变量. 如果一个值以 "{" 开头, YAML 将认为它是一个字典, 所以我们必须引用它, 像这样::
 
     foo: "{{ variable }}"
 

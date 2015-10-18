@@ -1,46 +1,35 @@
-Testing Strategies
+测试策略
 ==================
 
 .. _testing_intro:
 
-Integrating Testing With Ansible Playbooks
+Ansible Playbooks 的集成测试
 ``````````````````````````````````````````
 
-Many times, people ask, "how can I best integrate testing with Ansible playbooks?"  There are many options.  Ansible is actually designed
-to be a "fail-fast" and ordered system, therefore it makes it easy to embed testing directly in Ansible playbooks.  In this chapter,
-we'll go into some patterns for integrating tests of infrastructure and discuss the right level of testing that may be appropriate.
+很多时候, 人们问, "我怎样才能最好的将 Ansible playbooks 和测试结合在一起?" 这有很多选择. Ansible 的设计实际上是一个"fail-fast"有序系统, 因此它可以很容易地嵌入到 Ansible playbooks. 在这一章节, 我们将讨论基础设施的集成测试及合适的测试等级.
 
-.. note:: This is a chapter about testing the application you are deploying, not the chapter on how to test Ansible modules during development.  For that content, please hop over to the Development section.
+.. note:: 这是一个关于测试你部署应用程序的章节, 不是如何测试开发的 Ansible 模块. 对于那些内容, 请移步开发区域.
 
-By incorporating a degree of testing into your deployment workflow, there will be fewer surprises when code hits production and, in many cases,
-tests can be leveraged in production to prevent failed updates from migrating across an entire installation.  Since it's push-based, it's
-also very easy to run the steps on the localhost or testing servers. Ansible lets you insert as many checks and balances into your upgrade workflow as you would like to have.
+通过将某种程度的测试部署合并到部署工作流中, 当代码运行在生产环境中这将减少意外的产生, 在许多情况下, 测试可以避免在生产中因为更新失败而导致的迁移整个安装. 因为它是基于推送的, 它可以很容易的运行在 localhost 或者测试服务器上. Ansible 允许你添加尽可能多的检查在你的升级流程中.
 
-The Right Level of Testing
+正确的测试等级
 ``````````````````````````
 
-Ansible resources are models of desired-state.  As such, it should not be necessary to test that services are started, packages are
-installed, or other such things.  Ansible is the system that will ensure these things are declaratively true.   Instead, assert these
-things in your playbooks.
+Ansible 资源是期望状态的模块. 因此测试服务是否处于运行, 包是否已经安装, 或其他这样的事情它不是必要的. Ansible 确保这些系统中的这些声明是真实的. 相反, 在你的 playbooks 中 assert 这些事情.
 
 .. code-block:: yaml
 
    tasks:
      - service: name=foo state=started enabled=yes
 
-If you think the service may not be started, the best thing to do is request it to be started.  If the service fails to start, Ansible
-will yell appropriately. (This should not be confused with whether the service is doing something functional, which we'll show more about how to
-do later).
+如果你认为该服务可能没有启动, 最好的事情就是要求它处于启动状态. 如果这个服务启动失败, Ansible 将适当的抛出. (这不应该和服务是否正在做一些功能性的事情混淆, 而我们应该更多的展示如何做这些事).
 
-Check Mode As A Drift Test
+Check 模块作为主要测试
 ``````````````````````````
 
-In the above setup, `--check` mode in Ansible can be used as a layer of testing as well.  If running a deployment playbook against an
-existing system, using the `--check` flag to the `ansible` command will report if Ansible thinks it would have had to have made any changes to
-bring the system into a desired state.
+在上面的设置中, `--check` 模块在 Ansible 中可以作为一层测试. 如果在一个现有的系统部署 playbook, 使用 `--check` 选项 `ansible` 命令将会报告出 Ansible 使系统进入一个期望状态所做的任何更改. 
 
-This can let you know up front if there is any need to deploy onto the given system.  Ordinarily scripts and commands don't run in check mode, so if you
-want certain steps to always execute in check mode, such as calls to the script module, add the 'always_run' flag::
+这可以让你知道前面任何需要不如到给定系统的信息. 一般的脚本和命令不运行在检查模式, 所以如果你想要某些步骤总是在检查模式下执行, 例如调用 script 模块, 添加 'always_run' 标记::
 
 
    roles:
@@ -50,17 +39,17 @@ want certain steps to always execute in check mode, such as calls to the script 
      - script: verify.sh
        always_run: True
 
-Modules That Are Useful for Testing
+用于测试的模块
 ```````````````````````````````````
 
-Certain playbook modules are particularly good for testing.  Below is an example that ensures a port is open::
+某些 playbook 模块对于测试特别友好. 下面的例子保证端口处于打开状态::
 
    tasks:
 
      - wait_for: host={{ inventory_hostname }} port=22
        delegate_to: localhost
       
-Here's an example of using the URI module to make sure a web service returns::
+这是使用 URI 模块来确保 web service 有正确的返回::
 
    tasks:
 
@@ -70,16 +59,16 @@ Here's an example of using the URI module to make sure a web service returns::
      - fail: msg='service is not happy'
        when: "'AWESOME' not in webpage.content"
 
-It's easy to push an arbitrary script (in any language) on a remote host and the script will automatically fail if it has a non-zero return code::
+可以很容易的将任意(语言)的脚本推送到远程主机上, 如果这个脚本有一个非零的返回码, 它将自动失效::
 
    tasks:
 
      - script: test_script1
      - script: test_script2 --parameter value --parameter2 value
 
-If using roles (you should be, roles are great!), scripts pushed by the script module can live in the 'files/' directory of a role.
+如果使用 roles(你应该这样做, roles 是伟大的!), 脚本模块可以推送 role 下的 'files/' 目录下的脚本
 
-And the assert module makes it very easy to validate various kinds of truth::
+添加 assert 模块, 它可以很容易的验证各种真理::
 
    tasks:
 
@@ -91,7 +80,7 @@ And the assert module makes it very easy to validate various kinds of truth::
             - "'not ready' not in cmd_result.stderr"
             - "'gizmo enabled' in cmd_result.stdout"
 
-Should you feel the need to test for existence of files that are not declaratively set by your Ansible configuration, the 'stat' module is a great choice::
+如果你觉得需要测试通过 Ansible 设置的文件是否存在, 'stat' 模块是一个不错的选择::
 
    tasks:
 
@@ -103,40 +92,35 @@ Should you feel the need to test for existence of files that are not declarative
             - p.stat.exists and p.stat.isdir
 
 
-As mentioned above, there's no need to check things like the return codes of commands.  Ansible is checking them automatically.
-Rather than checking for a user to exist, consider using the user module to make it exist.
+如上所处, 哪些没必要检查的东西如命令的返回码. Ansible 自动检查它们.
+如果检查用户存在, 考虑使用 user 模块使其存在.
 
-Ansible is a fail-fast system, so when there is an error creating that user, it will stop the playbook run.  You do not have
-to check up behind it.
+Ansible 是一个 fail-fast 系统, 所以当创建用户失败, 它将停止 playbook 的运行. 你不必检查它背后的原因.
 
-Testing Lifecycle
+测试的生命周期
 `````````````````
 
-If writing some degree of basic validation of your application into your playbooks, they will run every time you deploy.
+如果将你的应用程序的基本验证写入了你的 playbooks 中, 在你每次部署的适合他们都将运行.
 
-As such, deploying into a local development VM and a staging environment will both validate that things are according to plan
-ahead of your production deploy.
+因此部署到本地开发的虚拟机和临时的环境都将根据你的生产环境的部署计划来验证这一切.
 
-Your workflow may be something like this::
+你的工作流可能是这样::
 
-    - Use the same playbook all the time with embedded tests in development
-    - Use the playbook to deploy to a staging environment (with the same playbooks) that simulates production
-    - Run an integration test battery written by your QA team against staging
-    - Deploy to production, with the same integrated tests.
+    - 使用相同的 playbook 在开发过程中嵌入测试
+    - 使用 playbook 部署一个临时环境(使用相同的playbooks)来模拟生产
+    - 运行一个由 QA 团建编写的集成测试用例
+    - 使用相同的总和测试部署到生产.
 
-Something like an integration test battery should be written by your QA team if you are a production webservice.  This would include
-things like Selenium tests or automated API tests and would usually not be something embedded into your Ansible playbooks.
+如果你是一个产品服务, 一些像集成测试系列需要通过你的 QA 团队来编写. 这将包含诸如测试用例或自动化 API 测试, 这些通常不是嵌入到 Ansible 的 playbooks 中的.
 
-However, it does make sense to include some basic health checks into your playbooks, and in some cases it may be possible to run
-a subset of the QA battery against remote nodes.   This is what the next section covers.
+然而, 它包含基本的健康的检查使 playbooks 有意义, 而且在某些情况下它可能会相对于远程节点运行一些 QA 的子集合. 这是下一节所涵盖的内容.
 
-Integrating Testing With Rolling Updates
+结合滚动更新测试
 ````````````````````````````````````````
 
-If you have read into :doc:`playbooks_delegation` it may quickly become apparent that the rolling update pattern can be extended, and you
-can use the success or failure of the playbook run to decide whether to add a machine into a load balancer or not. 
+如果你已经读到 :doc:`playbooks_delegation` 滚动更新的扩展好处可以迅速变得明显, 你可以使用 playbook 运行的成功或失败来决定是否增加机器到负载均衡器中. 
 
-This is the great culmination of embedded tests::
+这是嵌入测试的显著结果::
 
     ---
 
@@ -161,17 +145,13 @@ This is the great culmination of embedded tests::
           command: /usr/bin/add_back_to_pool {{ inventory_hostname }}
           delegate_to: 127.0.0.1
 
-Of course in the above, the "take out of the pool" and "add back" steps would be replaced with a call to a Ansible load balancer
-module or appropriate shell command.  You might also have steps that use a monitoring module to start and end an outage window
-for the machine.
+在上述过程中, "task out of the pool" 和 "add back" 的步骤将会代替 Ansible 调用负载均衡模块或对应的 shell 命令. 您还可以使用监控模块对机器进行创建和关闭中断的窗口.
 
-However, what you can see from the above is that tests are used as a gate -- if the "apply_testing_checks" step is not performed,
-the machine will not go back into the pool.
+然而, 你可以从上面看出测试作为入口 -- 如果"apply_testing_checks"这一步不执行, 这个机器将不会被添加到池中.
 
-Read the delegation chapter about "max_fail_percentage" and you can also control how many failing tests will stop a rolling update
-from proceeding.
+阅读关于"max_fail_percentage"的代表章节, 你可以控制有多少失败的测试后停止程序的滚动更新.
 
-This above approach can also be modified to run a step from a testing machine remotely against a machine::
+这种方式也可以被修改为先在测试机器上执行测试步骤然后在远程机器执行测试的步骤::
 
     ---
 
@@ -199,55 +179,39 @@ This above approach can also be modified to run a step from a testing machine re
           command: /usr/bin/add_back_to_pool {{ inventory_hostname }}
           delegate_to: 127.0.0.1
 
-In the above example, a script is run from the testing server against a remote node prior to bringing it back into
-the pool.
+在上面的例子中, 从测试服务器上执行一个脚本紧接着将一个远程的节点添加到 pool 中.
 
-In the event of a problem, fix the few servers that fail using Ansible's automatically generated 
-retry file to repeat the deploy on just those servers.
+在出现问题时, 解决一些服务器不能使用 Ansible 自动生成的重试文件重复部署这些服务器.
 
-Achieving Continuous Deployment
+
+实现连续部署
 ```````````````````````````````
 
-If desired, the above techniques may be extended to enable continuous deployment practices.
+如果需要, 上述技术可以扩展到启用连续部署中.
 
-The workflow may look like this::
+这个工作流可能像这样::
 
-    - Write and use automation to deploy local development VMs
-    - Have a CI system like Jenkins deploy to a staging environment on every code change
-    - The deploy job calls testing scripts to pass/fail a build on every deploy
-    - If the deploy job succeeds, it runs the same deploy playbook against production inventory
+    - 编写和使用自动部署本地开发虚拟机
+    - 有一个 CI 系统像 Jenkins, 来将每一次的代码变更部署到临时环境中
+    - 这个部署任务调用测试脚本, 参考通过/失败来确定每一次的部署是否进行 build
+    - 如果部署任务成功, 它将在生产环境中运行相同的部署 playbook
 
-Some Ansible users use the above approach to deploy a half-dozen or dozen times an hour without taking all of their infrastructure
-offline.  A culture of automated QA is vital if you wish to get to this level.  
+一些 Ansible 用户使用上述方式, 在一个小时内多次部署使它们所有的基础设施不下线. 如果你想达到那种水平, 一个自动 QA 系统是至关重要的.
 
-If you are still doing a large amount of manual QA, you should still make the decision on whether to deploy manually as well, but
-it can still help to work in the rolling update patterns of the previous section and incorporate some basic health checks using
-modules like 'script', 'stat', 'uri', and 'assert'.
+如果你仍然在大量使用人工 QA, 你仍然需要决定手动部署是否是最好的, 但它仍然可以帮助滚动更新前的一部分工作, 包括基本的健康检查使用模块 'script', 'stat', 'uri', 和 'assert'.
 
-Conclusion
+结尾
 ``````````
 
-Ansible believes you should not need another framework to validate basic things of your infrastructure is true.  This is the case
-because Ansible is an order-based system that will fail immediately on unhandled errors for a host, and prevent further configuration
-of that host.  This forces errors to the top and shows them in a summary at the end of the Ansible run.
+Ansible 相信你应该不需要另一个框架来验证你的基础设施是正确的. 这种情况是因为 Ansible 是基于顺序的系统, 处理失败后将立即在主机上引发错误, 并阻止该主机进一步的配置. 这迫使 Ansible 在运行结束后将错误作为摘要显示在顶端.
 
-However, as Ansible is designed as a multi-tier orchestration system, it makes it very easy to incorporate tests into the end of
-a playbook run, either using loose tasks or roles.  When used with rolling updates, testing steps can decide whether to put a machine
-back into a load balanced pool or not.
+然而, Ansible 作为一个多层编排系统, 它可以很轻松的将测试合并到 playbook 中运行完毕, 使用 tasks 或 roles. 当使用滚动更新时, 测试步骤可以决定是否要把一台服务器添加到负载均衡池中.
 
-Finally, because Ansible errors propagate all the way up to the return code of the Ansible program itself, and Ansible by default
-runs in an easy push-based mode, Ansible is a great step to put into a build environment if you wish to use it to roll out systems
-as part of a Continuous Integration/Continuous Delivery pipeline, as is covered in sections above.
+最后, 因为 Ansible 错误会通过所有的方式进行传播以及 Ansible 程序本身的返回码, Ansible 默认运行在一个简单的推送模式, 如果你想使用它作为部署系统, 持续集成/持续交付道路上的组成部分, Ansible 是作为构建环境的最好的阶段, 如上面部分的介绍.
 
-The focus should not be on infrastructure testing, but on application testing, so we strongly encourage getting together with your
-QA team and ask what sort of tests would make sense to run every time you deploy development VMs, and which sort of tests they would like
-to run against the staging environment on every deploy.  Obviously at the development stage, unit tests are great too.  But don't unit
-test your playbook.  Ansible describes states of resources declaratively, so you don't have to.  If there are cases where you want
-to be sure of something though, that's great, and things like stat/assert are great go-to modules for that purpose.
+重点不应该放在基础设施测试上, 而是在应用程序的测试, 所以我们强烈鼓励你和你的 QA 团队商量出对于每一次部署的开发虚拟机什么样的测试是有意义的, 并将他们希望对每个部署的临时环境的测试进行排序. Ansible 描述了资源应该所处的状态, 所以你不需要考虑这些. 如果存在你需要确定的东西, 使用 stat/assert 这些伟大的模块来实现你的目的, 这将是最棒的.
 
-In all, testing is a very organizational and site-specific thing.  Everybody should be doing it, but what makes the most sense for your
-environment will vary with what you are deploying and who is using it -- but everyone benefits from a more robust and reliable deployment
-system.
+总之, 测试是一个组织非常明确的事情. 每一个人都应该这样做, 但是这些要根据你要部署什么以及谁在使用它们来确定最适合的方案 -- 但每个人肯定都会从一个更加强大和可靠的部署系统中受益.
 
 .. seealso::
 

@@ -1,308 +1,218 @@
 Community Information & Contributing
+社区信息与贡献
 ````````````````````````````````````
+   
+Ansible是一个开源项目，它被设计于让开发者和管理员在共同构建自动化解决方案的时候更好的合作。
 
-Ansible is an open source project designed to bring together administrators and developers of all kinds to collaborate on building
-IT automation solutions that work well for them.   
+你想要参与进来吗 -- 不论是问问题，帮助其它用户，像新人介绍ansible，或者帮助软件和文档的完善，我们都非常欢迎你对这个项目的贡献。
 
-Should you wish to get more involved -- whether in terms of just asking a question, helping other users, introducing new people to Ansible, or helping with the software or documentation, we welcome your contributions to the project.
+.. 内容:: 主题
 
-.. contents:: Topics
-
-Ansible Users
+Ansible用户
 =============
 
-I've Got A Question
+我有个问题
 -------------------
 
-We're happy to help!
+我们很乐意帮助你！
 
-Ansible questions are best asked on the `Ansible Google Group Mailing List <http://groups.google.com/group/ansible-project>`_.  
+Ansible问题最好在Ansible的google谈论组上面询问。`Ansible Google Group Mailing List <http://groups.google.com/group/ansible-project>`_.  
 
-This is a very large high-traffic list for answering questions and sharing tips
-and tricks. Anyone can join, and email delivery is optional if you just want to read the group online.  To cut down on spam, your first post is moderated, though posts are approved quickly.
+这里有非常多的回答问题的列表和分享的技巧。任何人都可以加入进来，如果你只想在线阅读的话，发送邮件是可选的。为了减少垃圾邮件，尽管投递很快就被批准，你的第一次投递还是可能比较慢。
 
-Please be sure to share any relevant commands you ran, output, and detail, indicate the version of Ansible you are using when asking a question.
+在问问题的时候，确保让大家知道你运行的相关命令，输出内容，一些细节，和你使用的Ansible版本
 
-Where needed, link to gists or github repos to show examples, rather than sending attachments to the list.
+在需要的使用实例场合，尽量链接到 github 上展示，而不是在邮件列表中发送附件。
 
-We recommend using Google search to see if a topic has been answered recently, but comments found in older threads may no longer apply, depending on the topic.
+推荐你在问问题之前使用 Google 搜索，查看是否相关问题已经被回答过了，但是如果在注释中发现时间很久了，相关主题可能不再回复。
 
-Before you post, be sure you are running the latest stable version of Ansible.  You can check this by comparing the output of 'ansible --version' with the version indicated on `PyPi <https://pypi.python.org/pypi/ansible>`.
+在问问题之前，确保使用的是最新的稳定版本的 Ansible ，你可以通过对比命令 'ansible --version' 的输出和 `PyPi <https://pypi.python.org/pypi/ansible>` 上面的版本来进行检查。
 
-Alternatively, you can also join our IRC channel - #ansible on irc.freenode.net.  It's a very high traffic channel as well, if you don't get an answer you like, please stop by our mailing list, which is more likely
-to get attention of core developers since it's asynchronous.
+同样，你可以加入 IRC 频道 - #ansible on irc.freenode.net .这也是一个很活跃的频道， 如果还没在邮件列表中没有找到你想要的答案，因为邮件是异步的，请暂停发送邮件，你的邮件可能会引起核心开发人员的注意。
 
-I'd Like To Keep Up With Release Announcements
+我想跟上版本发布公告
 ----------------------------------------------
 
-Release announcements are posted to ansible-project, though if you don't want to keep up with the very active list, you can join the `Ansible Announce Mailing List <http://groups.google.com/group/ansible-announce>`_
+版本通知发布在 ansible 的项目上面，如果你不想跟上最新的邮件列表，你可以加入 Ansible 匿名邮件列表 `Ansible Announce Mailing List <http://groups.google.com/group/ansible-announce>`_
 
-This is a low-traffic read-only list, where we'll share release announcements and occasionally links to major Ansible Events around the world.
+这是一个低流量的只读邮件列表，我们指挥在这里发布版本通知和 可选的通向到 Ansible 大事件的链接
 
-I'd Like To Help Share and Promote Ansible
+我想帮助分享和改善Ansible
 ------------------------------------------
 
-You can help share Ansible with others by telling friends and colleagues, writing a blog post, 
-or presenting at user groups (like DevOps groups or the local LUG).  
+你可以通过告诉朋友和同事，写博客，来把 Ansible 分享给其它人，或者出现在用户讨论组上面(像 DevOps组，或者本地 LUG)
 
-You are also welcome to share slides on speakerdeck, sign up for a free account and tag it “Ansible”. On Twitter, 
-you can also share things with #ansible and may wish to `follow us <https://twitter.com/ansible>`_.
+你可以注册一个免费的账户标记为 "Ansible"，在 speakerdeck 上面分享你的幻灯片。在推特上，你可以和 ansible 一起分享，或者跟随我们  `follow us <https://twitter.com/ansible>`_.
 
-I'd Like To Help Ansible Move Faster
+我想让Ansible开发的更快
 ------------------------------------
 
-If you're a developer, one of the most valuable things you can do is look at the github issues list and help fix bugs.  We almost always prioritize bug fixing over
-feature development, so clearing bugs out of the way is one of the best things you can do.
+如果你是一个开发者，最有价值的事情就是查看 github issue 列表，帮助修复 bug。我们总是在特性开发时，优先考虑修复 bug 问题，因此你可以做的最好的事情就是清楚 bug 。
 
-If you're not a developer, helping test pull requests for bug fixes and features is still immensely valuable.  You can do this by checking out ansible, making a test
-branch off the main one, merging a GitHub issue, testing, and then commenting on that particular issue on GitHub.
+如果你不是开发者，帮助测试提交的 bug 修复问题，也是很有价值的。你可以检验 ansible，在主分支下，开一个测试分支，合并 github 上的问题，测试，然后在指定的 issue 上面注释。
 
-I'd Like To Report A Bug
+我想报告 Bug
 ------------------------------------
 
-Ansible practices responsible disclosure - if this is a security related bug, email `security@ansible.com <mailto:security@ansible.com>`_ instead of filing a ticket or posting to the Google Group and you will receive a prompt response.
+Ansible实际使用中暴露的问题 -- 如果和安全相关，请发邮件到 `security@ansible.com <mailto:security@ansible.com>`，而不是发到 Google 讨论组上面 。
 
-Bugs related to the core language should be reported to `github.com/ansible/ansible <https://github.com/ansible/ansible>`_ after
-signing up for a free github account.  Before reporting a bug, please use the bug/issue search
-to see if the issue has already been reported.
+有关核心语言的 Bug 应该被报道到 `github.com/ansible/ansible <https://github.com/ansible/ansible>` 。在报告一个 Bug 之前首先检查 bug/issue 查看有关 issue 是否被报告了。
 
-MODULE related bugs however should go to `ansible-modules-core <https://github.com/ansible/ansible-modules-core>`_ or `ansible-modules-extras <https://github.com/ansible/ansible-modules-extras>`_ based on the classification of the module.  This is listed on the bottom of the docs page for any module.
+模块相关的 Bugs 应该基于模块的分类发到 `ansible-modules-core <https://github.com/ansible/ansible-modules-core>` 或者  `ansible-modules-extras <https://github.com/ansible/ansible-modules-extras>` 。这会被列到模块文档的底部。
 
-When filing a bug, please use the `issue template <https://github.com/ansible/ansible/raw/devel/ISSUE_TEMPLATE.md>`_ to provide all relevant information, regardless of what repo you are filing a ticket against.
+当你填bug信息的时候，模块请使用 `issue template <https://github.com/ansible/ansible/raw/devel/ISSUE_TEMPLATE.md>` 提供所有相关的信息，不管你正在填什么类型的表格。
+(When filing a bug, please use the `issue template <https://github.com/ansible/ansible/raw/devel/ISSUE_TEMPLATE.md>`_ to provide all relevant information, regardless of what repo you are filing a ticket against.)
 
-Knowing your ansible version and the exact commands you are running, and what you expect, saves time and helps us help everyone with their issues
-more quickly.
+知道你ansible的版本，和你运行的具体的命令，你期望什得到什么结果，将会帮助我们和每个人世间，更快的知道问题。
 
-Do not use the issue tracker for "how do I do this" type questions.  These are great candidates
-for IRC or the mailing list instead where things are likely to be more of a discussion.
+不要使用类似，"我如何做(how do I do this)" 类型的问题。这里都是 IRC 的参与者回答有用的问题，而不是讨论有什么问题的。学会提问。
 
-To be respectful of reviewers time and allow us to help everyone efficiently, please 
-provide minimal well-reduced and well-commented examples versus sharing your entire production
-playbook.  Include playbook snippets and output where possible.  
+尊重审稿人，使审稿人有时间帮助更多的忍，请提供 良好注释，语言简洁的playbook，包括playbook的片段和输出内容。有用的信息尽量提出来，省略无用的信息
 
-When sharing YAML in playbooks, formatting can be preserved by using `code blocks <https://help.github.com/articles/github-flavored-markdown#fenced-code-blocks>`_.
+当在 playbook 分享 YAML 时候，格式可以被保存通过使用 `code blocks <https://help.github.com/articles/github-flavored-markdown#fenced-code-blocks>`
 
-For multiple-file content, we encourage use of gist.github.com.  Online pastebin content can expire, so it's nice to have things around for a longer term if they
-are referenced in a ticket.
+对于多文件的内容，推荐使用 gist.github.com. 在线 pastebin 内容可能会过期，因此如果他们被长时间的引用，最好时间放久一点。(For multiple-file content, we encourage use of gist.github.com.  Online pastebin content can expire, so it's nice to have things around for a longer term if they
+are referenced in a ticket.)
 
-If you are not sure if something is a bug yet, you are welcome to ask about something on 
-the mailing list or IRC first.  
+如果你不确定你提供的是否为 bug，欢迎到 IRC 邮件列表提问一些相关的事情。
 
-As we are a very high volume project, if you determine that 
-you do have a bug, please be sure to open the issue yourself to ensure we have a record of
-it. Don’t rely on someone else in the community to file the bug report for you.
+因为我们是一个大文献的项目，如果你确定你有一个 bug ，请确保你打开 issue ，确保我们有这个与你有关的issue记录。不要依靠社区的其他人代替你上传这个bug。
 
-It may take some time to get to your report, see our information about priority flags below.
+得到你的报告可能会花一些世间，具体信息查看下面的优先级标识。
 
-I'd Like To Help With Documentation
+我想帮助改善文档
 -----------------------------------
 
-Ansible documentation is a community project too!  
+ansible 的文档也是一个社区项目。
 
-If you would like to help with the 
-documentation, whether correcting a typo or improving a section, or maybe even 
-documenting a new feature, submit a github pull request to  the code that
-lives in the “docsite/rst” subdirectory of the project for most pages, and there is an "Edit on GitHub"
-link up on those.
+如果你想帮助改善文档，纠正错别字，或者改善一些章节，或者写一个新特性的文档， 提交一个 github pull 请求，代码位于“docsite/rst” 子目录，同样也有一个 "Edit On Github"连接到哪里的。
 
-Module documentation is generated from a DOCUMENTATION structure embedded in the source code of each module, which is in either the ansible-modules-core or ansible-modules-extra repos on github, depending on the module.  Information about this is always listed on the bottom of the web documentation for each module.
+模块文档嵌入在源码模块的底部，模块可能是 ansible-modules-core 或者 ansible-modules-extra 取决于在github上的模块。关于这的信息一直列在网页文档的每个模块底部
 
-Aside from modules, the main docs are in restructured text
-format.  
+除了模块，主文档也在重建文本格式。(Aside from modules, the main docs are in restructured text format.  )
 
-If you aren’t comfortable with restructured text, you can also open a ticket on 
-github about any errors you spot or sections you would like to see added. For more information
-on creating pull requests, please refer to the
-`github help guide <https://help.github.com/articles/using-pull-requests>`_.
+如果你对新的重组的文本不满意，你可以在 github 上打开一个的标签，关于你发现的错误，或者你想添加的部分。更多的信息或者创建 pull 请求，请参考 `github help guide <https://help.github.com/articles/using-pull-requests>`_.
 
-For Current and Prospective Developers
+对当前和未来的开发人员
 =======================================
 
-I'd Like To Learn How To Develop on Ansible
+我想学习如何在 Ansible 上开发
 -------------------------------------------
 
-If you're new to Ansible and would like to figure out how to work on things, stop by the ansible-devel mailing list
-and say hi, and we can hook you up.
+如果你刚开始使用 Ansible，想弄明白 Ansible 内部的工作机制，停止 Ansible-devel 邮件列表，像我们打个招呼，我们会带你开始的。
 
-A great way to get started would be reading over some of the development documentation on the module site, and then
-finding a bug to fix or small feature to add.
+一个好的开始方式可以是在模块网站上阅读一些开发文档，然后找到一个 bug 然后修复，或者添加一些新的小特性。
 
-Modules are some of the easiest places to get started.
+模块最容易开始地方。
 
-Contributing Code (Features or Bugfixes)
+贡献代码(特性或者修复bug)
 ----------------------------------------
 
-The Ansible project keeps its source on github at `github.com/ansible/ansible <https://github.com/ansible/ansible>`_ for
-the core application, and two sub repos `github.com/ansible/ansible-modules-core <https://github.com/ansible/ansible-modules-core>`_
-and `ansible/ansible-modules-extras <https://github.com/ansible/ansible-modules-extras>`_ for module related items.
-If you need to know if a module is in 'core' or 'extras', consult the web documentation page for that module.
+Ansible 项目的源代码托管在 github 上 ，核心应用位于 `github.com/ansible/ansible <https://github.com/ansible/ansible>`_ ，还有两个模块相关的子项目  `github.com/ansible/ansible-modules-core <https://github.com/ansible/ansible-modules-core>`_。 如果你想知道一个模块是核心模块("core")还是额外模块("extras")，查阅那个模块的网页文档。
 
-The project takes contributions through `github pull requests <https://help.github.com/articles/using-pull-requests>`_.
+在提交代码之前，先到 ansible-devel 邮件列表讨论一下特性问题，这可以有效的避免后期重复的工作。如果你不确定一个新的特性是否合适，先去开发邮件列表讨论一下，这样相对后来不得不修改一个 pull 请求更容易一些。
 
-It is usually a good idea to join the ansible-devel list to discuss any large features prior to submission,
-and this especially helps in avoiding duplicate work or efforts where we decide, upon seeing a pull request
-for the first time, that revisions are needed. (This is not usually needed for module development, but can be nice for large changes).
+提交补丁的时候,一定要先运行单元测试“make tests”, 有一些基本的测试会自动运行当创建PR时候。 有更多的深入测试在测试/集成目录,分为 destructive 和 non_destructive,运行这些如果他们属于你的修改。他们被设置了标签,这样你就可以运行子集,一些测试需要云凭证和只有他们提供的时候才会运行。当添加修复 bug 的新的特性的时候，最好添加新的测试防止后期重新回滚。
 
-Note that we do keep Ansible to a particular aesthetic, so if you are unclear about whether a feature
-is a good fit or not, having the discussion on the development list is often a lot easier than having
-to modify a pull request later.
+使用 "git rebase" vs "git merge"(让git pull 别名为git pull -rebase 是一个好主意) ，来避免合并提交。也有一些基础测试可以运行在 "test/integration" 目录
 
-When submitting patches, be sure to run the unit tests first “make tests” and always use, these are the same basic
-tests that will automatically run on Travis when creating the PR. There are more in depth tests in the tests/integration
-directory, classified as destructive and non_destructive, run these if they pertain to your modification. They are setup
-with tags so you can run subsets, some of the tests requrie cloud credentials and will only run if they are provided.
-When adding new features of fixing bugs it would be nice to add new tests to avoid regressions.
+为了保证历史代码的整洁，和对新假如的代码做更好的审计，我们会要求那些包含合并注释的重新提交。使用"git pull --rebase" 而不是 "git pull" 和 "git rebase" 而不是 "git merge"。同样确保有主要分支在使用其他的分支的时候，这样你才不会丢失注释信息。(Also be sure to use topic branches to keep your additions on different branches, such that they won't pick up stray commits later.)
 
-Use  “git rebase” vs “git merge” (aliasing git pull to git pull --rebase is a great idea) to avoid merge commits in
-your submissions.  There are also integration tests that can be run in the "test/integration" directory.
+如果你犯错了，你不需要关闭你的 PR ，创建一个清洁的本地分支然后推送到github上面使用 --force 选项，轻质覆盖已存在的分支(在没人使用哪个分支作为参考的情况下是允许的)。代码注释不会丢失，他们只是不会连接到现有的分支
 
-In order to keep the history clean and better audit incoming code, we will require resubmission of pull requests that
-contain merge commits.  Use "git pull --rebase" vs "git pull" and "git rebase" vs "git merge". Also be sure to use topic
-branches to keep your additions on different branches, such that they won't pick up stray commits later.
+然后我们将审阅你的贡献和参与你的问题等等。
 
-If you make a mistake you do not need to close your PR, create a clean branch locally and then push to github
-with --force to overwrite the existing branch (permissible in this case as no one else should be using that
-branch as reference). Code comments won't be lost, they just won't be attached to the existing branch.
+因为我们有一个非常大的和活跃的社区,我们可能需要一段时间才能看到你的贡献，看一下后面的优先级部分来了解一下我们的工作队列。要有耐心,你的要求可能不会马上合并，我们也让 devel 能够使用，因此我们需要小心的测试pull 请求，而这需要花费时间。
 
-We’ll then review your contributions and engage with you about questions and  so on.
+补丁应该一直在开发分支之上。
 
-As we have a very large and active community, so it may take awhile to get your contributions
-in!  See the notes about priorities in a later section for understanding our work queue.
-Be patient, your request might not get merged right away, we also try to keep the devel branch more
-or less usable so we like to examine Pull requests carefully, which takes time.
+记住,小而专请求更容易检查和接受,如果有实例，会更加帮助我们理解 bug 修复的工具和新的特性。
 
-Patches should always be made against the 'devel' branch.
+贡献可以是新的特性，像模块，或者是修复一些你或其他人发现的 bug 。如果你对写新模块感兴趣，请参考 `module development documentation <http://docs.ansible.com/developing_modules.html>`_.
 
-Keep in mind that small and focused requests are easier to examine and accept, having example cases
-also help us understand the utility of a bug fix or a new feature.
+Ansible的理念鼓励简单、可读的代码和 一致的,保守扩展, 向后兼容的改进。代码开发Ansible需要支持Python 2.6 +, 而代码模块运行需要在Python 2.4之上。请使用4个空格的缩进，而不是tab，(we do not enforce 80 column lines, we are fine with 120-140. We do not take 'style only' requests unless the code is nearly unreadable, we are "PEP8ish", but not strictly compliant.)
 
-Contributions can be for new features like modules, or to fix bugs you or others have found. If you
-are interested in writing new modules to be included in the core Ansible distribution, please refer
-to the `module development documentation <http://docs.ansible.com/developing_modules.html>`_.
+你也可以通过测试和修改其他请求贡献,特别是如果它是一个你用着有趣的东西。请保持你的评论清楚和中肯,礼貌的和有建设性的, ticket 不是一个好开始讨论的地方( ansible-devel 和 IRC 是专门为 tickets 的)。
 
-Ansible's aesthetic encourages simple, readable code and consistent, conservatively extending,
-backwards-compatible improvements.  Code developed for Ansible needs to support Python 2.6+,
-while code in modules must run under Python 2.4 or higher.  Please also use a 4-space indent
-and no tabs, we do not enforce 80 column lines, we are fine with 120-140. We do not take 'style only'
-requests unless the code is nearly unreadable, we are "PEP8ish", but not strictly compliant.
+技巧：为了更容易的从一个分支运行，source "./hacking/env-setup" 就这样，不需要安装。
 
-You can also contribute by testing and revising other requests, specially if it is one you are interested
-in using. Please keep your comments clear and to the point, courteous and constructive, tickets are not a
-good place to start discussions (ansible-devel and IRC exist for this).
-
-Tip: To easily run from a checkout, source "./hacking/env-setup" and that's it -- no install
-required.  You're now live!
-
-Other Topics
+其它主题
 ============
 
-Ansible Staff
+Ansible 职员
 -------------
 
-Ansible, Inc is a company supporting Ansible and building additional solutions based on
-Ansible.  We also do services and support for those that are interested. We also offer an
-enterprise web front end to Ansible (see Tower below).
+Ansible 一家支持Ansible和基于 Ansible 构建额外的解决方案的公司。我们会服务和支持那些有趣的东西。我们还提供了一个企业 web 前端 Ansible(见下面的 Tower )。
 
-Our most important task however is enabling all the great things that happen in the Ansible
-community, including organizing software releases of Ansible.  For more information about
-any of these things, contact info@ansible.com
+我们最重要的任务是使 ansible 社区发生一些大事,包括组织Ansible的软件版本。想获取更多的信息，联系 info@ansible.com
 
-On IRC, you can find us as jimi_c, abadger1999, Tybstar, bcoca, and others.   On the mailing list,
-we post with an @ansible.com address.
+在 IRC 上，你可以找到我们 jimi_c, abadger1999, Tybstar, bcoca。在邮件列表上，我们使用 @ansible.com 的地址发送。
 
-Mailing List Information
+邮件列表信息
 ------------------------
 
-Ansible has several mailing lists.  Your first post to the mailing list will be
-moderated (to reduce spam), so please allow a day or less for your first post.
+Ansible有一些邮件列表，因为审核的原因，你的第一次投递邮件可能时间稍长，请允许一天时间的延迟。
 
-`Ansible Project List <https://groups.google.com/forum/#!forum/ansible-project>`_ is for sharing Ansible Tips,
-answering questions, and general user discussion.
+`Ansible Project List <https://groups.google.com/forum/#!forum/ansible-project>`_ 分享 Ansible的技巧，问题解答，用户讨论。
 
-`Ansible Development List <https://groups.google.com/forum/#!forum/ansible-devel>`_ is for learning how to develop on Ansible,
-asking about prospective feature design, or discussions about extending ansible or features in progress.
+`Ansible Development List <https://groups.google.com/forum/#!forum/ansible-devel>`_ 学习如何在Ansible上开发，询问ansible未来的设计特性，讨论扩展ansible或者正在进行的ansible特性。
 
-`Ansible Announce list <https://groups.google.com/forum/#!forum/ansible-announce>`_ is a read-only list that shares information
-about new releases of Ansible, and also rare infrequent event information, such as announcements about an AnsibleFest coming up,
-which is our official conference series.
+`Ansible Announce list <https://groups.google.com/forum/#!forum/ansible-announce>`_关于ansible版本号的只读共享信息，小频率的ansible事件信息。例如：通知AnsibleFest的出现。
 
-`Ansible Lockdown List <https://groups.google.com/forum/#!forum/ansible-lockdown>`_ is for all things related to Ansible Lockdown projects, including DISA STIG automation and CIS Benchmarks.
+`Ansible Lockdown List <https://groups.google.com/forum/#!forum/ansible-lockdown>`_ 关于ansible lockdown项目的所有信息，包括DISA STIG 自动化和 CIS Benchmarks
 
-To subscribe to a group from a non-google account, you can send an email to the subscription address requesting the subscription. For example: ansible-devel+subscribe@googlegroups.com
+对于非google账户订阅一个组，你可以发送邮件到这订阅地址请求订阅，例如：ansible-devel+subscribe@googlegroups.com
 
-Release Numbering
+版本号
 -----------------
 
-Releases ending in ".0" are major releases and this is where all new features land.  Releases ending
-in another integer, like "0.X.1" and "0.X.2" are dot releases, and these are only going to contain
-bugfixes.
+以 ".0" 结尾的版本是朱版本，同时将会有很多新的特性。以其他整数结尾的 ，像"0.X.1" 和 "0.X.2"是小版本，这些仅仅包含 bug 修复
 
-Typically we don't do dot releases for minor bugfixes (reserving these for larger items),
-but may occasionally decide to cut dot releases containing a large number of smaller fixes if it's still a fairly long time before
-the next release comes out.
+通常来说，我们不会发布小版本号(保存用于大的项目)，但是如果现在具体下次发布会有很长时间的话，偶尔可能决定去除包含大量修复的小版本。
 
-Releases are also given code names based on Van Halen songs, that no one really uses.
+版本号基于没有其他人使用 Van Halen 的歌曲命名。
 
-Tower Support Questions
+Tower 支持问题
 -----------------------
 
-Ansible `Tower <http://ansible.com/tower>`_ is a UI, Server, and REST endpoint for Ansible, produced by Ansible, Inc.
+Ansible `Tower <http://ansible.com/tower>` 是一个对 ansible 提供的用户接口，服务，应用程序接口等等。
 
-If you have a question about tower, email `support@ansible.com <mailto:support@ansible.com>`_ rather than using the IRC
-channel or the general project mailing list.
+如果你有关于 tower的问题，发送邮件到 `support@ansible.com <mailto:support@ansible.com>` 而不是在IRC频道上，或者一般邮件列表上提问
 
-IRC Channel
+IRC 频道
 -----------
 
-Ansible has an IRC channel #ansible on irc.freenode.net.
+Ansible 有IRC 频道 #ansible on irc.freenode.net.
 
-Notes on Priority Flags
+注意优先级的标识
 -----------------------
 
-Ansible was one of the top 5 projects with the most OSS contributors on GitHub in 2013, and has over 800 contributors
-to the project to date, not to mention a very large user community that has downloaded the application well over a million
-times.
+在2013年，Ansible 位于 github 上开源软件的前 5 名,到目前为止,有 800 多个对此项目贡献者，更不用说一个非常大的用户社区,下载了这个应用超过一百万次了。因此,我们有将会有很多的活动。
 
-As a result, we have a LOT of incoming activity to process.
+下面，我们会告诉你如何处理新来的请求的。
 
-In the interest of transparency, we're telling you how we sort incoming requests.
+在我们的 bug traker 中你会注意到一些标签- P1,P2,P3,P4和P5。这是我们的内部用于对提交的 bug 排序的。
 
-In our bug tracker you'll notice some labels - P1, P2, P3, P4, and P5.  These are our internal
-priority orders that we use to sort tickets.
+除了一些例外,便于合并(比如文档类型), 我们都会首先花时间处理 P1 和 P2 item，包括 pull 请求。这些通常与重大的 bug 有关，同时影响大量的用户群里。因此，如果你看到一些 "P3 or P4 的分类，那些将不会得到立即的关注。
 
-With some exceptions for easy merges (like documentation typos for instance),
-we're going to spend most of our time working on P1 and P2 items first, including pull requests.
-These usually relate to important bugs or features affecting large segments of the userbase.  So if you see something categorized
-"P3 or P4", and it's not appearing to get a lot of immediate attention, this is why.
+这些标签没有定义，它们只是简单的排序。然而，有些东西影响核心模块(yum,apt,等等)可能会有更高的优先级，相比那些影响少数用户的模块来说。
 
-These labels don't really have definition - they are a simple ordering.  However something
-affecting a major module (yum, apt, etc) is likely to be prioritized higher than a module
-affecting a smaller number of users.
+因为我们非常强调测试和代码审查,可能需要几个月的小功能合并。
 
-Since we place a strong emphasis on testing and code review, it may take a few months for a minor feature to get merged.
+但是不要担心，我们也会定期的给迪有限的队列做定期的清理，给予一些关注，由其在新模块的改变上面。因此，这不意味着我们把精力都花费在高优先级的东西上，而忽略了你的 请求(ticket)
 
-Don't worry though -- we'll also take periodic sweeps through the lower priority queues and give
-them some attention as well, particularly in the area of new module changes.  So it doesn't necessarily
-mean that we'll be exhausting all of the higher-priority queues before getting to your ticket.
+任何努力都会有帮助的，如果你促进快P3的 pull request 特性 ,你可以做的最好的事情是帮助处理 P2 bug 报告。
 
-Every bit of effort helps - if you're wishing to expedite the inclusion of a P3 feature pull request for instance, the best thing you can do
-is help close P2 bug reports.
-
-Community Code of Conduct
+社区代码和产品
 -------------------------
 
-Ansible’s community welcomes users of all types, backgrounds, and skill levels. Please treat others as you expect to be treated,
-keep discussions positive, and avoid discrimination of all kinds, profanity, allegations of Cthulhu worship, or engaging in
-controversial debates (except vi vs emacs is cool).
+社区欢迎所有类型的用户，什么背景，什么技术级别都可以。请尊敬其他人就像你想让其他人尊敬你一样，保持讨论的活跃氛围，不要产生冲突，避免各种歧视，亵渎，避免无用的争论(例如:vi和emace那个更好一样。)
 
-The same expectations apply to community events as they do to online interactions.
+在社区事件上面也是希望大家好好相处
 
-Posts to mailing lists  should remain focused around Ansible and IT automation. Abuse of these community guidelines will not be
-tolerated and may result in banning from community resources.
+邮件列表应该集中在IT自动化上面。滥用社区的指南将不会被容忍，后果是禁用社区资源
 
-
-Contributors License Agreement
+贡献执照许可
 ------------------------------
 
-By contributing you agree that these contributions are your own (or approved by your employer) and you grant a full, complete, irrevocable
-copyright license to all users and developers of the project, present and future, pursuant to the license of the project.
+通过贡献，你被授予一个完整的，不可吊销的版权执照，依据这个项目的执照，这个执照对这个项目的所有用户和开发者都有效。
