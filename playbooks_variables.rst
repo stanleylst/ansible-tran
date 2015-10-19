@@ -584,35 +584,33 @@ hostvars可以让你访问其它主机的变量,包括哪些主机中获取到�
 
 比如,一个前端代理服务器需要指向所有的应用服务器,在服务器间设置正确的防火墙规则等.你需要确保所有主机的facts在使用前都已被获取到,例如运行一个play来检查这些facts是否已经被缓存起来(fact缓存是Ansible 1.8中的新特性).
 
+Additionally, *inventory_hostname* is the name of the hostname as configured in Ansible's inventory host file.  This can
+be useful for when you don't want to rely on the discovered hostname `ansible_hostname` or for other mysterious
+reasons.  If you have a long FQDN, *inventory_hostname_short* also contains the part up to the first
+period, without the rest of the domain.
 
-另外, *inventory_hostname* 是Ansible inventory主机文件中配置的主机名称.由于其它一些神秘原因你不想使用自发现的主机名 `ansible_hostname` 时,你可以使用 *inventory_hostname* .如果主机的FQDN很长,那么*inventory_hostname_short*则会只包含域名第一个分号之前的部分,而舍弃其它部分.
-
-
-*play_hosts* 是在当前play范围中可用的一组主机名.比如可以为多个主机填写模板,以便将这些主机注入负载均衡器规则.
+*play_hosts* is available as a list of hostnames that are in scope for the current play. This may be useful for filling out templates with multiple hostnames or for injecting the list into the rules for a load balancer.
 
 *delegate_to* is the inventory hostname of the host that the current task has been delegated to using 'delegate_to'.
 
-*delegate_to* 是使用 'delegate_to' 代理的任务中主机的inventory主机名.
+Don't worry about any of this unless you think you need it.  You'll know when you do.
 
+Also available, *inventory_dir* is the pathname of the directory holding Ansible's inventory host file, *inventory_file* is the pathname and the filename pointing to the Ansible's inventory host file.
 
-不要担心以上东西,除非你需要使用它们.你会知道什么时候用它们.
-
-
-*inventory_dir* 是保存Ansible inventory主机文件的目录路径, *inventory_file* 是指向Ansible inventory主机文件的路径和文件名.
-
-
-最后, *role_path* 会返回当前role的目录名(1.8及以后).只有在role中才能使用该变量.
+And finally, *role_path* will return the current role's pathname (since 1.8). This will only work inside a role.
 
 .. _variable_file_separation_details:
 
-变量文件分割
+Variable File Separation
 ````````````````````````
 
+It's a great idea to keep your playbooks under source control, but
+you may wish to make the playbook source public while keeping certain
+important variables private.  Similarly, sometimes you may just
+want to keep certain information in different files, away from
+the main playbook.
 
-把playbook置于源代码管理之下是个很好的注意,当你可能会想把playbook源码公开之余还想保持某些重要的变量私有.有时你也想把某些信息放置在不同的文件中,远离主playbook文件.
-
-
-你可以使用外部的变量文件来实现::
+You can do this by using an external variables file, or files, just like this::
 
     ---
 
@@ -628,11 +626,10 @@ hostvars可以让你访问其它主机的变量,包括哪些主机中获取到�
       - name: this is just a placeholder
         command: /bin/echo foo
 
+This removes the risk of sharing sensitive data with others when
+sharing your playbook source with them.
 
-这可以保证你共享playbook源码时隔离敏感数据的风险.
-
-
-每个变量文件的内容是一个简单的YAML文件,如下所示::
+The contents of each variables file is a simple YAML dictionary, like this::
 
     ---
     # in the above example, this would be vars/external_vars.yml
@@ -643,23 +640,18 @@ hostvars可以让你访问其它主机的变量,包括哪些主机中获取到�
    It's also possible to keep per-host and per-group variables in very
    similar files, this is covered in :ref:`splitting_out_vars`.
 
-.. note::
-   保持每个主机和群组的变量在非常小的文件中是可能,请参见 :ref:`splitting_out_vars`.
-
-
 .. _passing_variables_on_the_command_line:
 
-命令行中传递变量
+Passing Variables On The Command Line
 `````````````````````````````````````
 
-
-除了`vars_prompt`和`vars_files`也可以通过Ansible命令行发送变量.如果你想编写一个通用的发布playbook时则特别有用,你可以传递应用的版本以便部署::
+In addition to `vars_prompt` and `vars_files`, it is possible to send variables over
+the Ansible command line.  This is particularly useful when writing a generic release playbook
+where you may want to pass in the version of the application to deploy::
 
     ansible-playbook release.yml --extra-vars "version=1.23.45 other_variable=foo"
 
-
-其它场景中也很有用,比如为playbook设置主机群组或用户.
-
+This is useful, for, among other things, setting the hosts group or the user for the playbook.
 
 Example::
 
@@ -673,39 +665,37 @@ Example::
 
     ansible-playbook release.yml --extra-vars "hosts=vipers user=starbuck"
 
-
-Ansible 1.2中你也可以给extra-vars传递JSON,比如::
+As of Ansible 1.2, you can also pass in extra vars as quoted JSON, like so::
 
     --extra-vars '{"pacman":"mrs","ghosts":["inky","pinky","clyde","sue"]}'
 
+The key=value form is obviously simpler, but it's there if you need it!
 
-key=value形式非常简单,但很实用!
-
-
-Ansible 1.3中,实用"@"语法可以为extra-vars传递JSON文件::
+As of Ansible 1.3, extra vars can be loaded from a JSON file with the "@" syntax::
 
     --extra-vars "@some_file.json"
 
-
-同样在Ansible 1.3中,我们可以为extra-vars传递YAML格式,无论直接通过命令行还是放置在文件中.
+Also as of Ansible 1.3, extra vars can be formatted as YAML, either on the command line
+or in a file as above.
 
 .. _variable_precedence:
 
-变量的优先级: 我该在什么地方放置变量?
+Variable Precedence: Where Should I Put A Variable?
 ```````````````````````````````````````````````````
 
-很多人都在问变量重载的规则是怎么样的.最终Ansible的哲学是你最好知道哪里放置变量,然后会简化变量覆盖的复杂度.
+A lot of folks may ask about how variables override another.  Ultimately it's Ansible's philosophy that it's better
+you know where to put a variable, and then you have to think about it a lot less.  
 
+Avoid defining the variable "x" in 47 places and then ask the question "which x gets used".  
+Why?  Because that's not Ansible's Zen philosophy of doing things.
 
-避免在47个地方定义 "x" 变量然后询问 "那个x会被使用". 为什么那？ 因为这不是Ansible做事的哲学.
+There is only one Empire State Building. One Mona Lisa, etc.  Figure out where to define a variable, and don't make
+it complicated.
 
+However, let's go ahead and get precedence out of the way!  It exists.  It's a real thing, and you might have
+a use for it.
 
-世界上只有一个帝国大厦.也只有一个蒙娜丽莎.请弄明白在那里定义变量,而不要把事情搞复杂.
-
-
-然而,我们还是来讨卵一下优先权的问题.它存在.你有可能会用到它.
-
-如果同样名称的变量在多个地方都有定义,那么采纳是有个确定的顺序,如下::
+If multiple variables of the same name are defined in different places, they win in a certain order, which is::
 
     * extra vars (-e in the command line) always win
     * then comes connection variables defined in inventory (ansible_ssh_user, etc)
@@ -714,19 +704,10 @@ Ansible 1.3中,实用"@"语法可以为extra-vars传递JSON文件::
     * then comes facts discovered about a system
     * then "role defaults", which are the most "defaulty" and lose in priority to everything.
 
-    * extra vars (在命令行中使用 -e)优先级最高
-    * 然后是在inventory中定义的连接变量(比如ansible_ssh_user)
-    * 接着是大多数的其它变量(命令行转换,play中的变量,included的变量,role中的变量等)
-    * 然后是在inventory定义的其它变量
-    * 然后是由系统发现的facts
-    * 然后是 "role默认变量", 这个是最默认的值,很容易丧失优先权
-
 .. note:: In versions prior to 1.5.4, facts discovered about a system were in the "most everything else" category above.
 
-.. note:: 在1.5.4版本级以后,关于系统的自发现的facts也包含在大多数的其它变量中.
-
-
-这样看起来太理论化了.让我们来看一段示例,
+That seems a little theoretical.  Let's show some examples and where you would choose to put what based on the kind of 
+control you might want over values.
 
 First off, group variables are super powerful.
 

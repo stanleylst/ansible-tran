@@ -13,6 +13,7 @@ Playbooks 被设计的非常简单易懂和基于text language二次开发.有�
 这里强烈建议在阅读的 playbook 文档的时候同步参阅 `Example Playbooks <https://github.com/ansible/ansible-examples>` 章节. 这些例子是最佳实战以及如何将各种概念灵活贯穿结合在一起.
 
 .. toctree::
+
    :maxdepth: 1
 
    playbooks_intro

@@ -21,7 +21,7 @@ Ansible。每两个月发布一次主版本号。核心应用程序的开发有�
 .. _an_introduction:
 
 .. toctree::
-      :maxdepth: 1
+   :maxdepth: 1
 
    intro
    quickstart
