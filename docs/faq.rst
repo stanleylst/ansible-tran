@@ -1,33 +1,33 @@
-Frequently Asked Questions
+常见问题
 ==========================
 
-Here are some commonly-asked questions and their answers.
+这是一些常见问题和回答
 
 .. _set_environment:
 
-How can I set the PATH or any other environment variable for a task or entire playbook?
+我可以为一个任务(task)或剧本(playbook)设置 PATH 或者其它环境变量吗？
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Setting environment variables can be done with the `environment` keyword. It can be used at task or play level::
-
+可以通过 `environment` 关键字设置环境变量，可以用在 task 或者 play 上
+    
     environment:
       PATH: "{{ ansible_env.PATH }}:/thingy/bin"
       SOME: value
 
 
 
-How do I handle different machines needing different user accounts or ports to log in with?
+如何处理需要不同账户与端口登录的不同机器？
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Setting inventory variables in the inventory file is the easiest way.
+设置清单(inventory)文件是最简单的方式
 
-For instance, suppose these hosts have different usernames and ports::
+例如，假设这些主机有不同的用户名和端口
 
     [webservers]
     asdf.example.com  ansible_ssh_port=5000   ansible_ssh_user=alice
     jkl.example.com   ansible_ssh_port=5001   ansible_ssh_user=bob
 
-You can also dictate the connection type to be used, if you want::
+你也可以指定什么类型的连接。
 
     [testcluster]
     localhost           ansible_connection=local
@@ -35,115 +35,97 @@ You can also dictate the connection type to be used, if you want::
     foo.example.com
     bar.example.com 
 
-You may also wish to keep these in group variables instead, or file in them in a group_vars/<groupname> file.
-See the rest of the documentation for more information about how to organize variables.
+你可能想保存这些组变量，或者一些变量文件。 看剩余的文档获取更多有关如何组织变量的信息
 
 .. _use_ssh:
 
-How do I get ansible to reuse connections, enable Kerberized SSH, or have Ansible pay attention to my local SSH config file?
+如何让 ansible 重用连接，启用 Kerberized SSH，或者让Ansible 注意本地的 SSH config 文件。
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Switch your default connection type in the configuration file to 'ssh', or use '-c ssh' to use
-Native OpenSSH for connections instead of the python paramiko library.  In Ansible 1.2.1 and later, 'ssh' will be used
-by default if OpenSSH is new enough to support ControlPersist as an option.
+转换默认连接类型，在配置文件里面设置为,'ssh'，或者使用 '-c ssh'选项使用OpenSSH连接，而不是python的paramiko库。在 Ansible 1.2.1之后，'ssh'会默认使用。
 
-Paramiko is great for starting out, but the OpenSSH type offers many advanced options.  You will want to run Ansible
-from a machine new enough to support ControlPersist, if you are using this connection type.  You can still manage
-older clients.  If you are using RHEL 6, CentOS 6, SLES 10 or SLES 11 the version of OpenSSH is still a bit old, so 
-consider managing from a Fedora or openSUSE client even though you are managing older nodes, or just use paramiko.
+paramiko在刚开始的时候是不错的，但是OpenSSH提供更多的高级选项。如果你正在使用这种连接类型的话，你可能会想在一个支持 ControlPersist 的新机器上运行 Ansible。你同样可以管理老的客户端。如果你正在用 RHEL6，CentOS6，SLES 10或 SLES 11，OpenSSH的版本仍然有些过时，因此考虑使用Fedora或OpenSUSE客户端来管理节点，或者使用paramiko。
 
-We keep paramiko as the default as if you are first installing Ansible on an EL box, it offers a better experience
-for new users.
+我们默认让paramiko作为默认选项，如果你第一次安装Ansible在一个EL box上，它提供了更好的用户体验。
 
 .. _ec2_cloud_performance:
 
-How do I speed up management inside EC2?
+如何在EC2内加速管理？
 ++++++++++++++++++++++++++++++++++++++++
 
-Don't try to manage a fleet of EC2 machines from your laptop.  Connect to a management node inside EC2 first
-and run Ansible from there.
+不要试着用你的笔记本电脑管理一群 EC2 机器。连接到EC2内的管理节点然后在里面运行Ansible
 
 .. _python_interpreters:
 
-How do I handle python pathing not having a Python 2.X in /usr/bin/python on a remote machine?
+如何处理远程机器上没有 /usr/bin/python 路径？
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-While you can write ansible modules in any language, most ansible modules are written in Python, and some of these
-are important core ones.
+尽管你可以使用其他语言编写 Ansible 模块，但大部分 Ansible 模块是用 Python 写的 ，而且一些事非常重要的核心模块
 
-By default Ansible assumes it can find a /usr/bin/python on your remote system that is a 2.X version of Python, specifically
-2.4 or higher.
+默认情况下， Ansible 假定它可以在远程机器上找到 2.x版本以上的 /usr/bin/python ，指定为2.4或者更高的版本。
 
-Setting of an inventory variable 'ansible_python_interpreter' on any host will allow Ansible to auto-replace the interpreter
-used when executing python modules.   Thus, you can point to any python you want on the system if /usr/bin/python on your
-system does not point to a Python 2.X interpreter.  
+设置 inventory 变量 'ansible_python_interpreter' ，允许 Ansible自动替换掉默认的 python解释器。因此你可以指向任何版本的 python ，尽管/usr/bin/python不存在
 
-Some Linux operating systems, such as Arch, may only have Python 3 installed by default.  This is not sufficient and you will
-get syntax errors trying to run modules with Python 3.  Python 3 is essentially not the same
-language as Python 2.  Ansible modules currently need to support older Pythons for users that  still have Enterprise Linux 5 deployed, so they are not yet ported to run under Python 3.0.  This is not a problem though as you can just install Python 2 also on a managed host.
+一些 Linux 操作系统，例如 Arch 可能默认安装的是 Python 3. 这会让你在运行模块的时候出现语法错误信息。 Python 3和 Python 2 在本质上还是有些区别的。Ansible 当前需要支持哪些更老版本的 Python 用户，因此还没有支持 Python 3.0。这不是一个问题，只需要安装 Python2 就可以解决问题。
 
-Python 3.0 support will likely be addressed at a later point in time when usage becomes more mainstream.
+当 Ansible 或 Python3.0 后来变得更加主流的时候，会支持Python 3.0
 
-Do not replace the shebang lines of your python modules.  Ansible will do this for you automatically at deploy time.
+不要替换 python 模块的 shebang 行，Ansible 在部署的时候会自动处理。
 
 .. _use_roles:
 
-What is the best way to make content reusable/redistributable?
+让内容重用和重新分发的最好方式是什么？
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-If you have not done so already, read all about "Roles" in the playbooks documentation.  This helps you make playbook content
-self-contained, and works well with things like git submodules for sharing content with others.
+如果你还没有做好， 请阅读 playbooks 文档的 "Roles" 部分。 这会让你更好的理解 playbook 的内容。(This helps you make playbook content self-contained, and works well with things like git submodules for sharing content with others.)
 
-If some of these plugin types look strange to you, see the API documentation for more details about ways Ansible can be extended.
-
+如果你对这些插件很陌生，查看 API 文档获取更多的有关扩展 Ansible 的细节信息
 .. _configuration_file:
 
-Where does the configuration file live and what can I configure in it?
+配置文件在那个地方，我如何配置它？
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-See :doc:`intro_configuration`.
+看 :doc:`intro_configuration`.
 
 .. _who_would_ever_want_to_disable_cowsay_but_ok_here_is_how:
 
-How do I disable cowsay?
+如何禁止 cowsay?
 ++++++++++++++++++++++++
 
-If cowsay is installed, Ansible takes it upon itself to make your day happier when running playbooks.  If you decide
-that you would like to work in a professional cow-free environment, you can either uninstall cowsay, or set an environment variable::
+如果你确定你想运行在没有cowsay的环境下，你可以卸载 cowsay，或者设置环境变量 
 
     export ANSIBLE_NOCOWS=1
 
 .. _browse_facts:
 
 How do I see a list of all of the ansible\_ variables?
+如何查看所有的 ansible_variables?
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Ansible by default gathers "facts" about the machines under management, and these facts can be accessed in Playbooks and in templates. To see a list of all of the facts that are available about a machine, you can run the "setup" module as an ad-hoc action::
+默认情况下，Ansible 收集 有关机器的 "facts" ，这些 facts 可以被Playbook或templates访问。想要查看相关机器的所有的facts，运行 "setup" 模块。
 
     ansible -m setup hostname
 
-This will print out a dictionary of all of the facts that are available for that particular host.
+这会打印指定主机上的所有的字典形式的facts。
 
 .. _host_loops:
 
-How do I loop over a list of hosts in a group, inside of a template?
+如何遍历某一组内的所有主机，在模板中？
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-A pretty common pattern is to iterate over a list of hosts inside of a host group, perhaps to populate a template configuration
-file with a list of servers. To do this, you can just access the "$groups" dictionary in your template, like this::
+一个通用的做法是遍历组内的所有主机，你可以访问 "$groups" 字典在模板中，就像这样
 
     {% for host in groups['db_servers'] %}
         {{ host }}
     {% endfor %}
 
-If you need to access facts about these hosts, for instance, the IP address of each hostname, you need to make sure that the facts have been populated. For example, make sure you have a play that talks to db_servers::
+如果你需要访问有关这些主机的 facts ，例如每个主机的IP地址，你需要确保 facts 已经被 populated 了。例如
 
     - hosts:  db_servers
       tasks:
         - # doesn't matter what you do, just that they were talked to previously.
 
-Then you can use the facts inside your template, like this::
+然后你可以使用 facts 在模板里面，就像这样
 
     {% for host in groups['db_servers'] %}
        {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}
@@ -151,138 +133,127 @@ Then you can use the facts inside your template, like this::
 
 .. _programatic_access_to_a_variable:
 
-How do I access a variable name programmatically?
+如何以编程方式访问变量名
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
-An example may come up where we need to get the ipv4 address of an arbitrary interface, where the interface to be used may be supplied
-via a role parameter or other input.  Variable names can be built by adding strings together, like so::
+可能出现这种情况,我们需要一个任意的ipv4地址接口,同时这个接口是通过角色提供参数或其他输入提供的。变量名可以通过组合字符串来构建，就像这样::
 
     {{ hostvars[inventory_hostname]['ansible_' + which_interface]['ipv4']['address'] }}
 
-The trick about going through hostvars is necessary because it's a dictionary of the entire namespace of variables.  'inventory_hostname'
-is a magic variable that indicates the current host you are looping over in the host loop.
+这个遍历主机变量的技巧是必要的，因为它是一变量名称扣减的字典。'inventory_hostname' 是一个神奇的变量，因为它告诉你你在主机组循环中当前的主机是谁。
 
 .. _first_host_in_a_group:
 
-How do I access a variable of the first host in a group?
+如何访问组内第一个主机的变量？
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-What happens if we want the ip address of the first webserver in the webservers group?  Well, we can do that too.  Note that if we
-are using dynamic inventory, which host is the 'first' may not be consistent, so you wouldn't want to do this unless your inventory
-was static and predictable.  (If you are using :doc:`tower`, it will use database order, so this isn't a problem even if you are using cloud
-based inventory scripts).
+如果我们想要在 webservers 组内的第一个 webserver 的 ip 地址怎么办？我们可以这么做。注意如果再使用动态 inventory ， 'first' 的主机可能不会一致 ，因此你不希望这样，除非你耳朵 inventory 是静态。(如果你在用 :doc:`tower`,它会使用数据库指令，因此这不是个问题尽管你正在使用基于云环境的 inventory 脚本)
 
-Anyway, here's the trick::
+这里是技巧：
 
     {{ hostvars[groups['webservers'][0]]['ansible_eth0']['ipv4']['address'] }}
 
-Notice how we're pulling out the hostname of the first machine of the webservers group.  If you are doing this in a template, you
-could use the Jinja2 '#set' directive to simplify this, or in a playbook, you could also use set_fact:
+注意我们如何获得 webserver 组内的第一台机器的主机名的。如果你也在在模板中这么做，你可以用 Jinja2 "#set" 指令来简化这，或者在一个基本中，你也可以设置 fact
 
     - set_fact: headnode={{ groups[['webservers'][0]] }}
  
     - debug: msg={{ hostvars[headnode].ansible_eth0.ipv4.address }}
 
-Notice how we interchanged the bracket syntax for dots -- that can be done anywhere.
+注意我们如何交换花括号的语法点(Notice how we interchanged the bracket syntax for dots)。
 
 .. _file_recursion:
 
-How do I copy files recursively onto a target host?
+如何递归的宝贝文件到目标主机上?
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The "copy" module has a recursive parameter, though if you want to do something more efficient for a large number of files, take a look at the "synchronize" module instead, which wraps rsync.  See the module index for info on both of these modules.  
+"copy" 模块有递归的参数，如果你想更加高徐璈的处理大量的文件，看一下 "synchronize"模块，封装了rsync。自行看一些模块索引获取一些他们的信息。
 
 .. _shell_env:
 
-How do I access shell environment variables?
+如何查看 shell 环境变量？
 ++++++++++++++++++++++++++++++++++++++++++++
 
-If you just need to access existing variables, use the 'env' lookup plugin.  For example, to access the value of the HOME
-environment variable on management machine::
-
+如果是只是想看看，使用 `env` 查看。例如，如果想查看在管理机器上 HOME 环境变量的值。
    ---
    # ...
      vars:
         local_home: "{{ lookup('env','HOME') }}"
 
-If you need to set environment variables, see the Advanced Playbooks section about environments.
+如果你是想设置环境变量，查看高级的有关环境的 Playbook 部分。
 
 Ansible 1.4 will also make remote environment variables available via facts in the 'ansible_env' variable::
-
+Ansible1.4也会让远程的环境变量可用通过 facts 在 'ansible_env' 变量。
    {{ ansible_env.SOME_VARIABLE }}
 
 .. _user_passwords:
 
-How do I generate crypted passwords for the user module?
+如何为用户模块生成加密密码？
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The mkpasswd utility that is available on most Linux systems is a great option::
+mkpasswd工具在大多数linux系统上都可以使用，是一个不错的选项
 
     mkpasswd --method=SHA-512
 
-If this utility is not installed on your system (e.g. you are using OS X) then you can still easily
-generate these passwords using Python. First, ensure that the `Passlib <https://code.google.com/p/passlib/>`_
-password hashing library is installed.
+如果这个工具在你系统上面没安装，你可以简单的通过 Python 生成密码。首先确保 `Passlib <https://code.google.com/p/passlib/>`_ 密码哈西库已经安装了。
 
     pip install passlib
 
-Once the library is ready, SHA512 password values can then be generated as follows::
+一旦库准备好了，SHA512密码值可以被生成通过下面命令生成。
 
     python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
 
 .. _commercial_support:
 
-Can I get training on Ansible or find commercial support?
+如何获得Ansible培训到商业支持？
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Yes!  See our `services page <http://www.ansible.com/services>`_ for information on our services and training offerings. Support is also included with :doc:`tower`. Email `info@ansible.com <mailto:info@ansible.com>`_ for further details.
+Yes！ 看我们的 `services page <http://www.ansible.com/services>`_  获得更多的信息关于我们的服务和培训服务。支持也包含在 :doc:`tower` 。发邮件到`info@ansible.com <mailto:info@ansible.com>`_ 获取更深的细节。
 
-We also offer free web-based training classes on a regular basis. See our `webinar page <http://www.ansible.com/webinars-training>`_ for more info on upcoming webinars.
+我们也会提供免费的培训课程在基础上。 看  `webinar page <http://www.ansible.com/webinars-training>`_ 获得更多信息在下面的研讨会上。
 
 .. _web_interface:
 
-Is there a web interface / REST API / etc?
+有网络接口  / REST API / etc? 
 ++++++++++++++++++++++++++++++++++++++++++
 
-Yes!  Ansible, Inc makes a great product that makes Ansible even more powerful
-and easy to use. See :doc:`tower`.
+Yes！Ansible 做了很好的产品让 Ansible 更加的强大容器使用，看 :doc:`tower`
 
 .. _docs_contributions:
 
-How do I submit a change to the documentation?
+如何提交文档改变信息？
 ++++++++++++++++++++++++++++++++++++++++++++++
 
-Great question!  Documentation for Ansible is kept in the main project git repository, and complete instructions for contributing can be found in the docs README `viewable on GitHub <https://github.com/ansible/ansible/blob/devel/docsite/README.md>`_.  Thanks!
+不错的问题！ Ansible 文档保存在主项目git 源下面，指导贡献可以在 docs README `viewable on GitHub <https://github.com/ansible/ansible/blob/devel/docsite/README.md>`_找到。谢谢！
 
 .. _keep_secret_data:
 
-How do I keep secret data in my playbook?
+如何加密我的剧本数据？
 +++++++++++++++++++++++++++++++++++++++++
 
-If you would like to keep secret data in your Ansible content and still share it publicly or keep things in source control, see :doc:`playbooks_vault`.
+如果你想加密数据，仍然想要在源码控制上分享给大家。看 :doc:`playbooks_vault`.
 
 .. _i_dont_see_my_question:
 
-In Ansible 1.8 and later, if you have a task that you don't want to show the results or command given to it when using -v (verbose) mode, the following task or playbook attribute can be useful::
+在 Ansible 1.8后，如果你有一个任务，你不想显示结果，或者给了命令 -v 选项，下面的例子很有用
 
     - name: secret task
       shell: /usr/bin/do_something --value={{ secret_value }}
       no_log: True
 
-This can be used to keep verbose output but hide sensitive information from others who would otherwise like to be able to see the output.
+这个对保持详细的输出，但是从其他人那里隐藏了敏感的信息。
 
-The no_log attribute can also apply to an entire play::
+no_log属性也可以应用在整个 play 里面。
 
     - hosts: all
       no_log: True
 
-Though this will make the play somewhat difficult to debug.  It's recommended that this
-be applied to single tasks only, once a playbook is completed.   
 
-I don't see my question here
+尽管这回让play很难调试。推荐使用这个应用到单一任务上。
+
+在这里我没看到我的问题
 ++++++++++++++++++++++++++++
 
-Please see the section below for a link to IRC and the Google Group, where you can ask your question there.
+请看下面的部分链接到 IRC 和 Google Group，你可以在那里提问你的问题。
 
 .. seealso::
 
