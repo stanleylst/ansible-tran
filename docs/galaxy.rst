@@ -1,67 +1,68 @@
 Ansible Galaxy
 ++++++++++++++
 
-"Ansible Galaxy" can either refer to a website for sharing and downloading Ansible roles, or a command line tool that helps work with roles.
+"Ansible Galaxy" 指的是一个网站共享和下载 Ansible 角色,也可以是者是帮助 roles 更好的工作的命令行工具。
 
-.. contents:: Topics
+.. 内容:: 主题
 
 The Website
+网站
 ```````````
 
-The website `Ansible Galaxy <https://galaxy.ansible.com>`_, is a free site for finding, downloading, rating, and reviewing all kinds of community developed Ansible roles and can be a great way to get a jumpstart on your automation projects.
+这个网站 `Ansible Galaxy <https://galaxy.ansible.com>`_，是一个免费的用于查找，下载，评论各种社区开发的 Ansible 角色，在你的自动化项目中引入一些角色也是不错的。
 
-You can sign up with social auth and use the download client 'ansible-galaxy' which is included in Ansible 1.4.2 and later.
+你可以使用 social auth 注册和使用 "ansible-galaxy" 下载客户端，"ansible-galaxy"在 Ansible 1.4.2 就已经被包含了。
 
-Read the "About" page on the Galaxy site for more information.
+阅读 Galaxy 网站的 "About" 页面获取更多信息。
 
-The ansible-galaxy command line tool
+ansible-galaxy命令行工具
 ````````````````````````````````````
 
-The command line ansible-galaxy has many different subcommands.
+ansible-galaxy 有许多不同的子命令
 
-Installing Roles
+安装角色
 ----------------
 
-The most obvious is downloading roles from the Ansible Galaxy website::
+很明显从 Ansible Galaxy 网站下载角色
 
    ansible-galaxy install username.rolename
 
-Building out Role Scaffolding
+构建角色架构
 -----------------------------
 
-It can also be used to initialize the base structure of a new role, saving time on creating the various directories and main.yml files a role requires::
+也可以用于初始化一个新角色的基本文件结构，节省创建不同的目录和main.yml的时间了。
 
    ansible-galaxy init rolename
 
-Installing Multiple Roles From A File
+从一个文件安装多个角色
 -------------------------------------
 
-To install multiple roles, the ansible-galaxy CLI can be fed a requirements file.  All versions of ansible allow the following syntax for installing roles from the Ansible Galaxy website::
+想安装多个角色，ansible-galaxy 命令行可以通过一个 requirements 文件实现。各种版本的ansible 都允许使用下面的语法从 Ansible galaxy 网站安装角色。
 
    ansible-galaxy install -r requirements.txt
 
-Where the requirements.txt looks like::
+requirements.txt 文件看起来就像这样
 
    username1.foo_role
    username2.bar_role
 
-To request specific versions (tags) of a role, use this syntax in the roles file::
+想得到指定版本(tag)的role，使用下面的语法
 
    username1.foo_role,version
    username2.bar_role,version
 
-Available versions will be listed on the Ansible Galaxy webpage for that role.
+可用的版本在 Ansible Galaxy 网页上都有列出来。
 
-Advanced Control over Role Requirements Files
+Requirements 文件高级用法 
 ---------------------------------------------
 
-For more advanced control over where to download roles from, including support for remote repositories, Ansible 1.8 and later support a new YAML format for the role requirements file, which must end in a 'yml' extension.  It works like this::
+一些控制从哪里下载角色，支持远程源的用法，在 Ansible 1.8 之后支持通过 YMAL 语法的 requirements 文件实现，但是必须以 yml为文件扩展名。就像这样
 
     ansible-galaxy install -r requirements.yml
 
-The extension is important. If the .yml extension is left off, the ansible-galaxy CLI will assume the file is in the "basic" format and will be confused.
+扩展名是很重要的，如果 .yml 扩展忘记写了， ansible-galaxy 命令行会假设这个文件是普通格式的，而且会失败，
 
-And here's an example showing some specific version downloads from multiple sources.  In one of the examples we also override the name of the role and download it as something different::
+这里有个例子展示通过多个源下载一些指定版本。 其中也实现了覆盖下载角色的名字到其它名字。
 
     # from galaxy
     - src: yatesr.timezone
@@ -90,15 +91,15 @@ And here's an example showing some specific version downloads from multiple sour
     - src: http://bitbucket.org/willthames/hg-ansible-galaxy
       scm: hg
 
-As you can see in the above, there are a large amount of controls available
-to customize where roles can be pulled from, and what to save roles as.     
+从上面你可以看到，有许多控制命令可以使用去自定义那些角色从哪里获得，保存为什么角色名称。
 
 Roles pulled from galaxy work as with other SCM sourced roles above. To download a role with dependencies, and automatically install those dependencies, the role must be uploaded to the Ansible Galaxy website.
+有些角色之间会有依赖关系，想要从依赖关系中自动安装，这个角色需要被上传到 Ansible Galaxy 网站上。
 
 .. seealso::
 
    :doc:`playbooks_roles`
-       All about ansible roles
+       关于 Ansible role 的内容
    `Mailing List <http://groups.google.com/group/ansible-project>`_
        Questions? Help? Ideas?  Stop by the list on Google Groups
    `irc.freenode.net <http://irc.freenode.net>`_
