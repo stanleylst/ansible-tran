@@ -1,12 +1,12 @@
-.. ansible-cn documentation master file, created by
+.. ansible中文权威指南 documentation master file, created by
       sphinx-quickstart on Fri Apr  3 17:00:44 2015.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to ansible-cn's documentation!
+Ansible中文权威指南
 ======================================
 
-Contents:
+目录:
 
 .. toctree::
    :maxdepth: 3

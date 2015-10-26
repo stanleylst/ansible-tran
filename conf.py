@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# ansible-cn documentation build configuration file, created by
+# ansible中文权威指南 documentation build configuration file, created by
 # sphinx-quickstart on Fri Apr  3 17:00:44 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -52,8 +52,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'ansible-cn'
-copyright = u'2015, www.magedu.com, AUTHORS: 薛定谔的章鱼 & guli & 以马内利 & 黄博文 & stanley'
+#project = u'ansible中文权威指南'
+project = u'ansible中文权威指南'
+copyright = u'2015, www.magedu.com, AUTHORS: 薛定谔的章鱼 & guli & 以马内利 & 黄博文 & coocla & 云中鹤 & stanley'
 author = u'www.magedu.com'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -206,7 +207,7 @@ html_static_path = ['_static']
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'ansible-cndoc'
+htmlhelp_basename = 'ansible中文权威指南doc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -228,7 +229,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'ansible-cn.tex', u'ansible-cn Documentation',
+  (master_doc, 'ansible中文权威指南.tex', u'ansible中文权威指南 Documentation',
    u'www.magedu.com', 'manual'),
 ]
 
@@ -258,7 +259,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'ansible-cn', u'ansible-cn Documentation',
+    (master_doc, 'ansible中文权威指南', u'ansible中文权威指南 Documentation',
      [author], 1)
 ]
 
@@ -272,8 +273,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'ansible-cn', u'ansible-cn Documentation',
-   author, 'ansible-cn', 'One line description of project.',
+  (master_doc, 'ansible中文权威指南', u'ansible中文权威指南 Documentation',
+   author, 'ansible中文权威指南', 'One line description of project.',
    'Miscellaneous'),
 ]
 
