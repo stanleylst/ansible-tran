@@ -1,38 +1,33 @@
-Rackspace Cloud Guide
+Rackspace 云指南
 =====================
 
 .. _introduction:
 
-Introduction
+介绍
 ````````````
 
-.. note:: This section of the documentation is under construction. We are in the process of adding more examples about the Rackspace modules and how they work together.  Once complete, there will also be examples for Rackspace Cloud in `ansible-examples <https://github.com/ansible/ansible-examples/>`_.
+.. 注意:: 这部分文档仍在建设中. 我们在添加更多关于 Rackspace 模块更多例子的同时讲述他们是如何在一起工作的. 一旦完成, 他们将会被添加到 Rackspace Cloud 实例中 `ansible-examples <https://github.com/ansible/ansible-examples/>`_.
 
-Ansible contains a number of core modules for interacting with Rackspace Cloud.  
+Ansible 包含一些与 Rackspace Cloud 交互的核心模块.
 
-The purpose of this section is to explain how to put Ansible modules together 
-(and use inventory scripts) to use Ansible in a Rackspace Cloud context.
+本节的目的是说明在 Rackspace Cloud 的环境下如何使用 Ansible 模块(和使用 inventory scripts).
 
-Prerequisites for using the rax modules are minimal.  In addition to ansible itself, 
-all of the modules require and are tested against pyrax 1.5 or higher. 
-You'll need this Python module installed on the execution host.  
+使用其他模块的先决条件是最少的. 除 Ansible 之外, 所有的模块依赖 pyrax 1.5 或更高版本. 你需要将这个 Python 模块安装在执行主机上.
 
-pyrax is not currently available in many operating system 
-package repositories, so you will likely need to install it via pip:
+pyrax 在一些操作系统的包仓库中是不存在的, 所以你可能需要通过 pip 安装:
 
 .. code-block:: bash
 
     $ pip install pyrax
 
-The following steps will often execute from the control machine against the Rackspace Cloud API, so it makes sense 
-to add localhost to the inventory file.  (Ansible may not require this manual step in the future):
+下面的步骤将会一直从控制机器通过 Rackspace Cloud API 执行, 所以将 localhost 添加到 inventory 文件中是有意义的. (在未来 Ansible 可能不在依赖这一步):
 
 .. code-block:: ini
 
     [localhost]
     localhost ansible_connection=local
 
-In playbook steps, we'll typically be using the following pattern:
+在 playbook 中, 我们将会使用下面典型的模式:
 
 .. code-block:: yaml
 
@@ -43,10 +38,10 @@ In playbook steps, we'll typically be using the following pattern:
 
 .. _credentials_file:
 
-Credentials File
+凭证文件
 ````````````````
 
-The `rax.py` inventory script and all `rax` modules support a standard `pyrax` credentials file that looks like:
+这个 `rax.py` inventory 脚本和所有 `rax` 模块均支持一种标准的 `pyrax` 凭证文件, 它看起来像这样:
 
 .. code-block:: ini
 
@@ -54,58 +49,54 @@ The `rax.py` inventory script and all `rax` modules support a standard `pyrax` c
     username = myraxusername
     api_key = d41d8cd98f00b204e9800998ecf8427e
 
-Setting the environment parameter RAX_CREDS_FILE to the path of this file will help Ansible find how to load
-this information.
+设置环境变量 RAX_CREDS_FILE 到凭证文件的路径, 这将帮助 Ansible 找到它并加载这些信息.
 
-More information about this credentials file can be found at 
+更多关于凭证文件的信息可以参考这里
 https://github.com/rackspace/pyrax/blob/master/docs/getting_started.md#authenticating
 
 
 .. _virtual_environment:
 
-Running from a Python Virtual Environment (Optional)
+在 Python 的虚拟环境中运行(可选)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Most users will not be using virtualenv, but some users, particularly Python developers sometimes like to.
+大多数用户不喜欢使用虚拟环境, 但是有些用户喜欢, 特别是一些 Python 开发者.
 
-There are special considerations when Ansible is installed to a Python virtualenv, rather than the default of installing at a global scope. Ansible assumes, unless otherwise instructed, that the python binary will live at /usr/bin/python.  This is done via the interpreter line in modules, however when instructed by setting the inventory variable 'ansible_python_interpreter', Ansible will use this specified path instead to find Python.  This can be a cause of confusion as one may assume that modules running on 'localhost', or perhaps running via 'local_action', are using the virtualenv Python interpreter.  By setting this line in the inventory, the modules will execute in the virtualenv interpreter and have available the virtualenv packages, specifically pyrax. If using virtualenv, you may wish to modify your localhost inventory definition to find this location as follows:
+当 Ansible 被安装到 Python 的虚拟环境时, 相比较默认安装到全局环境中, 需要有一些特殊考虑. Ansible 假定, 除非有其他明确的指定, python 二进制可执行文件为 /usr/bin/python. 这是通过模块中解释器一行确定的, 然而可以使用 inventory 变量 'ansible_python_interpreter' 来重新指定, Ansible 将使用指定的路径去寻找 Python. 使用 Python 虚拟环境解析器, 这可能是模块在 'localhost' 运行或者通过 'local_action' 来运行的原因. 通过设置 inventory, 模块将会在虚拟环境中执行并且拥有单独的虚拟包, 特别是 pyrax. 如果使用虚拟环境, 你可能需要修改你本地 inventory 来定义这个虚拟位置, 像下面一样:
 
 .. code-block:: ini
 
     [localhost]
     localhost ansible_connection=local ansible_python_interpreter=/path/to/ansible_venv/bin/python
 
-.. note::
+.. 注意::
 
-    pyrax may be installed in the global Python package scope or in a virtual environment.  There are no special considerations to keep in mind when installing pyrax.
+    pyrax 可以被安装到全局的 Python 包作用域下或在一个虚拟的环境中. 这里没有特殊的考虑, 只需要记住安装 pyrax.
 
 .. _provisioning:
 
-Provisioning
+配置
 ````````````
 
-Now for the fun parts.
+现在到了有趣的部分.
 
-The 'rax' module provides the ability to provision instances within Rackspace Cloud.  Typically the provisioning task will be performed from your Ansible control server (in our example, localhost) against the Rackspace cloud API.  This is done for several reasons:
+这个 'rax' 模块在 Rackspace Cloud 中具有提供 instances 的能力. 典型的配置任务将通过你的 Ansible 控制服务器(在我们的例子中, localhost)请求 Rackspace cloud API. 这是因为这几个原因:
 
-    - Avoiding installing the pyrax library on remote nodes
-    - No need to encrypt and distribute credentials to remote nodes
-    - Speed and simplicity
+    - 避免 pyrax 库安装在远程节点
+    - 无需加密和分发凭证到远程节点
+    - 快且简单
 
-.. note::
+.. 注意::
 
-   Authentication with the Rackspace-related modules is handled by either 
-   specifying your username and API key as environment variables or passing
-   them as module arguments, or by specifying the location of a credentials
-   file.
+   与 Rackspace-related 相关的认证模块是通过指定你的用户名和 API key 到环境变量或者将他们以参数的方式传递给模块, 或者通过指定凭证文件的路径.
 
-Here is a basic example of provisioning an instance in ad-hoc mode:
+下面是一个在 ad-hoc 模式下配置 instance 的简单实例:
 
 .. code-block:: bash
 
     $ ansible localhost -m rax -a "name=awx flavor=4 image=ubuntu-1204-lts-precise-pangolin wait=yes" -c local
 
-Here's what it would look like in a playbook, assuming the parameters were defined in variables:
+这些内容转换成 playbook 像下面一样, 假设参数定义在变量中:
 
 .. code-block:: yaml
 
@@ -121,7 +112,7 @@ Here's what it would look like in a playbook, assuming the parameters were defin
             wait: yes
         register: rax
 
-The rax module returns data about the nodes it creates, like IP addresses, hostnames, and login passwords.  By registering the return value of the step, it is possible used this data to dynamically add the resulting hosts to inventory (temporarily, in memory). This facilitates performing configuration actions on the hosts in a follow-on task.  In the following example, the servers that were successfully created using the above task are dynamically added to a group called "raxhosts", with each nodes hostname, IP address, and root password being added to the inventory.
+rax 模块返回节点创建 instance 的数据, 像 IP 地址, 主机名, 和登陆密码. 通过注册返回值的步骤, 可以使用它动态添加到主机的 inventory 中(临时在内存中). 这有利于在新建的 instance 上进行配置操作. 在下面的示例中, 将会使用上面成功创建的服务器的信息, 通过每个节点的主机名, IP 地址, 和 root 密码动态添加到一个名为 raxhosts 组中.
 
 .. code-block:: yaml
 
@@ -135,7 +126,7 @@ The rax module returns data about the nodes it creates, like IP addresses, hostn
       with_items: rax.success
       when: rax.action == 'create'
 
-With the host group now created, the next play in this playbook could now configure servers belonging to the raxhosts group.
+现在使用已经创建的主机组, 接下来将会使用下面的 playbook 配置 raxhosts 组中的服务器
 
 .. code-block:: yaml
 
@@ -146,48 +137,45 @@ With the host group now created, the next play in this playbook could now config
         - ntp
         - webserver
 
-The method above ties the configuration of a host with the provisioning step.  This isn't always what you want, and leads us 
-to the next section.
+上面的方法将提供的主机配置在一起. 这并不总是你想要了, 那么让我们进入下一章节.
 
 .. _host_inventory:
 
-Host Inventory
+主机 Inventory
 ``````````````
 
-Once your nodes are spun up, you'll probably want to talk to them again.  The best way to handle his is to use the "rax" inventory plugin, which dynamically queries Rackspace Cloud and tells Ansible what nodes you have to manage.  You might want to use this even if you are spinning up Ansible via other tools, including the Rackspace Cloud user interface. The inventory plugin can be used to group resources by metadata, region, OS, etc.  Utilizing metadata is highly recommended in "rax" and can provide an easy way to sort between host groups and roles. If you don't want to use the ``rax.py`` dynamic inventory script, you could also still choose to manually manage your INI inventory file, though this is less recommended.
+一旦你的节点被创建启动, 你很可能会多次和他们进行通讯. 最好的方法是通过 "rax" inventory 插件, 动态查询 Rackspace Cloud 告诉 Ansible 哪些节点需要被管理. 你可能会使用 Ansible 启动的这些 event 来管理其他的工具, 包含 Rackspace 云用户接口. 这个 inventory 插件可以通过元数据, 区域, OS, 配置等来进行分组. 在 "rax" 中高度推荐使用元数据, 它可以很容易的在主机组和 roles 之间排序. 如果你不想使用 "rax.py" 这个动态 inventory 脚本, 你仍然可以选择手动管理你的 INI inventory 文件, 尽管这是不被推荐的.
 
-In Ansible it is quite possible to use multiple dynamic inventory plugins along with INI file data.  Just put them in a common directory and be sure the scripts are chmod +x, and the INI-based ones are not.
+Ansible 可以使用多个动态 inventory 插件和 INI 数据文件. 仅仅需要将他们放在一个目录下, 并确保脚本添加了执行权限, INI 文件则不需要.
 
 .. _raxpy:
 
 rax.py
 ++++++
 
-To use the rackspace dynamic inventory script, copy ``rax.py`` into your inventory directory and make it executable. You can specify a credentials file for ``rax.py`` utilizing the ``RAX_CREDS_FILE`` environment variable.
+使用 rackspace 动态 inventory 脚本, 复制 ``rax.py`` 到你的 inventory 目录下并且赋予执行权限. 你可以为 ``rax.py`` 指定一个凭证文件利用 ``RAX_CREDS_FILE`` 环境变量.
 
-.. note:: Dynamic inventory scripts (like ``rax.py``) are saved in ``/usr/share/ansible/inventory`` if Ansible has been installed globally.  If installed to a virtualenv, the inventory scripts are installed to ``$VIRTUALENV/share/inventory``.
+.. 注意:: 如果 Ansible 已经被安装在全局中, 动态 inventory 脚本(例如 ``rax.py``) 将被保存在 ``/usr/share/ansible/inventory``. 如果被安装到虚拟环境中, 这个 inventory 脚本将会被安装到 ``$VIRTUALENV/share/inventory``.
 
-.. note:: Users of :doc:`tower` will note that dynamic inventory is natively supported by Tower, and all you have to do is associate a group with your Rackspace Cloud credentials, and it will easily synchronize without going through these steps::
+.. 注意:: :doc:`tower`用户需要注意这个动态的 inventory 已经被 Tower 内部支持, 所以你所要做的就是提供你的 Rackspace Cloud 凭证, 它将很快的执行这些步骤::
 
     $ RAX_CREDS_FILE=~/.raxpub ansible all -i rax.py -m setup
 
-``rax.py`` also accepts a ``RAX_REGION`` environment variable, which can contain an individual region, or a comma separated list of regions.
+``rax.py`` 也接收 ``RAX_REGION`` 环境变量, 其中可以包含单个区域或者用逗号隔开的区域列表.
 
-When using ``rax.py``, you will not have a 'localhost' defined in the inventory.  
+当使用 ``rax.py``, 你将不需要在 inventory 中定义 'localhost'.
 
-As mentioned previously, you will often be running most of these modules outside of the host loop, and will need 'localhost' defined.  The recommended way to do this, would be to create an ``inventory`` directory, and place both the ``rax.py`` script and a file containing ``localhost`` in it.
+正如前面所提到的, 你将经常在主机循环之外运行这些模块, 并且需要定义 'localhost'. 这里推荐这样做, 创建一个 ``inventory`` 目录, 并且将 ``rax.py`` 和包含 ``localhost`` 的文件放在这个目录下.
 
-Executing ``ansible`` or ``ansible-playbook`` and specifying the ``inventory`` directory instead 
-of an individual file, will cause ansible to evaluate each file in that directory for inventory.
+执行 ``ansible`` 或 ``ansible_playbook`` 并且指定一个包含 ``inventory`` 的目录而不是一个文件, ansible 将会读取这个目录下的所有文件.
 
-Let's test our inventory script to see if it can talk to Rackspace Cloud.
+让我们测试下我们的 inventory 脚本是否可以和 Reckspace Cloud 通信.
 
 .. code-block:: bash
 
     $ RAX_CREDS_FILE=~/.raxpub ansible all -i inventory/ -m setup
 
-Assuming things are properly configured, the ``rax.py`` inventory script will output information similar to the 
-following information, which will be utilized for inventory and variables. 
+假设所有的属性配置都是正确的, 这个 ``rax.py`` inventory 脚本将会输入类似于下面的信息, 这些将会被用作 inventory 和变量.
 
 .. code-block:: json
 
@@ -283,12 +271,12 @@ following information, which will be utilized for inventory and variables.
 
 .. _standard_inventory:
 
-Standard Inventory
+标准的 Inventory
 ++++++++++++++++++
 
-When utilizing a standard ini formatted inventory file (as opposed to the inventory plugin), it may still be advantageous to retrieve discoverable hostvar information  from the Rackspace API.
+当使用标准的 ini 格式的 inventory文件(相对于 inventory 插件), 它仍然可以从 Rackspace API 检索和发现 hostvar 信息.
 
-This can be achieved with the ``rax_facts`` module and an inventory file similar to the following:
+这可以使用像下面 inventory 格式来实现类似于 ``rax_facts`` 的功能:
 
 .. code-block:: ini
 
@@ -312,9 +300,9 @@ This can be achieved with the ``rax_facts`` module and an inventory file similar
           set_fact:
             ansible_ssh_host: "{{ rax_accessipv4 }}"
 
-While you don't need to know how it works, it may be interesting to know what kind of variables are returned.
+虽然你不需要知道它是如何工作的, 了解返回的变量这也将是有趣的.
 
-The ``rax_facts`` module provides facts as followings, which match the ``rax.py`` inventory script:
+这个 ``rax_facts`` 模块提供像下面内容的 facts, 这将匹配 ``rax.py`` inventory 脚本::
 
 .. code-block:: json
 
@@ -402,17 +390,17 @@ The ``rax_facts`` module provides facts as followings, which match the ``rax.py`
     }
 
 
-Use Cases
+使用案例
 `````````
 
-This section covers some additional usage examples built around a specific use case.
+本节涵盖了一些特定案例外及额外的使用案例.
 
 .. _network_and_server:
 
-Network and Server
+网络和服务器
 ++++++++++++++++++
 
-Create an isolated cloud network and build a server
+创建一个独立的云网络并且创建一台服务器
 
 .. code-block:: yaml
    
@@ -452,10 +440,10 @@ Create an isolated cloud network and build a server
 
 .. _complete_environment:
 
-Complete Environment
+完整的环境
 ++++++++++++++++++++
 
-Build a complete webserver environment with servers, custom networks and load balancers, install nginx and create a custom index.html
+使用服务器建立一个完整的 web 服务环境, 自定义网络和负载均衡, 安装 nginx 并且创建自定义的 index.html
 
 .. code-block:: yaml
    
@@ -558,20 +546,20 @@ Build a complete webserver environment with servers, custom networks and load ba
 
 .. _rackconnect_and_manged_cloud:
 
-RackConnect and Managed Cloud
+RackConnect 和 Managed Cloud
 +++++++++++++++++++++++++++++
 
-When using RackConnect version 2 or Rackspace Managed Cloud there are Rackspace automation tasks that are executed on the servers you create after they are successfully built. If your automation executes before the RackConnect or Managed Cloud automation, you can cause failures and un-usable servers.
+当使用 RackConnect version 2 或者 Rackspace Managed Cloud, Rackspace 将在成功创建的服务器上自动执行这些任务. 如果你在 RackConnect 或 Managed Cloud 自动执行之前执行了, 你可能会获得错误或者不可用的服务器.
 
-These examples show creating servers, and ensuring that the Rackspace automation has completed before Ansible continues onwards.
+这些例子展示了创建服务器并且确保 Rackspace 自动执行完成之前将会继续执行这些任务.
 
-For simplicity, these examples are joined, however both are only needed when using RackConnect.  When only using Managed Cloud, the RackConnect portion can be ignored.
+为了简单, 这些例子将会被连接起来, 但是都只需要使用 RackConnect. 当仅使用 Managed Cloud, RackConnect 将会忽略这部分.
 
-The RackConnect portions only apply to RackConnect version 2.
+RackConnect 部分只适用于 RackConnect 版本 2.
 
 .. _using_a_control_machine:
 
-Using a Control Machine
+使用一台控制服务器
 ***********************
 
 .. code-block:: yaml
@@ -647,7 +635,7 @@ Using a Control Machine
 
 .. _using_ansible_pull:
 
-Using Ansible Pull
+利用 Ansible Pull
 ******************
 
 .. code-block:: yaml
@@ -704,7 +692,7 @@ Using Ansible Pull
 
 .. _using_ansible_pull_with_xenstore:
 
-Using Ansible Pull with XenStore
+利用 Ansible 拉取 XenStore
 ********************************
 
 .. code-block:: yaml
@@ -774,33 +762,29 @@ Using Ansible Pull with XenStore
 
 .. _advanced_usage:
 
-Advanced Usage
+高级用法
 ``````````````
 
 .. _awx_autoscale:
 
-Autoscaling with Tower
+Tower 中的自动伸缩
 ++++++++++++++++++++++
 
-:doc:`tower` also contains a very nice feature for auto-scaling use cases.  
-In this mode, a simple curl script can call a defined URL and the server will "dial out" to the requester 
-and configure an instance that is spinning up.  This can be a great way to reconfigure ephemeral nodes.
-See the Tower documentation for more details.  
+:doc:`tower` 中包含一个非常好的功能 自动伸缩. 在这种模式下, 一个简单的 curl 脚本可以调用定义的 URL, 通过这个请求, 服务器将会被 "dial out" 或者配置一个新的服务器并启动. 这对于临时节点的控制是非常伟大的. 查看 Tower 文档获取更多细节.
 
-A benefit of using the callback in Tower over pull mode is that job results are still centrally recorded 
-and less information has to be shared with remote hosts.
+在 Tower 上使用回调的方式覆盖 Pull 模式的好处在于, 任务的结果被集中的存放, 避免了主机之间信息共享
 
 .. _pending_information:
 
-Orchestration in the Rackspace Cloud
+Rackspace Cloud 中的流程
 ++++++++++++++++++++++++++++++++++++
 
-Ansible is a powerful orchestration tool, and rax modules allow you the opportunity to orchestrate complex tasks, deployments, and configurations.  The key here is to automate provisioning of infrastructure, like any other piece of software in an environment.  Complex deployments might have previously required manual manipulation of load balancers, or manual provisioning of servers.  Utilizing the rax modules included with Ansible, one can make the deployment of additional nodes contingent on the current number of running nodes, or the configuration of a clustered application dependent on the number of nodes with common metadata.  One could automate the following scenarios, for example:
+Ansible 是一个强大的编排工具, 搭配 rax 模块使你有机会完成复杂任务的部署和配置. 这里的关键是自动配置的基础设施, 就像一个环境中任何的服务软件. 复杂的部署以前可能需要手动配置负载均衡器或手动配置服务器. 利用 Ansible 和 rax 模块, 可以使其他节点参照当前运行的一些节点来部署, 或者一个集群的应用程序依赖于具有公共元数据的节点数量. 例如, 人们可以完成下列情况:
 
-* Servers that are removed from a Cloud Load Balancer one-by-one, updated, verified, and returned to the load balancer pool
-* Expansion of an already-online environment, where nodes are provisioned, bootstrapped, configured, and software installed
-* A procedure where app log files are uploaded to a central location, like Cloud Files, before a node is decommissioned
-* Servers and load balancers that have DNS records created and destroyed on creation and decommissioning, respectively
+* 将服务器从云负载均衡器中一个一个的删除, 更新, 验证并且返回一个负载均衡池
+* 对一个已存在的线上环境进行扩展, 哪些节点需要提供软件, 引导, 配置和安装
+* 在节点下线之前将应用程序的日志上传至中心存储, 像云存储
+* 关于服务器在负载均衡器中的 DNS 记录的创建和销毁
 
 
 
