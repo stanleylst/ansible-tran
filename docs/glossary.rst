@@ -101,62 +101,43 @@ Host Specifier
 Host Vars
 +++++++++
 
-Just like "Group Vars", a directory alongside the inventory file named "host_vars/" can contain a file named after each hostname in
-the inventory file, in YAML format.  This provides a convenient place to assign variables to the host without having to embed
-them in the inventory file.  The Host Vars file can also be used to define complex data structures that can't be represented in the
-inventory file.
+就像"Group Vars"，一个名称为 "host_vars/" 的目录在 inventory 文件旁，可以在 invetory 文件的主机名后面包含这个文件，使用 YAML 格式。这提供一个方便的位置分配变量给这个主机而不要在 inventory 文件里面嵌入太多变量。Host Vars 文件还可以用于定义复杂的在 inventory 文件里面不断出现的数据结构。
 
 Lazy Evaluation
 +++++++++++++++
 
-In general, Ansible evaluates any variables in playbook content at the last possible second, which means that if you define a data structure
-that data structure itself can define variable values within it, and everything "just works" as you would expect.  This also means variable
-strings can include other variables inside of those strings.
+总的来说， Ansible 评估任何变量在 playbook 内容在最新的可能的时间里，也就是意味着如果你定义了一个数据结构，这个数据结构自身也可以定义变量值在里面，然后每件事情就像你期望的那样工作。 这也意味着 变量字符串可以包含其它的变量在字符串里面。
 
 Lookup Plugin
 +++++++++++++
 
-A lookup plugin is a way to get data into Ansible from the outside world.  These are how such things as "with_items", a basic looping plugin, are implemented,
-but there are also lookup plugins like "with_file" which loads data from a file, and even ones for querying environment variables,
-DNS text records, or key value stores.  Lookup plugins can also be accessed in templates, e.g., ``{{ lookup('file','/path/to/file') }}``.
+一个查询插件是从外界得到数据进入 Ansible 。这些东西就像 "with_items" ，一个基础的循环插件，但是也有其它的查询插件就像 "with_file", 从文件加载数据，甚至有一些逡巡环境变量， DNS 文本记录，或者键值存储。 查询插件也可以被 templates 访问 ，``{{ lookup('file','/path/to/file') }}``.
 
 Multi-Tier
 ++++++++++
 
-The concept that IT systems are not managed one system at a time, but by interactions between multiple systems, and groups of systems, in
-well defined orders.  For instance, a web server may need to be updated before a database server, and pieces on the web server may need
-to be updated after *THAT* database server, and various load balancers and monitoring servers may need to be contacted.  Ansible models
-entire IT topologies and workflows rather than looking at configuration from a "one system at a time" perspective.
+IT 系统不是一次在同一时间只管理一个系统，而是在多个系统之间交互，一组系统，在一个定义好的顺序里面。例如，一个 web server 可能需要在数据库服务器之前更新，web server的部分内容又要在 *THAT* 数据库服务之后更新，同时不同的负载均衡器和监控服务器也需要被联系到。 Ansible 看待系统为整个工作流和拓扑，而不是简单的一次一个系统。
+
 
 Idempotency
 +++++++++++
 
-The concept that change commands should only be applied when they need to be applied, and that it is better to describe the desired
-state of a system than the process of how to get to that state.  As an analogy, the path from North Carolina in the United States to
-California involves driving a very long way West, but if I were instead in Anchorage, Alaska, driving a long way west is no longer
-the right way to get to California.  Ansible's Resources like you to say "put me in California" and then decide how to get there.  If
-you were already in California, nothing needs to happen, and it will let you know it didn't need to change anything.
+改变类的命令仅仅在他们需要使用的时候才被使用，最好描述系统的状态而不是如何到达系统某个状态的过程。打个比方，从美国的卡罗莱纳州到加利福尼亚州包括驾驶很长一段距离的车，但是如果我是在阿拉斯加州，则需要乘坐地铁。 Ansible的资源就像你说，“把我放到加利福尼亚”然后决定如何到达那里。如果你已经在加利福尼亚，没有什么会发生，然后他会让你知道什么都没有发生，不需要改变什么东西。
 
 Includes
 ++++++++
 
-The idea that playbook files (which are nothing more than lists of plays) can include other lists of plays, and task lists
-can externalize lists of tasks in other files, and similarly with handlers.  Includes can be parameterized, which means that the
-loaded file can pass variables.  For instance, an included play for setting up a WordPress blog may take a parameter called "user"
-and that play could be included more than once to create a blog for both "alice" and "bob".
+Playbook 文件可以包含其它的 plays，任务列表也可以扩展在其它文件的外部任务，就像处理器。 Include 可以被参数化的，也就是装载文件可以传递变量。例如，一个Include 表演设置Wordpress 博客站点，需要传递"user"参数,然后这个表演(play)可以 include 多于一次的博客站点，例如叫做 "alice" 和 "bob"
 
 Inventory
 +++++++++
 
-A file (by default, Ansible uses a simple INI format) that describes Hosts and Groups in Ansible.  Inventory can also be provided
-via an "Inventory Script" (sometimes called an "External Inventory Script").  
+一个描述主机和组的 Ansible 文件。Inventory 可以通过 "Inventory Script" 提供，有时也叫做 "External Inventory Script"
 
 Inventory Script
 ++++++++++++++++
 
-A very simple program (or a complicated one) that looks up hosts, group membership for hosts, and variable information from an external
-resource -- whether that be a SQL database, a CMDB solution, or something like LDAP.  This concept was adapted from Puppet (where it is
-called an "External Nodes Classifier") and works more or less exactly the same way.
+一个简单的从外部资源寻找主机,主机组的成员，和变量信息的程序 -- 可以是个 SQL 数据库，一个 CMDB 解决方案，或者是 LDAP。这个概念来自 Puppet (叫"External Nodes Classifier")，工作方式也是类似的。
 
 Jinja2
 ++++++
@@ -211,10 +192,6 @@ Orchestration
 paramiko
 ++++++++
 
-By default, Ansible manages machines over SSH.   The library that Ansible uses by default to do this is a Python-powered library called
-paramiko.  The paramiko library is generally fast and easy to manage, though users desiring Kerberos or Jump Host support may wish to switch
-to a native SSH binary such as OpenSSH by specifying the connection type in their playbook, or using the "-c ssh" flag.
-
 默认， Ansible 管理机器使用 SSH。而 Ansible 默认使用的 python 提供的库叫 paramiko。 paramiko库非常的快和很容易管理，渴望支持 Kerberos 或 jump Host 的用户转向使用 SSH 作为连接类型了。在他们的 playbook里面使用 "-c ssh" 选项即可。
 
 Playbooks
@@ -225,60 +202,37 @@ Playbooks 是一种语言，Ansible 用于编排，配置，管理和部署吸�
 Plays
 +++++
 
-A playbook is a list of plays.  A play is minimally a mapping between a set of hosts selected by a host specifier (usually chosen by groups, but sometimes by hostname
-globs) and the tasks which run on those hosts to define the role that those systems will perform. There
-can be one or many plays in a playbook.
+一个 playbook 就是一系列的 plays。一个 play 就是在一些主机中挑选指定的主机和主机组，然后运行任务在这些主机上，定义这些主机的角色和他们会怎么样表演。
 
 Pull Mode
 +++++++++
 
-By default, Ansible runs in push mode, which allows it very fine-grained control over when it talks to each system.  Pull mode is
-provided for when you would rather have nodes check in every N minutes on a particular schedule.  It uses a program called ansible-pull and can also be set up (or reconfigured) using a push-mode playbook.  Most Ansible users use push mode, but pull mode is included for variety and the sake
-of having choices.
-
-ansible-pull works by checking configuration orders out of git on a crontab and then managing the machine locally, using the local
-connection plugin.
+Pull 模式是节点每隔 N 分钟检查特定的主机。它使用 ansible-pull 程序，pull模式有很多选择性。Ansible-pull 在任务计划中检查配置指令熟悉怒，使用连接插件，在本地管理机器。
 
 Push Mode
 +++++++++
 
-Push mode is the default mode of Ansible. In fact, it's not really a mode at all -- it's just how Ansible works when you aren't
-thinking about it.  Push mode allows Ansible to be fine-grained and conduct nodes through complex orchestration processes without
-waiting for them to check in.
+push 模式是 Ansible 的默认模式。事实上，这也不算是个模式 -- 你不去想它的时候 ansible 就是这么工作的。Push 方式通过复杂的编排进程，而不要等到节点检查，对节点有个很好的粒度控制。
 
 Register Variable
 +++++++++++++++++
 
-The result of running any task in Ansible can be stored in a variable for use in a template or a conditional statement.
-The keyword used to define the variable is called 'register', taking its name from the idea of registers in assembly
-programming (though Ansible will never feel like assembly programming).  There are an infinite number of variable names
-you can use for registration.
+Ansible 运行的结果可以存储在一个变量里面以便模板或条件语句使用，用于定义这个变量的关键字叫做 'register'。你可以定义无限制的变量名用于 registertion.
 
 Resource Model
 ++++++++++++++
 
-Ansible modules work in terms of resources.   For instance, the file module will select a particular file
-and ensure that the attributes of that resource match a particular model. As an example, we might wish to change the owner of /etc/motd
-to 'root' if it is not already set to root, or set its mode to '0644' if it is not already set to '0644'.  The resource models
-are 'idempotent' meaning change commands are not run unless needed, and Ansible will bring the system back to a desired
-state regardless of the actual state -- rather than you having to tell it how to get to the state.
+Ansible 模块工作在资源上。例如，file 模块会挑选指定的文件然后确保资源的属性匹配指定的模型。例如，我们想改变 /etc/motd 的属主为 'root'，如果它还没设置为 root,或者设置权限为'0644',如果还没有设置为 0644 。资源模型是幂等性( 'idemotent' )意味着改变命令不会运行除非需要的时候，Ansible会把系统变为期望的状态而不管当前的状态是什么。
 
 Roles
 +++++
 
-Roles are units of organization in Ansible.  Assigning a role to a group of hosts (or a set of groups, or host patterns, etc.) implies that they should implement a specific behavior.  A role
-may include applying certain variable values, certain tasks, and certain handlers -- or just one or more of these things.  Because of the file structure associated with a role, roles become
-redistributable units that allow you to share behavior among playbooks -- or even with other users.
+一个 Role 可以包含特定的变量值，特定的任务，特定的触发器等东西。因为 Role 的文件结构，roles 可以是再次利用的单元，可以让你在其它 playbooks 中共享一些行为。
 
 Rolling Update
 ++++++++++++++
 
-The act of addressing a number of nodes in a group N at a time to avoid updating them all at once and bringing the system
-offline.  For instance, in a web topology of 500 nodes handling very large volume, it may be reasonable to update 10 or 20
-machines at a time, moving on to the next 10 or 20 when done.  The "serial:" keyword in an Ansible playbook controls the
-size of the rolling update pool.  The default is to address the batch size all at once, so this is something that you must
-opt-in to.  OS configuration (such as making sure config files are correct) does not typically have to use the rolling update
-model, but can do so if desired.
+一次处理某组主机的 N 个节点，避免一次全部更新导致系统离线。 例如，在一个 500 节点的 web 拓扑里，最好一次更新 10~20 台机器一次。Ansible 中的 'seria' 关键字控制 rolling updtae的池。默认是一次全部处理。OS 配置可以不使用 rolling update 模型，但是可以这么做。
 
 Runner
 ++++++
