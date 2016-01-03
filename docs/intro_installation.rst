@@ -26,7 +26,7 @@ Ansible默认通过  SSH 协议管理机器.
 
 因为Ansible可以很简单的从源码运行,且不必在远程被管理机器上安装任何软件,很多Ansible用户会跟进使用开发版本.
 
-Ansible一般每两个月出一个发行版本.小bugs一般在下一个发行版本中修复,并在稳定分支中做backports.大bugs会在必要时出一个维护版本,虽然这不是很频繁.
+Ansible一般每两个月出一个发行版本.小bugs一般在下一个发行版本中修复,并在稳定分支中做backports.大bugs会在必要时出一个维护版本,不过这不是很频繁.
 
 若你希望使用Ansible的最新版本,并且你使用的操作系统是 Red Hat Enterprise Linux (TM), CentOS, Fedora, Debian, Ubuntu,我们建议使用系统的软件包管理器.
 
@@ -40,18 +40,23 @@ Ansible一般每两个月出一个发行版本.小bugs一般在下一个发行�
 对管理主机的要求
 ````````````````````````````
 
-目前,只要机器上安装了 Python 2.6 (windows系统不可以做控制主机),都可以运行Ansible.
+目前,只要机器上安装了 Python 2.6 或 Python 2.7 (windows系统不可以做控制主机),都可以运行Ansible.
 
 主机的系统可以是 Red Hat, Debian, CentOS, OS X, BSD的各种版本,等等.
   
+.. note::
+
+自2.0版本开始,ansible使用了更多句柄来管理它的子进程,对于OS X系统,你需要增加ulimit值才能使用15个以上子进程,方法
+sudo launchctl limit maxfiles 1024 2048,否则你可能会看见”Too many open file”的错误提示.
+
+
 .. _managed_node_requirements:
 
 对托管节点的要求
 `````````````````````````
 
-On the managed nodes, you only need Python 2.4 or later, but if you are running less than Python 2.5 on the remotes, you will also need:
-
-托管节点上需要安装 Python 2.4 及以上的版本.但如果版本低于 Python 2.5 ,则需要额外安装一个模块:
+通常我们使用 ssh 与托管节点通信，默认使用 sftp.如果 sftp 不可用，可在 ansible.cfg 配置文件中配置成 scp 的方式.
+在托管节点上也需要安装 Python 2.4 或以上的版本.如果版本低于 Python 2.5 ,还需要额外安装一个模块:
 
 * ``python-simplejson`` 
 
@@ -65,7 +70,9 @@ On the managed nodes, you only need Python 2.4 or later, but if you are running 
 
 .. note::
 
-   Python 3 与 Python 2 是稍有不同的语言,而大多数Python程序还不能在 Python 3 中正确运行.而一些Linux发行版(Gentoo, Arch)没有默认安装 Python 2.X 解释器.在这些系统上,你需要安装一个 Python 2.X 解释器,并在 inventory (详见 :doc:`intro_inventory`) 中设置 'ansible_python_interpreter' 变量指向你的 2.X Python.你可以使用 'raw' 模块在托管节点上远程安装Python 2.X.
+   Python 3 与 Python 2 是稍有不同的语言,大多数Python程序还不能在 Python 3 中正确运行.一些Linux发行版(Gentoo, Arch)没有默认安装 Python 2.X 解释器.在这些系统上,你需要安装一个 Python 2.X 解释器,并在 inventory (详见 :doc:`intro_inventory`) 中设置 'ansible_python_interpreter' 变量指向你的 2.X Python.你可以使用 'raw' 模块在托管节点上远程安装Python 2.X.
+	例如：``ansible myhost --sudo -m raw -a "yum install -y python2 python-simplejson"``
+	这条命令可以通过远程方式在托管节点上安装 Python 2.X 和 simplejson 模块.
    
    Red Hat Enterprise Linux, CentOS, Fedora, and Ubuntu 等发行版都默认安装了 2.X 的解释器,包括几乎所有的Unix系统也是如此.
    
@@ -89,16 +96,29 @@ On the managed nodes, you only need Python 2.4 or later, but if you are running 
 
     $ git clone git://github.com/ansible/ansible.git --recursive
     $ cd ./ansible
+
+使用 Bash:
+
+.. code-block:: bash
+
     $ source ./hacking/env-setup
+
+使用 Fish::
+
+    $ . ./hacking/env-setup.fish
+
+If you want to suppress spurious warnings/errors, use::
+
+    $ source ./hacking/env-setup -q
 
 
 如果没有安装pip, 请先安装对应于你的Python版本的pip::
 
     $ sudo easy_install pip
 
-以下的Python模块也需要安装::
+以下的Python模块也需要安装 [1]_::
 
-    $ sudo pip install paramiko PyYAML Jinja2 httplib2
+    $ sudo pip install paramiko PyYAML Jinja2 httplib2 six
 
 注意,当更新ansible版本时,不只要更新git的源码树,也要更新git中指向Ansible自身模块的 "submodules" (不是同一种模块)
 
@@ -107,7 +127,7 @@ On the managed nodes, you only need Python 2.4 or later, but if you are running 
     $ git pull --rebase
     $ git submodule update --init --recursive
 
-一旦运行env-setup脚本,就意味着Ansible从源码中运行起来了.默认的inventory文件是 /etc/ansible/hosts.inventory文件也可以另行指定 (详见 :doc:`intro_inventory`) ::
+一旦运行env-setup脚本,就意味着Ansible从源码中运行起来了.默认的inventory文件是 /etc/ansible/hosts.inventory文件也可以另行指定 (详见 :doc:`intro_inventory`) :
 
 .. code-block:: bash
 
@@ -183,7 +203,7 @@ Ubuntu 编译版可在PPA中获得: ` <https://launchpad.net/~ansible/+archive/a
 
     $ emerge -av app-admin/ansible
 
-要安装最新版本,你或许需要...
+要安装最新版本,你可能需要在执行 emerge 之前，先做如下操作(unmsk ansible)
 
 .. code-block:: bash
 
@@ -191,7 +211,8 @@ Ubuntu 编译版可在PPA中获得: ` <https://launchpad.net/~ansible/+archive/a
 
 .. note::
 
-   若在Gentoo托管节点中,Python 3 默认作为 Python slot(这也是默认设置),则你必须在你的 group 或 inventory 变量中设置 ``ansible_python_interpreter = /usr/bin/python2`` 
+若在Gentoo托管节点中,已经安装了 Python 3 并将之作为默认的 Python slot(这也是默认设置),则你必须在 组变量 或 inventory 变量中设置如下变量   
+``ansible_python_interpreter = /usr/bin/python2`` 
 
 通过 pkg (FreeBSD)安装最新发布版本
 ++++++++++++++++++++++++++++++++++
@@ -208,15 +229,41 @@ Ubuntu 编译版可在PPA中获得: ` <https://launchpad.net/~ansible/+archive/a
 
 .. _from_brew:
 
-通过 Homebrew (Mac OSX)安装最新发布版本
+在Mac OSX 上安装最新发布版本
 +++++++++++++++++++++++++++++++++++++++
 
-在Mac中安装,确定你已安装 Homebrew:
+在 Mac 上安装 ansible，最好是通过 pip 安装，在 `通过 Pip 安装最新发布版本`_ 小节介绍.
+
+
+.. _from_pkgutil:
+
+通过 OpenCSW 安装最新发布版本(Solaris)
++++++++++++++++++++++++++++++++++++++
+
+在 Solaris 上安装 ansible: `SysV package from OpenCSW <https://www.opencsw.org/packages/ansible/>`_.
 
 .. code-block:: bash
 
-    $ brew update
-    $ brew install ansible
+    # pkgadd -d http://get.opencsw.org/now
+    # /opt/csw/bin/pkgutil -i ansible
+
+.. _from_pacman:
+
+通过 Pacman 安装最新发布版本(Arch Linux)
++++++++++++++++++++++++++++++++++++++++
+
+Ansible 已经放入了 Community repository::
+
+    $ pacman -S ansible
+
+The AUR has a PKGBUILD for pulling directly from Github called `ansible-git <https://aur.archlinux.org/packages/ansible-git>`_.
+
+Also see the `Ansible <https://wiki.archlinux.org/index.php/Ansible>`_ page on the ArchWiki.
+
+.. note::
+
+如果在 Arch Linux 上已经安装了 Python 3，并设置为默认的 Python slot，你必须在 组变量 或 inventory 变量中设置如下变量:
+``ansible_python_interpreter = /usr/bin/python2``
 
 .. _from_pip:
 
