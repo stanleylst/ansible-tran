@@ -227,7 +227,7 @@ Ubuntu 编译版可在PPA中获得: ` <https://launchpad.net/~ansible/+archive/a
 
     $ sudo make -C /usr/ports/sysutils/ansible install
 
-.. _from_brew:
+.. _on_macos:
 
 在Mac OSX 上安装最新发布版本
 +++++++++++++++++++++++++++++++++++++++
