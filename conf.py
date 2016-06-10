@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# ansible中文权威指南 documentation build configuration file, created by
+# Ansible中文权威指南 documentation build configuration file, created by
 # sphinx-quickstart on Fri Apr  3 17:00:44 2015.
 #
 # This file is execfile()d with the current directory set to its
@@ -52,9 +52,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-#project = u'ansible中文权威指南'
-project = u'ansible中文权威指南'
-copyright = u'2015, www.magedu.com, AUTHORS: 薛定谔的章鱼 & guli & 以马内利 & 黄博文 & coocla & 云中鹤 & stanley'
+#project = u'Ansible中文权威指南'
+project = u'Ansible中文权威指南'
+copyright = u'2015, http://www.magedu.com, 马哥Linux团队成员荣誉出品(薛定谔的章鱼 & guli & 以马内利 & 黄博文 & coocla & 云中鹤 & stanley) 官方QQ交流群:372011984'
 author = u'www.magedu.com'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -127,7 +127,7 @@ todo_include_todos = False
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-#html_title = None
+html_title=u'国内最专业的Ansible中文官方学习手册'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -173,16 +173,16 @@ html_static_path = ['_static']
 #html_use_index = True
 
 # If true, the index is split into individual pages for each letter.
-#html_split_index = False
+#html_split_index = True
 
 # If true, links to the reST sources are added to the pages.
-#html_show_sourcelink = True
+#html_show_sourcelink = False
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-#html_show_sphinx = True
+html_show_sphinx = False
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
-#html_show_copyright = True
+#html_show_copyright = 
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
@@ -207,7 +207,7 @@ html_static_path = ['_static']
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'ansible中文权威指南doc'
+htmlhelp_basename = 'Ansible中文权威指南doc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -229,7 +229,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'ansible中文权威指南.tex', u'ansible中文权威指南 Documentation',
+  (master_doc, 'Ansible中文权威指南.tex', u'Ansible中文权威指南 Documentation',
    u'www.magedu.com', 'manual'),
 ]
 
@@ -259,7 +259,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'ansible中文权威指南', u'ansible中文权威指南 Documentation',
+    (master_doc, 'Ansible中文权威指南', u'Ansible中文权威指南 Documentation',
      [author], 1)
 ]
 
@@ -273,8 +273,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'ansible中文权威指南', u'ansible中文权威指南 Documentation',
-   author, 'ansible中文权威指南', 'One line description of project.',
+  (master_doc, 'Ansible中文权威指南', u'Ansible中文权威指南 Documentation',
+   author, 'Ansible中文权威指南', 'One line description of project.',
    'Miscellaneous'),
 ]
 
