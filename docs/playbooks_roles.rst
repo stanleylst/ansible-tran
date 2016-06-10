@@ -1,34 +1,36 @@
-Playbook Roles and Include Statements
+Playbook 角色(Roles) 和 Include 语句
 =====================================
 
 .. contents:: Topics
 
-介绍
-````````````````
+简介
+````````````
 
-当 playbook 文件越来越大的时候(你可以跳出来去学习 playbooks 了),最后一定会有文件重用时候,此刻就需要我们来重新组织 playbooks 了.
+当我们刚开始学习运用 playbook 时，可能会把 playbook 写成一个很大的文件，到后来可能你会希望这些文件是可以方便去重用的，所以需要重新去组织这些文件。
 
-从最基本来讲, task files 请允许我们拆分配置策略到多个小文件. Task 可以从其它文件中读取 tasks. 因为 handler 也是tasks, 所以你也可以在在 'handlers:' 区域引用 handler 文件.
+基本上，使用 include 语句引用 task 文件的方法，可允许你将一个配置策略分解到更小的文件中。使用 include 语句引用 tasks 是将 tasks 从其他文件拉取过来。因为 handlers 也是 tasks，所以你也可以使用 include 语句去引用 handlers 文件。handlers 文件来自 'handlers:' section。
 
-你可以查阅 :doc:`playbooks` 来复习该章节内容.
+如果你想复习一下这些概念的话，请参见 :doc:`playbooks` 。
 
-Playbooks 也可以引用其它 playbooks 文件中的命令条目.当所有文件均读取完毕后, 所有的命令条目将被插入到一个 playbook 中组合成一条长的命令列表.
+Playbook 同样可以使用 include 引用其他 playbook 文件中的 play。这时被引用的 play 会被插入到当前的 playbook 中，当前的 playbook 中就有了一个更长的的 play 列表。
 
-当你开始思考 -- tasks, handlers, variables等 -- 开始形成大的想法概念,当你开始创造一些东西,而非模仿某些东西. It's no longer "apply this handful of THINGS to these hosts" ,你决定 "这些 hosts 是 dbservers" 或者 这些 hosts 是 webservers". 在编程语言中,我们称之为"封装".举个例子,你会开车但不需要知道发动机工作原理. 
+当你开始思考这些概念：tasks, handlers, variables 等等，是否可以将它们抽象为一个更大的概念呢。我们考虑的不再是"将这些 tasks，handlers，variables 等等应用到这些 hosts 中"，而是有了更抽象的概念，比如："这些 hosts 是 dbservers" 或者 "那些 hosts 是 webservers"（译者注：dbserver，webservers 即是"角色"）。这种思考方式在编程中被称为"封装"，将其中具体的功能封装了起来。举个例子，你会开车但并不需要知道引擎的工作原理（译者注：同样的道理，我们只需要知道"这些 hosts 是 dbservers"，而不需要知道其中有哪些 task，handlers 等）。
 
-Roles 在 Ansible中起到的宗旨是把配置文件整合到一起并最大程度保证其干净整洁,可重用 -- 他允许我们把重点放在大局上只有在需要的时候才再深入了解.
+Roles 的概念来自于这样的想法：通过 include 包含文件并将它们组合在一起，组织成一个简洁、可重用的抽象对象。这种方式可使你将注意力更多地放在大局上，只有在需要时才去深入了解细节。
 
-了解 includes 的对深入 roles 有重要意义,但我们最终的目标是理解 roles -- roles是非常伟大的产品,所以当我们写 playbooks 时一定要使用 roles.
+我们将从理解如何使用 include 开始，这样你会更容易理解 roles 的概念。但我们的终极目标是让你理解 roles，roles 是一个很棒的东西，每次你写 playbook 的时候都应该使用它。
 
-阅读 `ansible-examples <https://github.com/ansible/ansible-examples>` 获取更多实例. 你可以打开单独的页面进行深入学习.
+在 `ansible-examples <https://github.com/ansible/ansible-examples>`_ 中有很多实例，如果你希望深入学习可以在单独的页面打开它。
 
 
-Task Include Files 和鼓励重用机制
+Task Include Files And Encouraging Reuse
 ````````````````````````````````````````
 
-猜想你希望在不同 tasks 之间plays 和 playbooks 可以重复调用. include files可以达成目的. 系统通过使用 include task 来完美实现 role 定义. 记住, playbook 中的 play 最终目的是映射系统群到多 roles中. 我们来举个例子吧...
+假如你希望在多个 play 或者多个 playbook 中重用同一个 task 列表，你可以使用 include files 做到这一点。
+当我们希望为系统定义一个角色时，使用 include 去包含 task 列表是一种很好用的方法。需要记住的是，一个 play 所要达成
+的目标是将一组系统映射为多个角色。下面我们来看看具体是如何做的：
 
-只简单包括 tasks 的 task 文件如下示例::
+一个 task include file 由一个普通的 task 列表所组成，像这样::
 
     ---
     # possibly saved as tasks/foo.yml
@@ -39,65 +41,73 @@ Task Include Files 和鼓励重用机制
     - name: placeholder bar
       command: /bin/bar
 
-Include 指令类似如下,可以像普通 tasks 命令一样在 playbook 中混合使用::
+Include 指令看起来像下面这样，在一个 playbook 中，Include 指令可以跟普通的 task 混合在一起使用::
 
    tasks:
 
      - include: tasks/foo.yml
 
-你也可以传输变量到 includes 指令, 我们称之为 'parameterized include'.
+你也可以给 include 传递变量。我们称之为 '参数化的 include'。
 
-例如,如何分发多个 wordpress 实例,我可以包涵所有 wordpress 命令到一个 wordpress.yml 文件,按如下方式使用::
+举个例子，如果我们要部署多个 wordpress 实例，我们可将所有的 wordpress task 写在一个 wordpress.yml 文件中，
+然后像下面这样使用 wordpress.yml 文件::
 
    tasks:
      - include: wordpress.yml wp_user=timmy
      - include: wordpress.yml wp_user=alice
      - include: wordpress.yml wp_user=bob
 
-如果你使用的是 Ansible 1.4以上版本(包括1.4), include 语法简化了匹配 roles, 同时允许传递参数列表和字典::
-   
+如果你运行的是 Ansible 1.4 及以后的版本，include 语法可更为精简，这种写法同样允许传递列表和字典参数::
+
     tasks:
      - { include: wordpress.yml, wp_user: timmy, ssh_keys: [ 'keys/one.txt', 'keys/two.txt' ] }
 
-使用任意一种语法, 变量传递均可以在 included 文件中被使用. 我们将在 :doc:`playbooks_variables` 详细讨论. 你可以这样引用他们::
+使用上述任意一种语法格式传递变量给 include files 之后，这些变量就可以在 include 包含的文件中使用了。
+关于变量的详细使用方法请查看 :doc:`playbooks_variables` 。变量可以这样去引用:: 
 
    {{ wp_user }}
 
-(除了明确声明定义参数,所有 vars 区块定义的变量在这里同样适用.)
+(除了显式传递的参数，所有在 vars section 中定义的变量也可在这里使用)
 
-从1.0开始, ansible 还支持另外一种变量传参到 include files 的方式-结构化变量,方式如下::
+从 1.0 版开始，Ansible 支持另一种传递变量到 include files 的语法，这种语法支持结构化的变量::
 
     tasks:
 
       - include: wordpress.yml
         vars:
             wp_user: timmy
-            ssh_keys:
-              - keys/one.txt
-              - keys/two.txt
+            some_list_variable:
+              - alpha
+              - beta
+              - gamma
 
-Playbooks 也同样可以 include 引用其它 playbooks,但这部分内容将在另外章节介绍.
+在 Playbooks 中可使用 include 包含其他 playbook，我们将在稍后的章节介绍这个用法。
 
 .. note::
+	从 1.0 版开始，task include 语句可以在任意层次使用。在这之前，include 语句
+	只能在单个层次使用，所以在之前版本中由 include 所包含的文件，其中不能再有 include 
+	包含出现。
 
-   截止1.0版本,task include 声明可以在任意层级目录使用.在这之前,变量只能同层级目录引用,所以 task includes 不能引用其实包含有 task includes 引用的task文件.
-
-Includes 功能也可以被用在用 handlers 区域,例如,如果你希望定义如何重启apache,你只需要定义一个playbook,只需要做一次.编辑类似如下样例的 handers.yml::
+Include 语句也可以用在 'handlers' section 中，比如，你希望定义一个重启 apache 的 handler，
+你只需要定义一次，然后便可在所有的 playbook 中使用这个 handler。你可以创建一个 handlers.yml
+文件如下::
 
    ---
    # this might be in a file like handlers/handlers.yml
    - name: restart apache
      service: name=apache state=restarted
 
-然后像如下方式在 main playbook 的询问引用play即可::
+然后在你的主 playbook 文件中，在一个 play 的最后使用 include 包含 handlers.yml::
 
    handlers:
      - include: handlers/handlers.yml
 
-Includes也可以在常规不包含 included 的tasks和handlers文件中混合引用.
-Includes常被用作将一个playbook文件中的命令导入到另外一个playbook.这种方式允许我们定义由其它playbooks组成的顶层playbook(top-level playbook).
+Include 语句可以和其他非 include 的 tasks 和 handlers 混合使用。
 
-For example::
+Include 语句也可用来将一个 playbook 文件导入另一个 playbook 文件。这种方式允许你定义一个
+顶层的 playbook，这个顶层 playbook 由其他 playbook 所组成。
+
+举个例子::
 
     - name: this is a play at the top level of a file
       hosts: all
@@ -113,14 +123,16 @@ For example::
     - include: webservers.yml
     - include: dbservers.yml
 
-注意: 引用playbook到其它playbook时,变量替换功能将失效不可用.
+注意：当你在 playbook 中引用其他 playbook 时，不能使用变量替换。
 
 .. note::
-
-   你不能有条件的指定位置的 include 文件,就像在你使用 'vars_files' 时一样.
-   如果你发展你必须这么做,那请重新规划调整 playbook 的class/role 编排.这样
-   说其实是想明确告诉你不要妄想 include 指定位置的file. 所有被包含在 play 
-   中的主机都将执行相同的tasks.('*when*'提供了一些指定条件来跳过tasks)
+   You can not conditionally path the location to an include file,
+   like you can with 'vars_files'.  If you find yourself needing to do
+   this, consider how you can restructure your playbook to be more
+   class/role oriented.  This is to say you cannot use a 'fact' to
+   decide what include file to use.  All hosts contained within the
+   play are going to get the same tasks.  ('*when*' provides some
+   ability for hosts to conditionally skip tasks).
 
 .. _roles:
 
@@ -129,14 +141,10 @@ Roles
 
 .. versionadded:: 1.2
 
-Now that you have learned about tasks and handlers, what is the best way to organize your playbooks?
-The short answer is to use roles!  Roles are ways of automatically loading certain vars_files, tasks, and
-handlers based on a known file structure.  Grouping content by roles also allows easy sharing of roles with other users.
+你现在已经学过 tasks 和 handlers，那怎样组织 playbook 才是最好的方式呢？简单的回答就是：使用 roles ! 
+Roles 基于一个已知的文件结构，去自动的加载某些 vars_files，tasks 以及 handlers。基于 roles 对内容进行分组，使得我们可以容易地与其他用户分享 roles 。
 
-Roles are just automation around 'include' directives as described above, and really don't contain much
-additional magic beyond some improvements to search path handling for referenced files.  However, that can be a big thing!
-
-Example project structure::
+一个项目的结构如下::
 
     site.yml
     webservers.yml
@@ -159,7 +167,7 @@ Example project structure::
          defaults/
          meta/
 
-In a playbook, it would look like this::
+一个 playbook 如下::
 
     ---
     - hosts: webservers
@@ -167,31 +175,27 @@ In a playbook, it would look like this::
          - common
          - webservers
 
-This designates the following behaviors, for each role 'x':
+这个 playbook 为一个角色 'x' 指定了如下的行为：
 
-- If roles/x/tasks/main.yml exists, tasks listed therein will be added to the play
-- If roles/x/handlers/main.yml exists, handlers listed therein will be added to the play
-- If roles/x/vars/main.yml exists, variables listed therein will be added to the play
-- If roles/x/meta/main.yml exists, any role dependencies listed therein will be added to the list of roles (1.3 and later)
-- Any copy tasks can reference files in roles/x/files/ without having to path them relatively or absolutely
-- Any script tasks can reference scripts in roles/x/files/ without having to path them relatively or absolutely
-- Any template tasks can reference files in roles/x/templates/ without having to path them relatively or absolutely
-- Any include tasks can reference files in roles/x/tasks/ without having to path them relatively or absolutely
-   
-In Ansible 1.4 and later you can configure a roles_path to search for roles.  Use this to check all of your common roles out to one location, and share
-them easily between multiple playbook projects.  See :doc:`intro_configuration` for details about how to set this up in ansible.cfg.
+- 如果 roles/x/tasks/main.yml 存在, 其中列出的 tasks 将被添加到 play 中
+- 如果 roles/x/handlers/main.yml 存在, 其中列出的 handlers 将被添加到 play 中
+- 如果 roles/x/vars/main.yml 存在, 其中列出的 variables 将被添加到 play 中
+- 如果 roles/x/meta/main.yml 存在, 其中列出的 "角色依赖" 将被添加到 roles 列表中 (1.3 and later)
+- 所有 copy tasks 可以引用 roles/x/files/ 中的文件，不需要指明文件的路径。
+- 所有 script tasks 可以引用 roles/x/files/ 中的脚本，不需要指明文件的路径。
+- 所有 template tasks 可以引用 roles/x/templates/ 中的文件，不需要指明文件的路径。
+- 所有 include tasks 可以引用 roles/x/tasks/ 中的文件，不需要指明文件的路径。
+
+在 Ansible 1.4 及之后版本，你可以为"角色"的搜索设定 roles_path 配置项。使用这个配置项将所有的 common 角色 check out 到一个位置，以便在多个 playbook 项目中可方便的共享使用它们。查看 :doc:`intro_configuration` 详细了解设置这个配置项的细节，该配置项是在 ansible.cfg 中配置。
 
 .. note::
-   Role dependencies are discussed below.
+   稍后将讨论"角色依赖"的概念。
 
-If any files are not present, they are just ignored.  So it's ok to not have a 'vars/' subdirectory for the role,
-for instance.
+如果 roles 目录下有文件不存在，这些文件将被忽略。比如 roles 目录下面缺少了 'vars/' 目录，这也没关系。
 
-Note, you are still allowed to list tasks, vars_files, and handlers "loose" in playbooks without using roles,
-but roles are a good organizational feature and are highly recommended.  If there are loose things in the playbook,
-the roles are evaluated first.
+注意：你仍然可以在 playbook 中松散地列出 tasks，vars_files 以及 handlers，这种方式仍然可用，但 roles 是一种很好的具有组织性的功能特性，我们强烈建议使用它。如果你在 playbook 中同时使用 roles 和 tasks，vars_files 或者 handlers，roles 将优先执行。
 
-Also, should you wish to parameterize roles, by adding variables, you can do so, like this::
+而且，如果你愿意，也可以使用参数化的 roles，这种方式通过添加变量来实现，比如::
 
     ---
 
@@ -201,7 +205,7 @@ Also, should you wish to parameterize roles, by adding variables, you can do so,
         - { role: foo_app_instance, dir: '/opt/a',  port: 5000 }
         - { role: foo_app_instance, dir: '/opt/b',  port: 5001 }
 
-While it's probably not something you should do often, you can also conditionally apply roles like so::
+当一些事情不需要频繁去做时，你也可以为 roles 设置触发条件，像这样::
 
     ---
 
@@ -209,10 +213,9 @@ While it's probably not something you should do often, you can also conditionall
       roles:
         - { role: some_role, when: "ansible_os_family == 'RedHat'" }
 
-This works by applying the conditional to every task in the role.  Conditionals are covered later on in
-the documentation.
+它的工作方式是：将条件子句应用到 role 中的每一个 task 上。关于"条件子句"的讨论参见本文档后面的章节。
 
-Finally, you may wish to assign tags to the roles you specify. You can do so inline:::
+最后，你可能希望给 roles 分配指定的 tags。比如::
 
     ---
 
@@ -220,10 +223,9 @@ Finally, you may wish to assign tags to the roles you specify. You can do so inl
       roles:
         - { role: foo, tags: ["bar", "baz"] }
 
+如果 play 仍然包含有 'tasks' section，这些 tasks 将在所有 roles 应用完成之后才被执行。
 
-If the play still has a 'tasks' section, those tasks are executed after roles are applied.
-
-If you want to define certain tasks to happen before AND after roles are applied, you can do this::
+如果你希望定义一些 tasks，让它们在 roles 之前以及之后执行，你可以这样做::
 
     ---
 
@@ -242,28 +244,23 @@ If you want to define certain tasks to happen before AND after roles are applied
         - shell: echo 'goodbye'
 
 .. note::
-   If using tags with tasks (described later as a means of only running part of a playbook),  
-   be sure to also tag your pre_tasks and post_tasks and pass those along as well, especially if the pre
-   and post tasks are used for monitoring outage window control or load balancing.
+	如果对 tasks 应用了 tags（tags 是一种实现部分运行 playbook 的机制，将在后面的章节讨论），需确保给 pre_tasks 以及 post_tasks 也同样应用 tags，并且将它们一并传递。特别是当 pre_tasks 和 post_tasks 被用来监视 "停止窗口控制" 或者 "负载均衡" 时要确保这样做。
 
-Role Default Variables
-``````````````````````
 
-.. versionadded:: 1.3
-
-Role default variables allow you to set default variables for included or dependent roles (see below). To create
-defaults, simply add a `defaults/main.yml` file in your role directory. These variables will have the lowest priority
-of any variables available, and can be easily overridden by any other variable, including inventory variables.
-
-Role Dependencies
-`````````````````
+角色默认变量(Role Default Variables)
+````````````````````````````````````
 
 .. versionadded:: 1.3
 
-Role dependencies allow you to automatically pull in other roles when using a role. Role dependencies are stored in the
-`meta/main.yml` file contained within the role directory. This file should contain 
-a list of roles and parameters to insert before the specified role, such as the following in an example
-`roles/myapp/meta/main.yml`::
+角色默认变量允许你为 included roles 或者 dependent roles(见下) 设置默认变量。要创建默认变量，只需在 roles 目录下添加 `defaults/main.yml` 文件。这些变量在所有可用变量中拥有最低优先级，可能被其他地方定义的变量(包括 inventory 中的变量)所覆盖。
+
+
+角色依赖(Role Dependencies)
+``````````````````````````
+
+.. versionadded:: 1.3
+
+"角色依赖" 使你可以自动地将其他 roles 拉取到现在使用的 role 中。"角色依赖" 保存在 roles 目录下的 `meta/main.yml` 文件中。这个文件应包含一列 roles 和 为之指定的参数，下面是在 `roles/myapp/meta/main.yml` 文件中的示例::
 
     ---
     dependencies:
@@ -271,19 +268,21 @@ a list of roles and parameters to insert before the specified role, such as the 
       - { role: apache, port: 80 }
       - { role: postgres, dbname: blarg, other_parameter: 12 }
 
-Role dependencies can also be specified as a full path, just like top level roles::
+"角色依赖" 可以通过绝对路径指定，如同顶级角色的设置::
 
     ---
     dependencies:
        - { role: '/path/to/common/roles/foo', x: 1 }
 
-Role dependencies can also be installed from source control repos or tar files (via `galaxy`) using comma separated format of path, an optional version (tag, commit, branch etc) and optional friendly role name (an attempt is made to derive a role name from the repo name or archive filename). Both through the command line or via a requirements.yml passed to ansible-galaxy.
+"角色依赖" 也可以通过源码控制仓库或者 tar 文件指定，使用逗号分隔：路径、一个可选的版本（tag, commit, branch 等等）、一个可选友好角色名（尝试从源码仓库名或者归档文件名中派生出角色名）::
 
+    ---
+    dependencies:
+      - { role: 'git+http://git.example.com/repos/role-foo,v1.1,foo' }
+      - { role: '/path/to/tar/file.tgz,,friendly-name' }
 
-Roles dependencies are always executed before the role that includes them, and are recursive. By default, 
-roles can also only be added as a dependency once - if another role also lists it as a dependency it will
-not be run again. This behavior can be overridden by adding `allow_duplicates: yes` to the `meta/main.yml` file.
-For example, a role named 'car' could add a role named 'wheel' to its dependencies as follows::
+"角色依赖" 总是在 role （包含"角色依赖"的role）之前执行，并且是递归地执行。默认情况下，作为 "角色依赖" 被添加的 role 只能被添加一次，如果另一个 role 将一个相同的角色列为 "角色依赖" 的对象，它不会被重复执行。但这种默认的行为可被修改，通过添加 `allow_duplicates: yes` 到  `meta/main.yml` 文件中。
+比如，一个 role 名为 'car'，它可以添加名为 'wheel' 的 role 到它的 "角色依赖" 中::
 
     ---
     dependencies:
@@ -292,7 +291,7 @@ For example, a role named 'car' could add a role named 'wheel' to its dependenci
     - { role: wheel, n: 3 }
     - { role: wheel, n: 4 }
 
-And the `meta/main.yml` for wheel contained the following::
+wheel 角色的 `meta/main.yml` 文件包含如下内容::
 
     ---
     allow_duplicates: yes
@@ -300,7 +299,7 @@ And the `meta/main.yml` for wheel contained the following::
     - { role: tire }
     - { role: brake }
 
-The resulting order of execution would be as follows::
+最终的执行顺序是这样的::
 
     tire(n=1)
     brake(n=1)
@@ -312,12 +311,12 @@ The resulting order of execution would be as follows::
     car
 
 .. note::
-   Variable inheritance and scope are detailed in the :doc:`playbooks_variables`.
+	关于变量继承和范围的详细讨论，请查看 :doc:`playbooks_variables`。
 
-Embedding Modules In Roles
+在 Roles 中嵌入模块
 ``````````````````````````
 
-This is an advanced topic that should not be relevant for most users.
+这是一个高级话题，应该只有少数的 Ansible 用户关心这一话题。
 
 If you write a custom module (see :doc:`developing_modules`) you may wish to distribute it as part of a role.  Generally speaking, Ansible as a project is very interested
 in taking high-quality modules into ansible core for inclusion, so this shouldn't be the norm, but it's quite easy to do.
@@ -352,11 +351,11 @@ to github whenever possible via a pull request.
 Ansible Galaxy
 ``````````````
 
-`Ansible Galaxy <http://galaxy.ansible.com>`_ is a free site for finding, downloading, rating, and reviewing all kinds of community developed Ansible roles and can be a great way to get a jumpstart on your automation projects.
+`Ansible Galaxy <http://galaxy.ansible.com>`_ 是一个自由网站，网站提供所有类型的由社区开发的 roles，这对于实现你的自动化项目是一个很好的参考。网站提供这些 roles 的排名、查找以及下载。
 
-You can sign up with social auth, and the download client 'ansible-galaxy' is included in Ansible 1.4.2 and later.
+Ansible 1.4.2 及以后的版本已包含 Ansible Galaxy 的下载客户端 'ansible-galaxy'。
 
-Read the "About" page on the Galaxy site for more information.
+阅读 Galaxy 站点的 "About" 页面获取更多信息。
 
 .. seealso::
 
