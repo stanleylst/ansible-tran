@@ -35,7 +35,7 @@ Patterns
     webservers
     webservers:dbservers
 
-你也可以排队一个特定组,如下实例中,所有执行命令的机器必须隶属 webservers 组但同时不在 phoenix组::
+你也可以排除一个特定组,如下实例中,所有执行命令的机器必须隶属 webservers 组但同时不在 phoenix组::
 
     webservers:!phoenix
 
