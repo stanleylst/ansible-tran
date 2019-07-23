@@ -12,5 +12,5 @@
    guide_vagrant
    guide_rolling_upgrade
 
-即将包含的,目前未定的主题包括: Docerk,Jenkins , Google Compute Engine, Linode/DigitalOcean, Continuous Deployment,等等
+即将包含的,目前未定的主题包括: Docker,Jenkins , Google Compute Engine, Linode/DigitalOcean, Continuous Deployment,等等
 
