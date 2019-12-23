@@ -80,7 +80,6 @@ Ansible允许你使用Jinja2模板系统在playbook中引用变量.借助Jinja�
 
     template: src=foo.cfg.j2 dest={{ remote_install_path }}/foo.cfg
 
-In the above example, we used a variable to help decide where to place a file.
 在上述的例子中,我们使用变量来决定文件放置在哪里.
 在模板中你自动会获取在主机范围之内的所有变量的访问权.事实上更多,你可以读取其它主机的变量.我们将演示如何做.
 
