@@ -74,7 +74,7 @@ action_plugins
 ansible_managed
 ===============
 
-Ansible-managed 是一个字符串.可以插入到Ansible配置模版系统生成的文件中.如果你使用以下的自字符::
+Ansible-managed 是一个字符串.可以插入到Ansible配置模版系统生成的文件中.如果你使用以下的字符::
 
    {{ ansible_managed }}
 
@@ -91,7 +91,7 @@ Ansible-managed 是一个字符串.可以插入到Ansible配置模版系统生�
 ask_pass
 ========
 
-这个可以控制,Ansible 剧本playbook 是否会自动默认弹出弹出密码.默认为no:: 
+这个可以控制,Ansible 剧本playbook 是否会自动默认弹出密码.默认为no:: 
     ask_pass=True
 
 如果使用SSH 密钥匙做身份认证.可能需要修改这一参数 
@@ -105,7 +105,7 @@ ask_sudo_pass
 
     ask_sudo_pass=True
 
-如果用户使用的系统平台开启了sudo 密码的话,应该开绿这一参数
+如果用户使用的系统平台开启了sudo 密码的话,应该开启这一参数
 
 .. _bin_ansible_callbacks:
 
@@ -139,8 +139,8 @@ command_warnings
 
 .. versionadded:: 1.8
 
-从Ansible 1.8 开始,当shell和命令行模块被默认模块简化的时,Ansible 将默认发出警告.
-这个包含提醒使用'git'但不是通过命令行执行.使用模块调用比冒然使用命令行调用可以使playbook工作更具有一致性也更加可靠同时也更加便于维护::
+从Ansible 1.8 开始,当shell和命令行模块被默认模块简化时,Ansible 将默认发出警告.
+这个包含提醒使用'git'但不是通过命令行执行.使用模块调用比冒然使用命令行调用让playbook工作更具有一致性也更加可靠同时也更加便于维护::
 
     command_warnings = False
 
@@ -258,8 +258,8 @@ gathering
 =========
 
 1.6版本中的新特性,这个设置控制默认facts收集（远程系统变量）.
-默认值为'implicit', 每一次play,facts都会被手机,除非设置'gather_facts: False'. 选项‘explicit’正好相反,facts不会被收集,直到play中需要. 
-‘smart’选项意思是,没有facts的新hosts将不会被扫描, 但是如果同样一个主机,在不同的plays里面被记录地址,在playbook运行中将不会通信.这个选项当有需求节省fact收集时比较有用. 
+默认值为'implicit', 每一次play,facts都会被收集,除非设置'gather_facts: False'. 选项‘explicit’正好相反,facts不会被收集,直到play中需要. 
+‘smart’选项意思是,没有facts的新hosts将不会被扫描, 但是如果同样一个主机,在不同的plays里面被记录地址,在playbook运行中将不会通信.这个选项在有需求节省fact收集时比较有用. 
 
 hash_behaviour
 ==============
@@ -293,7 +293,7 @@ host_key_checking
 inventory
 =========
 
-这个事默认库文件位置,脚本,或者存放可通信主机的目录::
+这个是默认库文件位置,脚本,或者存放可通信主机的目录::
 
     inventory = /etc/ansible/hosts
 
@@ -315,7 +315,7 @@ jinja2_extensions
 library
 =======
 
-这个事Ansible默认搜寻模块的位置::
+这个是Ansible默认搜寻模块的位置::
 
      library = /usr/share/ansible
 
@@ -330,7 +330,7 @@ log_path
 
     log_path=/var/log/ansible.log
 
-这个特性不是默认开启的.如果不设置,ansible将会吧模块加载纪录在系统日志系统中.不包含用密码. 
+这个特性不是默认开启的.如果不设置,ansible将会把模块加载记录在系统日志中.不包含用密码. 
 
 对于需要了解更多日志系统的企业及用户,你也许对:doc:`tower` 感兴趣. 
 
@@ -399,7 +399,7 @@ poll_interval
 =============
 
 对于Ansible中的异步任务(详见 :doc:`playbooks_async`）, 这个是设置定义,当具体的poll interval 没有定义时,多少时间回查一下这些任务的状态,
-默认值是一个折中选择15秒钟.这个时间是个回查频率和任务完成叫回频率和当任务完成时的回转频率的这种:: 
+默认值是一个折中选择15秒钟.这个时间是回查频率和任务完成叫回频率以及当任务完成时的回转频率:: 
 
     poll_interval=15
 
@@ -408,7 +408,7 @@ poll_interval
 private_key_file
 ================
 
-如果你是用pem密钥文件而不是SSH 客户端或秘密啊认证的话,你可以设置这里的默认值,来避免每一次提醒设置密钥文件位置``--ansible-private-keyfile``::
+如果你是用pem密钥文件而不是SSH 客户端或密钥认证的话,你可以设置这里的默认值,来避免每一次提醒设置密钥文件位置``--ansible-private-keyfile``::
 
     private_key_file=/path/to/file.pem
 
@@ -438,7 +438,7 @@ Ansible 通过远程传输模块到远程主机,然后远程执行,执行后在�
 remote_user
 ===========
 
-这是个ansible使用/usr/bin/ansible-playbook链接的默认用户名. 注意如果不指定,/usr/bin/ansible默认使用当前用户名称:: 
+这个是ansible使用/usr/bin/ansible-playbook链接的默认用户名. 注意如果不指定,/usr/bin/ansible默认使用当前用户名称:: 
 
     remote_user = root
 
@@ -450,7 +450,7 @@ roles_path
 .. versionadded: '1.4'
 
 roles 路径指的是'roles/'下的额外目录,用于playbook搜索Ansible roles.比如, 如果我们有个用于common roles源代码控制仓库和一个不同的
-playbooks仓库,你也许会建立一个惯例去在 /opt/mysite/roles 里面查找roles.::
+playbooks仓库,你也许应该养成习惯去在 /opt/mysite/roles 里面查找roles.::
 
     roles_path = /opt/mysite/roles
 
@@ -465,7 +465,7 @@ Roles将会在playbook目录中开始搜索.如果role没有找到,这个参数�
 sudo_exe
 ========
 
-如果在其他远程主机上使用另一种方式执行sudo草做, sudo程序的路径可以用这个参数更换,使用命令行标签来拟合标准sudo::
+如果在其他远程主机上使用另一种方式执行sudo操作, sudo程序的路径可以用这个参数更换,使用命令行标签来拟合标准sudo::
 
    sudo_exe=sudo
 
@@ -507,7 +507,7 @@ system_warnings
 timeout
 =======
 
-这个事默认SSH链接尝试超市时间::
+这个是默认SSH链接尝试超时时间::
 
     timeout = 10
 
@@ -520,7 +520,7 @@ transport
 值为'smart', 如果本地系统支持 ControlPersist技术的话,将会使用(基于OpenSSH)‘ssh’,如果不支持讲使用‘paramiko’.其他传输选项包括‘local’,
 'chroot','jail'等等. 
 
-用户通常可以这个设置为‘smart’,让playbook在需要的条件自己选择‘connectin:’参数. 
+用户通常可以将这个设置为‘smart’,让playbook在需要的条件中自己选择‘connectin:’参数. 
 
 .. _vars_plugins:
 
@@ -603,7 +603,7 @@ Ansible 1.4 以后的版本会引导用户在这种情况下使用"-vvvv"参数,
 scp_if_ssh
 ==========
 
-又是用户操控一个一个没有开启SFTP协议的远程系统.如果这个设置为True,scp将代替用来为远程主机传输文件:: 
+这是用户操控一个没有开启SFTP协议的远程系统.如果这个设置为True,scp将代替用来为远程主机传输文件:: 
 
     scp_if_ssh=False
 
@@ -650,7 +650,7 @@ accelerate_timeout
 
 .. versionadded:: 1.4
 
-这个设置时用来控制从客户机获取数据的超时时间.如果在这段时间内没有数据传输,套接字连接会被关闭. 一个保持连接（keepalive）数据包通常每15秒回发回给控制台,所以这个超时时间不应该低于15秒（默认值为30秒）::
+这个设置是用来控制从客户机获取数据的超时时间.如果在这段时间内没有数据传输,套接字连接会被关闭. 一个保持连接（keepalive）数据包通常每15秒回发回给控制台,所以这个超时时间不应该低于15秒（默认值为30秒）::
 
     accelerate_timeout = 30
 
@@ -661,7 +661,7 @@ accelerate_connect_timeout
 
 .. versionadded:: 1.4
 
-这个设置空着套接字调用的超时时间.这个应该设置相对比较短.这个和`accelerate_port`连接在回滚到ssh或者paramiko（受限于你默认的连接设置）连接方式之前会尝试三次开始远程加速daemon守护进程.默认设置为1.0秒::
+这个设置控制着套接字调用的超时时间.这个应该设置相对比较短.这个和`accelerate_port`连接在回滚到ssh或者paramiko（受限于你默认的连接设置）连接方式之前会尝试三次开始远程加速daemon守护进程.默认设置为1.0秒::
 
     accelerate_connect_timeout = 1.0
 
@@ -674,8 +674,7 @@ accelerate_daemon_timeout
 
 .. versionadded:: 1.6
 
-This setting controls the timeout for the accelerated daemon, as measured in minutes. The default daemon timeout is 30 minutes::
-这个控制加速daemon守护进程的超时时间,用分钟来衡量.默认为30分钟::
+这个设置控制daemon守护进程的超时时间,用分钟来衡量.默认为30分钟::
 
     accelerate_daemon_timeout = 30
 
@@ -688,7 +687,6 @@ accelerate_multi_key
 
 .. versionadded:: 1.6
 
-If enabled, this setting allows multiple private keys to be uploaded to the daemon. Any clients connecting to the daemon must also enable this option::
 如果这个选项开启,这个设置将允许多个私钥被加载到daemon. 任何客户端要想连接daemon都需要开启这个选项::
 
     accelerate_multi_key = yes
