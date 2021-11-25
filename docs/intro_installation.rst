@@ -105,7 +105,7 @@ sudo launchctl limit maxfiles 1024 2048,否则你可能会看见”Too many open
 
 使用 Fish::
 
-    $ . ./hacking/env-setup.fish
+    $ source ./hacking/env-setup.fish
 
 If you want to suppress spurious warnings/errors, use::
 
