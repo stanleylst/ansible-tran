@@ -84,7 +84,7 @@ playbook基础
 .. note::
 
 	参数 `remote_user` 以前写做 `user`,在 Ansible 1.4 以后才改为 remote_user.主要为了不跟 `user` 模块混淆（user 模块用于在远程系统上创建用户）.
-	
+
 再者,在每一个 task 中,可以定义自己的远程用户::
 
     ---
@@ -149,9 +149,9 @@ Tasks 列表
 在运行 playbook 时（从上到下执行）,如果一个 host 执行 task 失败,这个 host 将会从整个 playbook 的 rotation 中移除.
 如果发生执行失败的情况,请修正 playbook 中的错误,然后重新执行即可.
 
-每个 task 的目标在于执行一个 moudle, 通常是带有特定的参数来执行.在参数中可以使用变量（variables）.
+每个 task 的目标在于执行一个 module, 通常是带有特定的参数来执行.在参数中可以使用变量（variables）.
 
-modules 具有"幂等"性,意思是如果你再一次地执行 moudle（译者注:比如遇到远端系统被意外改动,需要恢复原状）,moudle 
+modules 具有"幂等"性,意思是如果你再一次地执行 module（译者注:比如遇到远端系统被意外改动,需要恢复原状）,module
 只会执行必要的改动,只会改变需要改变的地方.所以重复多次执行 playbook 也很安全.
 
 对于 `command` module 和 `shell` module,重复执行 playbook,实际上是重复运行同样的命令.如果执行的命令类似于 'chmod' 或者 'setsebool' 这种命令,这没有任何问题.也可以使用一个叫做 'creates' 的 flag 使得这两个 module 变得具有"幂等"特性
@@ -162,13 +162,13 @@ modules 具有"幂等"性,意思是如果你再一次地执行 moudle（译者�
 
 如果要声明一个 task,以前有一种格式: "action: module options" （可能在一些老的 playbooks 中还能见到）.现在推荐使用更常见的格式:"module: options" ,本文档使用的就是这种格式.
 
-下面是一种基本的 task 的定义,service moudle 使用 key=value 格式的参数,这也是大多数 module 使用的参数格式::
+下面是一种基本的 task 的定义,service module 使用 key=value 格式的参数,这也是大多数 module 使用的参数格式::
 
    tasks:
      - name: make sure apache is running
        service: name=httpd state=running
 
-比较特别的两个 modudle 是  `command` 和 `shell` ,它们不使用 key=value 格式的参数,而是这样::
+比较特别的两个 module 是  `command` 和 `shell` ,它们不使用 key=value 格式的参数,而是这样::
 
    tasks:
      - name: disable selinux
@@ -203,7 +203,7 @@ modules 具有"幂等"性,意思是如果你再一次地执行 moudle（译者�
 
 这些变量在 tempates 中也是可用的,稍后会讲到.
 
-在一个基础的 playbook 中,所有的 task 都是在一个 play 中列出,稍后将介绍一种更合理的安排 task 的方式:使用 'include:' 
+在一个基础的 playbook 中,所有的 task 都是在一个 play 中列出,稍后将介绍一种更合理的安排 task 的方式:使用 'include:'
 指令.
 
 
@@ -262,7 +262,7 @@ Handlers 也是一些 task 的列表,通过名字来引用,它们和一般的 ta
           service: name=apache state=restarted
 
 Handlers 最佳的应用场景是用来重启服务,或者触发系统重启操作.除此以外很少用到了.
-  
+
 .. note::
    handlers 会按照声明的顺序执行
 
@@ -288,8 +288,8 @@ Roles 将在下一章节讲述.值得指出的是,handlers 会在 'pre_tasks', '
 
     ansible-playbook playbook.yml -f 10
 
-	
-	
+
+
 .. _ansible-pull:
 
 Ansible-Pull（拉取配置而非推送配置）
@@ -324,7 +324,7 @@ Ansible-pull 是一个小脚本,它从 git 上 checkout 一个关于配置指令
 在执行一个 playbook 之前,想看看这个 playbook 的执行会影响到哪些 hosts,你可以这样做::
 
     ansible-playbook playbook.yml --list-hosts
-   
+
 .. seealso::
 
    :doc:`YAMLSyntax`
@@ -343,6 +343,4 @@ Ansible-pull 是一个小脚本,它从 git 上 checkout 一个关于配置指令
        Complete end-to-end playbook examples
    `Mailing List <http://groups.google.com/group/ansible-project>`_
        Questions? Help? Ideas?  Stop by the list on Google Groups
-
-
 
